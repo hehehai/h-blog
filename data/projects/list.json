@@ -1,0 +1,11 @@
+[
+  {
+    "name": "CrateHub",
+    "description": "a rust project github plugin, can view repo dependencies",
+    "cover": "",
+    "links": {
+      "github": "",
+      "site": ""
+    }
+  }
+]
