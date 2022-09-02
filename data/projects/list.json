@@ -1,11 +1,22 @@
 [
   {
     "name": "CrateHub",
+    "subtitle": "github rust repo plugin",
     "description": "a rust project github plugin, can view repo dependencies",
-    "cover": "",
+    "cover": "https://user-images.githubusercontent.com/12692552/173165981-414dc36d-a11b-4e09-b92f-7c1333f84ea0.png",
     "links": {
-      "github": "",
-      "site": ""
+      "github": "https://github.com/hehehai/cratehub",
+      "site": "https://hehehai.cn"
+    }
+  },
+  {
+    "name": "CrateHub2",
+    "subtitle": "github rust repo plugin",
+    "description": "a rust project github plugin, can view repo dependencies",
+    "cover": "https://user-images.githubusercontent.com/12692552/173165981-414dc36d-a11b-4e09-b92f-7c1333f84ea0.png",
+    "links": {
+      "github": "https://github.com/hehehai/cratehub",
+      "site": "https://hehehai.cn"
     }
   }
 ]
