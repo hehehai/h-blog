@@ -1,12 +1,19 @@
 import Container from "../components/Container";
 import Project from "../components/ProjectItem";
-import allProjects from "../data/projects/list.json";
+import ownerProjects from "../data/projects/owner.json";
+import contributionProjects from "../data/projects/contribution.json";
 
 export default function Projects() {
   return (
     <Container>
-      <div className="space-y-10">
-        {allProjects.map((project, idx) => (
+      <div className="space-y-12">
+        {ownerProjects.map((project, idx) => (
+          <Project key={idx} {...project} />
+        ))}
+      </div>
+      <div className="mt-12 mb-4">贡献</div>
+      <div className="space-y-12">
+        {contributionProjects.map((project, idx) => (
           <Project key={idx} {...project} />
         ))}
       </div>

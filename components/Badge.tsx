@@ -14,6 +14,11 @@ const badgeMap = {
     color: "white",
     background: "#0ea5e9",
   },
+  note: {
+    label: "笔记",
+    color: "white",
+    background: "#f43f5e",
+  },
 };
 
 export default function Badge(props: { type: "news" | "translate" | "docs" }) {

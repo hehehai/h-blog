@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Arco Design Vue",
+    "subtitle": "基于 Arco Design 的 Vue UI 组件库。",
+    "description": "60多个开箱即用的高质量组件, 可以覆盖绝大部份的业务场景。\n- 参与社区运营以及组件维护。\n- 组件功能实现及文档编写。",
+    "cover": "/static/images/arco-cover.png",
+    "links": {
+      "github": "https://github.com/arco-design/arco-design-vue",
+      "site": "https://arco.design/vue/docs/start"
+    }
+  }
+]

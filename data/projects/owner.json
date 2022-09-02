@@ -1,0 +1,30 @@
+[
+  {
+    "name": "CrateHub",
+    "subtitle": "自动展示 Github Rust 项目依赖列表的浏览器插件",
+    "description": "- Rust 项目依赖列表。\n- crates.io 包信息。\n- Workspaces 目录列表",
+    "cover": "/static/images/cratehub-cover.png",
+    "links": {
+      "github": "https://github.com/hehehai/cratehub"
+    }
+  },
+  {
+    "name": "Arco Vue Playground",
+    "subtitle": "网页在线编辑器",
+    "description": "vue 文件在线编辑预览，内置的 Arco Vue UI 库。\n- 库版本切换。\n- Prettier 代码格式调整。",
+    "cover": "/static/images/arco-vue-playground-cover.png",
+    "links": {
+      "github": "https://github.com/hehehai/arco-vue-playground",
+      "site": "https://arco-vue-playground.netlify.app/"
+    }
+  },
+  {
+    "name": "终端 2048",
+    "subtitle": "NodeJS 实现终端 2048 玩游戏",
+    "description": "使用终端表格渲染布局，监听键盘事件操作。\n- 游戏分数展示。\n- 操作流畅。",
+    "cover": "https://github.com/hehehai/2048/raw/main/2048.gif",
+    "links": {
+      "github": "https://github.com/hehehai/2048"
+    }
+  }
+]
