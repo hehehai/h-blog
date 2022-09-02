@@ -21,7 +21,7 @@ const Home: NextPage = ({ posts, hasMore }: any) => {
           {hasMore && (
             <div className="mt-3">
               <NextLink href="/posts">
-                <a className="text-slate-700 underline underline-offset-8 decoration-2 decoration-slate-500 hover:decoration-dotted">
+                <a className="text-slate-700 dark:text-gray-400 underline underline-offset-8 decoration-2 decoration-slate-500 hover:decoration-dotted">
                   全部文章 _
                 </a>
               </NextLink>

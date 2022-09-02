@@ -17,7 +17,7 @@ export default function Project(props: any) {
         )}
       </div>
       <div className="flex gap-5">
-        <div className="bg-gray-50" style={{ width: "162px", height: "110px" }}>
+        <div style={{ width: "162px", height: "110px" }}>
           <img
             src={cover}
             alt={name}
@@ -35,7 +35,7 @@ export default function Project(props: any) {
               <a
                 href={links.github}
                 target="_blank"
-                className="rounded-lg text-slate-900 font-semibold transition flex items-center text-[0.6125rem] leading-6 py-1 px-2 bg-slate-900/[0.03] cursor-pointer"
+                className="rounded-lg text-slate-900 dark:text-white dark:bg-white/[0.03] font-semibold transition flex items-center text-[0.6125rem] leading-6 py-1 px-2 bg-slate-900/[0.03] cursor-pointer"
                 rel="noreferrer"
               >
                 <Github size={18} />
@@ -46,7 +46,7 @@ export default function Project(props: any) {
               <a
                 href={links.site}
                 target="_blank"
-                className="rounded-lg text-slate-900 font-semibold transition flex items-center text-[0.6125rem] leading-6 py-1 px-2 bg-slate-900/[0.03] cursor-pointer"
+                className="rounded-lg text-slate-900 dark:text-white dark:bg-white/[0.03] font-semibold transition flex items-center text-[0.6125rem] leading-6 py-1 px-2 bg-slate-900/[0.03] cursor-pointer"
                 rel="noreferrer"
               >
                 <Website size={18} />

@@ -3,7 +3,7 @@ import NextLink from "next/link";
 export default function HomeAboutMe() {
   return (
     <div className="max-w-xl">
-      <article className="prose">
+      <article className="prose dark:prose-invert">
         <h2 className="font-bold">@一块木头</h2>
         <p>
           我是一位自学的软件开发人员，专注于前端应用程序和用户界面设计。我的首选技术栈是
@@ -35,7 +35,7 @@ export default function HomeAboutMe() {
       </article>
       <div className="mt-3">
         <NextLink href="/about">
-          <a className="text-slate-700 underline underline-offset-8 decoration-2 decoration-slate-500 hover:decoration-dotted">
+          <a className="text-slate-700 dark:text-gray-400 underline underline-offset-8 decoration-2 decoration-slate-500 hover:decoration-dotted">
             我的故事 _
           </a>
         </NextLink>

@@ -8,7 +8,7 @@ export default function ThemeToggleIcon(props: {
     <svg
       width={size}
       height={size}
-      viewBox="0 0 22 22"
+      viewBox="0 0 24 24"
       fill="currentColor"
     >
       {theme === "dark" ? (

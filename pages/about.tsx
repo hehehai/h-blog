@@ -4,7 +4,7 @@ import NextLink from "next/link";
 export default function About() {
   return (
     <Container>
-      <article className="prose">
+      <article className="prose dark:prose-invert">
         <h2 className="font-bold">@一块木头</h2>
         <p>
           我是一位自学的软件开发人员，专注于前端应用程序和用户界面设计。我的首选技术栈是

@@ -26,7 +26,7 @@ export default function Header() {
           <Twitter size={22} />
         </HeaderButton>
         <HeaderButton onClick={handleToggleTheme}>
-          <Theme size={22} theme={resolvedTheme} />
+          <Theme size={24} theme={resolvedTheme} />
         </HeaderButton>
       </div>
     </div>

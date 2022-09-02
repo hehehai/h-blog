@@ -45,7 +45,7 @@ export default function Post({ html, frontMatter, readingTime }: any) {
           </div>
         </div>
         <main>
-          <article className="w-full mt-4 prose dark:prose-dark max-w-none">
+          <article className="w-full mt-4 prose dark:prose-invert max-w-none">
             <MDXRemote {...html} components={components} />
           </article>
         </main>
