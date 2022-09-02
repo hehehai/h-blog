@@ -28,8 +28,14 @@ const components = {
 export default function Post({ html, frontMatter, readingTime }: any) {
   readingTime = Number.parseInt(readingTime);
 
+  const seoMeta = {
+    title: frontMatter.title,
+    description: frontMatter.description,
+    date: frontMatter.publicAt,
+  };
+
   return (
-    <Container>
+    <Container {...seoMeta}>
       <div>
         <div className="mb-10">
           <div className="text-3xl leading-8 font-medium underline underline-offset-8 decoration-2 decoration-slate-700 mb-4">
