@@ -1,21 +1,23 @@
 import fs from "fs";
 import matter from "gray-matter";
 import { MDXRemote } from "next-mdx-remote";
-import { serialize } from "next-mdx-remote/serialize";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import path from "path";
-import { postFilePaths, POSTS_PATH } from "../../utils/mdx";
+import mdxComponents from "../../components/MDXComponents";
+import { mdxToHtml, postFilePaths, POSTS_PATH } from "../../utils/mdx";
 
 import Container from "../../components/Container";
 import CustomLink from "../../components/CustomLink";
+import { renderBadge } from "../../components/Badge";
+import { renderTag } from "../../components/Tag";
 
 // Custom components/renderers to pass to MDX.
 // Since the MDX files aren't loaded by webpack, they have no knowledge of how
 // to handle import statements. Instead, you must include components in scope
 // here.
 const components = {
-  a: CustomLink,
+  ...mdxComponents,
   // It also works with dynamically-imported components, which is especially
   // useful for conditionally loading components for certain routes.
   // See the notes in README.md for more details.
@@ -23,18 +25,29 @@ const components = {
   Head,
 };
 
-export default function Post({ source, frontMatter }: any) {
+export default function Post({ html, frontMatter, readingTime }: any) {
+  readingTime = Number.parseInt(readingTime);
+
   return (
     <Container>
       <div>
-        <div className="post-header">
-          <h1>{frontMatter.title}</h1>
-          {frontMatter.description && (
-            <p className="description">{frontMatter.description}</p>
-          )}
+        <div className="mb-10">
+          <div className="text-3xl leading-8 font-medium underline underline-offset-8 decoration-2 decoration-slate-700 mb-4">
+            {frontMatter.title}
+          </div>
+          <div className="text-sm text-slate-700 flex justify-content space-x-2 mt-1.5">
+            {frontMatter.tags && renderTag(frontMatter.tags)}
+          </div>
+          <div className="text-sm text-slate-700 flex justify-content space-x-2 mt-1.5">
+            {frontMatter.badges && renderBadge(frontMatter.badges)}
+            {frontMatter.publicAt && <div>{frontMatter.publicAt}</div>}
+            {!!readingTime && <div>约 {readingTime} 分钟</div>}
+          </div>
         </div>
         <main>
-          <MDXRemote {...source} components={components} />
+          <article className="w-full mt-4 prose dark:prose-dark max-w-none">
+            <MDXRemote {...html} components={components} />
+          </article>
         </main>
       </div>
     </Container>
@@ -47,18 +60,11 @@ export const getStaticProps = async ({ params }: any) => {
 
   const { content, data } = matter(source);
 
-  const mdxSource = await serialize(content, {
-    // Optionally pass remark/rehype plugins
-    mdxOptions: {
-      remarkPlugins: [],
-      rehypePlugins: [],
-    },
-    scope: data,
-  });
+  const htmlData = await mdxToHtml(content);
 
   return {
     props: {
-      source: mdxSource,
+      ...htmlData,
       frontMatter: data,
     },
   };

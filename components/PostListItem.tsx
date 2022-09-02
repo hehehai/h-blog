@@ -1,0 +1,23 @@
+import Link from "next/link";
+import Badge, { renderBadge } from "./Badge";
+
+export default function PostListItem(props: any) {
+  const { post } = props;
+
+  const readingTime = Number.parseInt(post.readingTime);
+
+  return (
+    <div>
+      <Link as={`/posts/${post.fileName}`} href={`/posts/[slug]`}>
+        <a className="text-xl leading-8 font-medium underline underline-offset-8 decoration-2 decoration-slate-700 hover:hover:decoration-dotted">
+          {post.data.title}
+        </a>
+      </Link>
+      <div className="text-sm text-slate-700 flex justify-content space-x-2 mt-1.5">
+        {post.data.badges && renderBadge(post.data.badges)}
+        {post.data.publicAt && <div>{post.data.publicAt}</div>}
+        {!!readingTime && <div>约 {readingTime} 分钟</div>}
+      </div>
+    </div>
+  );
+}

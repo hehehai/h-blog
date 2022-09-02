@@ -1,0 +1,272 @@
+---
+title: "Website redesign: How I evolved my website"
+description: I launched my new website in May after taking a long break from my personal business. Taking a few steps back helped me realise what I needed to do to be more productive and efficient. I needed a new website that would elevate my personal brand and be a hub for everything I do. Here’s a short story about how I evolved my personal website.
+tags: Business, Productivity, Typography, Web design
+badges: translate, docs
+publicAt: "2022-09-01"
+---
+
+## Why Should You Care?
+
+Every website starts simple. There's maybe one page with a few distinct pieces. It has modest intentions.
+
+Website Mockup
+Then, slowly, it begins to scale.
+
+More pages are added and new features are built. There might even be multiple teams devoted to specific sections of the site. You could be developing for mobile, too.
+
+You start to notice the buttons in one part of the site are slightly different than everywhere else. One team decides to build a feature that another team has (unknowingly) already completed. Communication breakdowns happen. Consistency is lost.
+
+Is this a preventable problem? Absolutely. Yet, why does it happen over and over again? Unless you think about your design and development process upfront, you will run into issues later as you scale.
+
+To prevent this issue from happening, or to fix the existing lack of consistency in your products, you need three things:
+
+- Style Guide
+- Component Library
+- Design System
+- Don't worry if you have no idea what I'm talking about yet. By the end of this article, you'll have consumed almost a year's worth of trial & error, - - research, and development.
+
+## What Is a Style Guide?
+
+Style Guide
+A style guide is a set of rules for how your brand should be displayed. This is both visual (design & imagery) as well as written content (voice & tone).
+
+The purpose of a style guide is to allow multiple contributors to create content clearly that cohesively represents the brand. Almost every major brand has a style guide, though not all are public.
+
+## What is a Component Library?
+
+### Component Library
+
+A component library is living, breathing implementation of your style guide. It's a shared set of UI components that developers can consume to build applications reflecting your brand. Some notable benefits:
+
+Having a component library means less custom code for consumers.
+Since there's a central location, you can ensure all components meet accessibility requirements.
+Components become more robust with multiple contributors submitting bug fixes and improvements in a single place.
+Less duplication of code allows you to ship new products and rewrite legacy code faster.
+What is a Design System?
+A design system is a complete set of standards, documentation, and principles along with the components to achieve those standards. It is the marriage between your style guide and component library. One of the most popular design systems is Google's Material Design.
+
+## Design System
+
+A design system should contain:
+
+- Content -- The language to design a more thoughtful product experience.
+- Design -- The visual elements of the design system.
+- Components -- The building blocks for developing new products and features.
+- Patterns -- The individual pieces for creating meaningful product experiences.
+- Where Should You Begin?
+- Depending on the state of your company/product, you might have a different starting point. This is the outline before we dive into specifics.
+
+- Create an inventory of existing design patterns.
+- Establish design principles and begin a style guide.
+- Define your design tokens.
+- Create or identify an icon set.
+- Choose languages/frameworks supported.
+- Evaluate Monorepo vs. single package.
+- Evaluate CSS/Sass vs. CSS-in-JS.
+- Create a component library.
+- Choose a documentation platform.
+- Write design system documentation.
+- Building the Design System
+- Create an inventory of existing design patterns.
+- Unless you are starting from scratch, you will need to identify all the design patterns currently in use in your interface and document any inconsistencies. The goal should be the same user experience regardless of which part of the product the user is in.
+
+Start documenting and reviewing these amongst your team and identifying your preferred interaction patterns. This should start to paint a picture of which pieces your style guide will need.
+
+Establish design principles and begin a style guide.
+It's time to translate these findings into the beginnings of a style guide. You can use tools like:
+
+Figma
+Sketch
+Framer
+Abobe XD
+My recommendation would be Figma, but it's ultimately up to your team and company. Here's some helpful Figma for Beginners tutorials.
+
+Define your design tokens.
+Design Tokens
+Design tokens are the visual design atoms of the design system --- specifically, they are named entities that store visual design attributes. We use them in place of hard-coded values (such as hex values for color or pixel values for spacing) in order to maintain a scalable and consistent visual system for UI development.
+
+### This includes things like:
+
+Colors (text, backgrounds, borders)
+Fonts
+Typography sizes
+Spacing values
+Shadows
+For example, take a look at Vercel's Design System.
+
+```css
+--geist-foreground: #000;
+--geist-background: #fff;
+--accents-1: #fafafa;
+--accents-2: #eaeaea;
+--accents-3: #999999;
+--accents-4: #888888;
+--accents-5: #666666;
+--accents-6: #444444;
+--accents-7: #333333;
+--accents-8: #111111;
+--geist-success: #0070f3;
+--geist-error: #ee0000;
+--geist-warning: #f5a623;
+--dropdown-box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.02);
+--dropdown-triangle-stroke: #fff;
+--scroller-start: var(--geist-background);
+--scroller-end: rgba(255, 255, 255, 0);
+--shadow-small: 0 5px 10px rgba(0, 0, 0, 0.12);
+--shadow-medium: 0 8px 30px rgba(0, 0, 0, 0.12);
+--shadow-large: 0 30px 60px rgba(0, 0, 0, 0.12);
+--portal-opacity: 0.25;
+```
+
+There is now a shared language between designers and developers.
+
+Create or identify an icon set.
+
+## Icon set
+
+If you already have existing icons, you'll need to determine which to keep. It might not make sense to create your own icons depending on the size and priorities of your company. You might be better off utilizing an open-source icon library. Here are some examples:
+
+Font Awesome
+Icons8
+Material UI Icons
+Eva Icons
+Feather Icons
+Styled Icons
+Ikonate
+Regardless if you build your own or use open source, you should standardize on usage and identify consumption patterns. It's also worth considering who are the end-users of your icons set - designers, developers, and marketing?
+
+Using SVGs, you can make the icon library your single source of truth. Your process might look like this:
+
+Designers create/provide raw SVGs.
+Optimize and compress the SVGs using SVGO.
+Automatically create React components using SVGR for developers.
+Output PNGs and JPEGs at different sizes/resolutions for marketing.
+Compile SVGs into a bundled font for mobile applications to use.
+Choose languages/frameworks supported.
+What languages or frameworks are you currently supporting? Which should the component library support? It's important to think about this ahead of time so you can properly architecture your library.
+
+If you have an application which uses script tags instead of ES Modules, then you'll need to configure your component library to bundle into a single distributable file. For example, a vanilla JavaScript application would need something like this in an HTML file.
+
+``` html
+<script src="/js/component-library.min.js"></script>
+```
+
+To achieve this, you can use either Webpack or Rollup. I would recommend Webpack, as it's the industry standard. I'd also recommend TSDX if you want to use TypeScript.
+
+Evaluate Monorepo vs. single package.
+A Monorepo allows you to build and publish multiple libraries from a single repo. While it does solve some very real problems, it also creates others. It's important to understand the pros and cons.
+
+## Monorepo
+
+You might use a monorepo if...
+Small bundle sizes by decreasing the scope of components included in one package.
+Shared built, lint, test, and release process for multiple packages versus separate repositories with duplicated code.
+More granular control of semver on a package-by-package basis.
+You might not use a monorepo if...
+Additional tooling and infrastructure needed.
+Consumers are required to import from a variety of packages instead of one single component library.
+Cutting edge technology. There is industry adoption, but you can run into issues very few have experienced without a clear path for a solution.
+Some questions that will help you identify which solution is right for your company.
+
+Do you currently have multiple repositories all publishing to NPM?
+Is your build, test, lint infrastructure complex? Is it duplicated in many places?
+How many repositories do you have (or plan to have in the next year?)
+How large is your team? How many people will be consuming the component library?
+Will it be open-source? Can you lean on others in the industry to help solve problems?
+Do you see the need for multiple packages in the future? (e.g. icons, codemods, etc)
+For most smaller companies, I would argue that a Monorepo is unnecessary. It has its time and place. I've used it before with (~150 developers) to distribute 10 different packages at once, spanning both internal and external apps.
+
+Note: Want to use a Monorepo? Check out Building a Design System Monorepo with Turborepo.
+
+Evaluate CSS/Sass vs. CSS-in-JS.
+CSS-in-JS is the easiest solution for bundling styles and distributing through NPM. For optimal performance, consider using a near-zero runtime solution like Stitches.
+
+If your component library needs to output raw HTML/CSS, I'd recommend sticking with Sass. A great example of this is IBM's Carbon Design System. You can use CSS variables to contain your design tokens.
+
+Design System Button
+
+```jsx
+<button class="bx--btn bx--btn--primary" type="button">
+  Button
+</button>
+```
+If you're using React, check out How Should I Style My React Application?
+
+Create a component library.
+With your technical requirements defined and your style guide started, you should now be able to begin constructing a component library. My recommendation would be to use React alongside Storybook.
+
+Component Driven Development
+Creating a component library is much more than just translating the style guide into code.
+
+You'll need to think about how consumers will interact with your components. What sort of API would they expect? What provides the most clarity and is self-documenting? For example, consider buttons. You have different variations of buttons - primary, secondary, etc.
+
+Buttons
+Should you have separate components for each?
+``` jsx
+<PrimaryButton>Hello World!</PrimaryButton>
+<SecondaryButton>Hello World!</SecondaryButton>
+or should you use a prop?
+
+<Button>Hello World!</Button>
+<Button variant="secondary">Hello World!</Button>
+```
+Secondarily, what should the prop be called? variant? type? Did you consider that type is a reserved attribute for the HTML `<button>` element? These are the type of decisions that you will need to make as you build your component library.
+
+Some other things you might want to consider:
+
+Should you allow consumers to pass CSS properties in as props to the React components, or should they have to extend/wrap components to achieve their desired styling? If you choose the former, consider styled-system.
+Should you build loading states directly into components, or should there be a generic component for loading (spinner, skeleton?)
+How should you test purely visual components? Snapshot testing? Visual diff testing?
+What will consumers need to do to integrate with your component library? Should there be a global style reset? Should they add any Babel plugins?
+Should you utilize Conventional Commits to auto-generate a changelog?
+Will your components need to support web and mobile? Consider using React Native Web to share code across platforms.
+Choose a documentation platform.
+You need a platform to display your design system. If you're just getting started, I would recommend using Storybook Docs.
+
+Storybook Docs
+This combination will achieve the output as other similar platforms like Docz, Styleguidist, and Docusaurus.
+
+Easily copy code snippets from component examples
+Auto-generate a props table based on prop-types and defaultProps
+Easily view all permutations of a component
+Write custom docs using MDX
+Storybook Flow
+If you're adamant on your design system reflecting your brand and dogfooding your component library, I would recommend a custom solution using MDX. This will allow you to insert React components inside Markdown files. The blog you're reading right now uses this.
+
+Having a truly custom solution allows you full control over your docs. One example I'm extremely impressed by is Atomize React.
+
+Atomize React
+Write design system documentation.
+Now that you've chosen a documentation platform, it's time to write the docs. You should include:
+
+Installation and setup instruction for the component library
+Props schemas and type definitions for each component
+Component examples along with copyable code snippets
+Technology choices and rationale
+Consider also adding:
+
+A "Getting Started" section involving a tutorial
+Completed UI templates to choose from
+Information about theming
+A live code playground for interacting with components
+Conclusion
+I've spent a lot of time in the past year thinking about design systems. Building a component library from the ground up gave me a new appreciation for the amount of work that goes into front-end development and design. Below, you'll find a list of design systems which have inspired me and serve as great resources.
+
+Feel free to reach out if you wanna chat about building design systems.
+
+Resources
+Design Systems
+
+Shopify's Polaris
+Segment's Evergreen
+Eva Design
+Vercel's Design System
+Ant Design
+IBM's Carbon
+Storybook's Design System
+Modulz's Radix
+GitHub's Primer
+Palantir's Blueprint
+Atlassian's Design System
+Chakra UI

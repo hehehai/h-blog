@@ -3,29 +3,16 @@ import path from "path";
 import matter from "gray-matter";
 import Container from "../../components/Container";
 import { postFilePaths, POSTS_PATH } from "../../utils/mdx";
-import Link from "next/link";
+import PostList from "../../components/PostList";
+import readingTime from "reading-time";
 
 export default function Index({ posts }: any) {
   return (
     <Container>
       <div>
-        {posts.length > 0 ? (
-          posts.map((post: any) => (
-            <div key={post.filePath}>
-              <Link
-                as={`/posts/${post.filePath.replace(/\.mdx?$/, "")}`}
-                href={`/posts/[slug]`}
-              >
-                <a>{post.data.title}</a>
-              </Link>
-            </div>
-          ))
-        ) : (
-          <div>none</div>
-        )}
-        latest {posts.length} posts
+        <div className="mb-3">共 {posts.length} 篇</div>
+        <PostList posts={posts} />
       </div>
-      <div>View all posts</div>
     </Container>
   );
 }
@@ -38,7 +25,9 @@ export function getStaticProps() {
     return {
       content,
       data,
+      readingTime: readingTime(content).minutes,
       filePath,
+      fileName: filePath.replace(/\.mdx?$/, ""),
     };
   });
 

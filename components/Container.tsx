@@ -1,15 +1,14 @@
-import { useTheme } from "next-themes";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import NavItem from "./NavItem";
+import Navigator from "./Navigator";
+import Header from "./Header";
+import Footer from "./Footer";
 
 export default function Container(props: any) {
-  const { resolvedTheme, setTheme } = useTheme();
-
   const { children, ...customMeta } = props;
   const router = useRouter();
   const meta = {
-    title: "Lee Robinson – Developer, writer, creator.",
+    title: "Hehehai - Developer, writer, creator.",
     description: `Front-end developer, JavaScript enthusiast, and course creator.`,
     image: "https://leerob.io/static/images/lee-banner.png",
     type: "website",
@@ -42,30 +41,12 @@ export default function Container(props: any) {
   };
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-900">
+    <div className="max-w-4xl mx-auto px-8">
       {headers()}
-      <div>
-        <div><NavItem href="/" text="Hehehai.cn" /></div>
-        <div>
-          <div>Github</div>
-          <div>Twitter</div>
-          <div>Dark/Light</div>
-        </div>
-      </div>
-      <div>
-        <div>
-          <NavItem href="/about" text="About" />
-          <NavItem href="/posts" text="Posts" />
-          <NavItem href="/projects" text="Projects" />
-          <NavItem href="/photos" text="Photos" />
-        </div>
-      </div>
-      <div>
-        {children}
-      </div>
-      <div>
-        <div>© 2022, Hehehai</div>
-      </div>
+      <Header />
+      <Navigator />
+      <div className="my-3">{children}</div>
+      <Footer />
     </div>
   );
 }

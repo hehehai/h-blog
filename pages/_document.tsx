@@ -6,7 +6,7 @@ export default function Document() {
       <Head>
         <link href="/favicon.ico" rel="shortcut icon" />
       </Head>
-      <body className="bg-white dark:bg-black text-white dark:text-black">
+      <body className="bg-white dark:bg-slate text-black dark:text-white">
         <Main />
         <NextScript />
       </body>
