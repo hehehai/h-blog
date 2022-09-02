@@ -4,11 +4,11 @@ import { MDXRemote } from "next-mdx-remote";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import path from "path";
+import Giscus from "@giscus/react";
 import mdxComponents from "../../components/MDXComponents";
 import { mdxToHtml, postFilePaths, POSTS_PATH } from "../../utils/mdx";
 
 import Container from "../../components/Container";
-import CustomLink from "../../components/CustomLink";
 import { renderBadge } from "../../components/Badge";
 import { renderTag } from "../../components/Tag";
 
@@ -49,6 +49,23 @@ export default function Post({ html, frontMatter, readingTime }: any) {
             <MDXRemote {...html} components={components} />
           </article>
         </main>
+        <div className="mt-12">
+          <Giscus
+            id="comments"
+            repo="hehehai/h-blog"
+            repoId="R_kgDOH7HVQQ"
+            category="Announcements"
+            categoryId="DIC_kwDOH7HVQc4CRL4m"
+            mapping="pathname"
+            term="Welcome to @giscus/react component!"
+            reactionsEnabled="1"
+            emitMetadata="0"
+            inputPosition="top"
+            theme="light"
+            lang="zh-CN"
+            loading="lazy"
+          />
+        </div>
       </div>
     </Container>
   );

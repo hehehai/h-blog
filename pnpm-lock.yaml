@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@giscus/react': ^2.2.0
   '@tailwindcss/typography': ^0.5.4
   '@types/node': 18.7.14
   '@types/react': 18.0.18
@@ -30,6 +31,7 @@ specifiers:
   typescript: 4.8.2
 
 dependencies:
+  '@giscus/react': registry.npmmirror.com/@giscus/react/2.2.0_biqbaboplfbrettd7655fr4n2y
   '@tailwindcss/typography': registry.npmmirror.com/@tailwindcss/typography/0.5.4_tailwindcss@3.1.8
   classnames: registry.npmmirror.com/classnames/2.3.1
   dayjs: registry.npmmirror.com/dayjs/1.11.5
@@ -100,6 +102,20 @@ packages:
       - supports-color
     dev: true
 
+  registry.npmmirror.com/@giscus/react/2.2.0_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-MXjKAQyO85ZdC8OVApNQsJhPvTJcuUf5GmQw2KdvNcBVivUpVrA+NUppdwsrI+lK6jEX4ZMVOCnbJ5GaQddaAA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@giscus/react/-/react-2.2.0.tgz}
+    id: registry.npmmirror.com/@giscus/react/2.2.0
+    name: '@giscus/react'
+    version: 2.2.0
+    peerDependencies:
+      react: ^16 || ^17 || ^18
+      react-dom: ^16 || ^17 || ^18
+    dependencies:
+      giscus: registry.npmmirror.com/giscus/1.2.0
+      react: registry.npmmirror.com/react/18.2.0
+      react-dom: registry.npmmirror.com/react-dom/18.2.0_react@18.2.0
+    dev: false
+
   registry.npmmirror.com/@humanwhocodes/config-array/0.10.4:
     resolution: {integrity: sha512-mXAIHxZT3Vcpg83opl1wGlVZ9xydbfZO3r5YfRSH6Gpp2J/PfdBP0wbDa2sO6/qRbcalpoevVyW6A/fI6LfeMw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@humanwhocodes/config-array/-/config-array-0.10.4.tgz}
     name: '@humanwhocodes/config-array'
@@ -131,6 +147,12 @@ packages:
     name: '@humanwhocodes/object-schema'
     version: 1.2.1
     dev: true
+
+  registry.npmmirror.com/@lit/reactive-element/1.4.1:
+    resolution: {integrity: sha512-qDv4851VFSaBWzpS02cXHclo40jsbAjRXnebNXpm0uVg32kCneZPo9RYVQtrTNICtZ+1wAYHu1ZtxWSWMbKrBw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@lit/reactive-element/-/reactive-element-1.4.1.tgz}
+    name: '@lit/reactive-element'
+    version: 1.4.1
+    dev: false
 
   registry.npmmirror.com/@mdx-js/mdx/2.1.3:
     resolution: {integrity: sha512-ahbb47HJIJ4xnifaL06tDJiSyLEy1EhFAStO7RZIm3GTa7yGW3NGhZaj+GUCveFgl5oI54pY4BgiLmYm97y+zg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@mdx-js/mdx/-/mdx-2.1.3.tgz}
@@ -504,6 +526,12 @@ packages:
     resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/scheduler/-/scheduler-0.16.2.tgz}
     name: '@types/scheduler'
     version: 0.16.2
+
+  registry.npmmirror.com/@types/trusted-types/2.0.2:
+    resolution: {integrity: sha512-F5DIZ36YVLE+PN+Zwws4kJogq47hNgX3Nx6WyDJ3kcplxyke3XIzB8uK5n/Lpm1HBsbGzd6nmGehL8cPekP+Tg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/trusted-types/-/trusted-types-2.0.2.tgz}
+    name: '@types/trusted-types'
+    version: 2.0.2
+    dev: false
 
   registry.npmmirror.com/@types/unist/2.0.6:
     resolution: {integrity: sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/unist/-/unist-2.0.6.tgz}
@@ -1758,6 +1786,14 @@ packages:
       get-intrinsic: registry.npmmirror.com/get-intrinsic/1.1.2
     dev: true
 
+  registry.npmmirror.com/giscus/1.2.0:
+    resolution: {integrity: sha512-IpfWvU0/hYbMGQKuoPlED8wWmluRYIOjtrBCnL7logsWjMpPRxiAC2pUIC0+SC0pDMOqXrk1onTYMHgwgRpRzg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/giscus/-/giscus-1.2.0.tgz}
+    name: giscus
+    version: 1.2.0
+    dependencies:
+      lit: registry.npmmirror.com/lit/2.3.1
+    dev: false
+
   registry.npmmirror.com/github-slugger/1.4.0:
     resolution: {integrity: sha512-w0dzqw/nt51xMVmlaV1+JRzN+oCa1KfcgGEWhxUG16wbdA+Xnt/yoFO8Z8x/V82ZcZ0wy6ln9QDup5avbhiDhQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/github-slugger/-/github-slugger-1.4.0.tgz}
     name: github-slugger
@@ -2360,6 +2396,33 @@ packages:
     name: lilconfig
     version: 2.0.6
     engines: {node: '>=10'}
+
+  registry.npmmirror.com/lit-element/3.2.2:
+    resolution: {integrity: sha512-6ZgxBR9KNroqKb6+htkyBwD90XGRiqKDHVrW/Eh0EZ+l+iC+u+v+w3/BA5NGi4nizAVHGYvQBHUDuSmLjPp7NQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/lit-element/-/lit-element-3.2.2.tgz}
+    name: lit-element
+    version: 3.2.2
+    dependencies:
+      '@lit/reactive-element': registry.npmmirror.com/@lit/reactive-element/1.4.1
+      lit-html: registry.npmmirror.com/lit-html/2.3.1
+    dev: false
+
+  registry.npmmirror.com/lit-html/2.3.1:
+    resolution: {integrity: sha512-FyKH6LTW6aBdkfNhNSHyZTnLgJSTe5hMk7HFtc/+DcN1w74C215q8B+Cfxc2OuIEpBNcEKxgF64qL8as30FDHA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/lit-html/-/lit-html-2.3.1.tgz}
+    name: lit-html
+    version: 2.3.1
+    dependencies:
+      '@types/trusted-types': registry.npmmirror.com/@types/trusted-types/2.0.2
+    dev: false
+
+  registry.npmmirror.com/lit/2.3.1:
+    resolution: {integrity: sha512-TejktDR4mqG3qB32Y8Lm5Lye3c8SUehqz7qRsxe1PqGYL6me2Ef+jeQAEqh20BnnGncv4Yxy2njEIT0kzK1WCw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/lit/-/lit-2.3.1.tgz}
+    name: lit
+    version: 2.3.1
+    dependencies:
+      '@lit/reactive-element': registry.npmmirror.com/@lit/reactive-element/1.4.1
+      lit-element: registry.npmmirror.com/lit-element/3.2.2
+      lit-html: registry.npmmirror.com/lit-html/2.3.1
+    dev: false
 
   registry.npmmirror.com/locate-path/6.0.0:
     resolution: {integrity: sha512-iPZK6eYjbxRu3uB4/WZ3EsEIMJFMqAoopl3R+zuq0UjcAm/MO6KCweDgPfP3elTztoKP3KtnVHxTn2NHBSDVUw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/locate-path/-/locate-path-6.0.0.tgz}

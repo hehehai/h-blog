@@ -1,23 +1,15 @@
 import fs from "fs";
 import path from "path";
-import Image from "next/image";
 import Container from "../components/Container";
+import PhotoItem from "../components/PhotoItem";
 import { photoMetaPaths, PHOTOS_PATH } from "../utils/photo";
 
 export default function Photos({ photos }: any) {
   return (
     <Container>
-      <div>Photos</div>
-      <div>
+      <div className="space-y-10">
         {photos.map((photo: any, idx: number) => (
-          <div key={idx}>
-            <div>{photo.meta.name}</div>
-            <div>
-              {photo.meta.images.map((imagePath: any) => (
-                <Image src={`/photos/${photo.folderPath}/${imagePath}`} key={imagePath} width={200} height={200} />
-              ))}
-            </div>
-          </div>
+          <PhotoItem key={idx} {...photo} />
         ))}
       </div>
     </Container>
@@ -31,7 +23,7 @@ export function getStaticProps() {
 
     return {
       meta,
-      folderPath: filePath.replace(".json", ''),
+      folderPath: filePath.replace(".json", ""),
     };
   });
 
