@@ -41,10 +41,10 @@ export default function Post({ html, frontMatter, readingTime }: any) {
           <div className="text-3xl leading-8 font-medium underline underline-offset-8 decoration-2 decoration-slate-700 mb-4">
             {frontMatter.title}
           </div>
-          <div className="text-sm text-slate-700 flex justify-content space-x-2 mt-1.5">
+          <div className="text-sm text-slate-700 dark:text-gray-200 flex justify-content space-x-2 mt-1.5">
             {frontMatter.tags && renderTag(frontMatter.tags)}
           </div>
-          <div className="text-sm text-slate-700 flex justify-content space-x-2 mt-1.5">
+          <div className="text-sm text-slate-700 dark:text-gray-200 flex justify-content space-x-2 mt-1.5">
             {frontMatter.badges && renderBadge(frontMatter.badges)}
             {frontMatter.publicAt && <div>{frontMatter.publicAt}</div>}
             {!!readingTime && <div>约 {readingTime} 分钟</div>}

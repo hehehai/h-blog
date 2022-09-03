@@ -7,7 +7,6 @@ import rehypeSlug from 'rehype-slug';
 import rehypeCodeTitles from 'rehype-code-titles';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import rehypePrism from 'rehype-prism-plus';
 
 // POSTS_PATH is useful when you want to get the path to a specific file
 export const POSTS_PATH = path.join(process.cwd(), 'data/posts')
@@ -25,7 +24,6 @@ export async function mdxToHtml(content: string) {
       rehypePlugins: [
         rehypeSlug,
         rehypeCodeTitles,
-        rehypePrism,
         rehypeHighlight,
         [
           rehypeAutolinkHeadings,

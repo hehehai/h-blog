@@ -1,0 +1,176 @@
+---
+title: Vue3 reactivity 源码
+description: vue3 响应式的实现原理的解读
+tags: Vue, 响应式
+badges: note
+publicAt: "2022-03-06"
+---
+
+## @vue/reactivity@3.0.0-alpha.0
+
+这里先看的是最早期的代码，结构会更容易读些，下面的文章不是直接看源码，而是由 vue reativeity 的出口 api 来进入，试着实现该接口（并非玩去实现）
+
+## demo.html
+
+```jsx
+<script type="module">
+  import { reactive, effect } from "./simple-reactivity.js";
+
+  const root = document.querySelector("#root");
+  const btnName = document.querySelector("#btn_name");
+  const btnAge = document.querySelector("#btn_age");
+  const inputName = document.querySelector("#input_name");
+
+  const user = reactive({
+    name: "张三",
+    age: 27,
+  });
+
+  inputName.value = user.name;
+
+  effect(() => {
+    root.innerHTML = `<h1>${user.name}---${user.age}</h1>`;
+  });
+
+  effect(() => {
+    console.log(user.age);
+  });
+
+  inputName.oninput = function (event) {
+    user.name = event.target.value;
+  };
+
+  btnAge.onclick = function () {
+    user.age += 1;
+  };
+</script>
+
+<div id="root"></div>
+<input type="text" id="input_name" placeholder="名字" />
+<button id="btn_age">年龄 + 1</button>
+```
+
+我们这里要实现的是 reactive 和 effect，虽然我们直接在 vue core 中没有 effect 接口，但是 watch，computed 内都是使用了 effect，所以我们直接关注 effect（类似 react effect 的效果）
+
+## reactive
+
+```jsx
+const user = reactive({
+  name: "张三",
+  age: 27,
+});
+```
+
+vue2 中响应式的实现依靠对象的描述（[defineProperties](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperties)）
+
+`get`
+
+作为该属性的 getter 函数，如果没有 getter 则为`undefined`。函数返回值将被用作属性的值。**默认为  `undefined`**
+
+`set`
+
+作为属性的 setter 函数，如果没有 setter 则为`undefined`。函数将仅接受参数赋值给该属性的新值。**默认为  `undefined`**
+
+<aside>
+🛎️ 具体为啥？更快，开销更小（自己搜索下把）
+
+</aside>
+
+vue3 使用了 Proxy（Reflect, Map, Set, WeakMap, WeakSet）需要先了解一下
+
+[Proxy 和 Reflect](https://zh.javascript.info/proxy)
+
+[Map and Set（映射和集合）](https://zh.javascript.info/map-set)
+
+[WeakMap and WeakSet（弱映射和弱集合）](https://zh.javascript.info/weakmap-weakset)
+
+ok, 开始
+
+先想一下，reactive 的类型（typescript）
+
+```jsx
+function reactive<T extends object>(target: T): ReactiveTarget
+```
+
+<aside>
+🛎️ get, set 就是 Proxy 里的 handler，我们这里可以先不管（这里仅仅是一个函数值，在ProxyTarget获取属性或赋值等操作的时候，拦截函数才会执行）
+
+</aside>
+
+```jsx
+function get(target, key, receiver) {
+  // track() 做些拦截
+  return Reflect.get(target, key, receiver);
+}
+
+function set(target, key, value, receiver) {
+  // trigger() 做些拦截
+  return Reflect.set(target, key, value, receiver);
+}
+```
+
+```jsx
+function reactive(target) {
+  return new Proxy(target, {
+    get,
+    set,
+  });
+}
+```
+
+为了提高性能，我们同一个 target，没必要每次都去创建 proxy，可以搞个缓存嘛
+
+```jsx
+const rawToReactive = new WeakMap(); // taret: reactiveTarget
+const reactiveToRaw = new WeakMap(); // reactiveTarget: target
+
+function isObject(val) {
+  return val != null && typeof val === "object";
+}
+
+export function reactive(target) {
+  return createReactiveObject(target, rawToReactive, reactiveToRaw, {
+    get,
+    set,
+  });
+}
+
+function createReactiveObject(target, toProxy, toRaw, handlers) {
+  if (!isObject(target)) {
+    // 不是对象不处理
+    return target;
+  }
+  let observed = toProxy.get(target);
+  if (observed != undefined) {
+    return observed;
+  }
+  if (toRaw.has(target)) {
+    return target;
+  }
+  observed = new Proxy(target, handlers);
+  toProxy.set(target, observed);
+  toRaw.set(observed, target);
+  return observed;
+}
+```
+
+![reactive](/static/images/Xnip2022-03-06_09-01-08.jpg)
+
+其实这里并没有完成是响应，我们只是将 target 创建了一个 proxy，返回。而具体的拦截执行是 reactiveTarget 的使用
+
+```jsx
+const user = reactive({
+  name: "张三",
+  age: 27,
+});
+user.name; // get => "张三"
+user.age = user.age + 1; // set => true; 28
+```
+
+ok，这里我们先不用处理了，从数据来说，这以及是我们要的结果了，而之后的响应是和执行有关了，也就是 set，get 等 handlers 中如何拦截等操作
+
+## effect
+
+```jsx
+function effect()
+```

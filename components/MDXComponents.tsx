@@ -30,9 +30,9 @@ function Callout(props: any) {
 }
 
 const MDXComponents = {
-  Image: RoundedImage,
   a: CustomLink,
-  Callout,
+  Image: RoundedImage,
+  Callout
 };
 
 export default MDXComponents;

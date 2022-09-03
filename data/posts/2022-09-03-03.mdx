@@ -1,0 +1,12 @@
+---
+title: 文字长度
+description: 计算机如何计算文字的长度，不同的编码默认计算长度的方式是什么，如何统一
+badges: note
+publicAt: "2022-04-12"
+---
+
+关于 emoji 等高位码点的字符的长度问题，多数lib 使用 Array.from(str).length 来处理，这会处理基础字符的长度问题，也可以理解将 js utf-16的计算方式，做压缩处理，取长度内有效的字符长度。而 高级些的判断，可以使用 esnext 的 Intl 对象做国际化字符处理，但该方法目前在 stage 3 中，浏览器支持度不完全，还有就是使用 lodash.size 属性，lodash 内容实现了一个 unicodeSize 方法，可以对字符串中的 码点字符做长度计算，目前测试长度计算较准确，lodash.size 的 size 也很小。还有就是使用 https://github.com/orling/grapheme-splitter可计算长度，但该包的gzip就高达200kb，非必要情况下，不建议使用
+
+[JavaScript has a Unicode problem](https://mathiasbynens.be/notes/javascript-unicode)
+
+[Intl - JavaScript | MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Intl)

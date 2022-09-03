@@ -32,7 +32,7 @@ html {
 
 .prose .anchor:after {
   @apply text-gray-300 dark:text-gray-700;
-  content: '#';
+  content: "#";
 }
 
 .prose *:hover > .anchor {
@@ -48,4 +48,9 @@ html {
   /* Override removing top margin, causing layout shift */
   margin-top: 1.25em !important;
   margin-bottom: 1.25em !important;
+}
+
+/* highlight styles */
+.hljs {
+  background: transparent;
 }
