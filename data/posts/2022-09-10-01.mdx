@@ -1,0 +1,178 @@
+---
+title: 虚拟列表的实现
+description: 网页中大量数据的列表渲染总是会出现性能问题，我们使用虚拟的空间来表示列表中不可见的元素，从而高度还原列表的展示和交互。
+tags: Vue,Component
+publicAt: '2022-09-10'
+---
+
+前端需要展示大量的数据，数据在页面的渲染或滚动时出现明显的卡顿，或在渲染时出现的性能问题，这种情况下，你就应该做优化了
+
+- 是否可以分页
+- 是否可以限制展示数量
+- 懒加载（实际懒加载在加载项渲染多了后，也会有性能问题）
+
+### 术语
+
+![Terminology](/static/images/post-virtual-list/terminology.png)
+
+- 大小：一下内容的大小均指“宽”【水平方向滚动】或“高”【垂直方向】
+- View: 当前元素视口的大小
+- Buffer：视口边界外已加载的 DOM（前后）
+- Section: 所有已加载的 DOM（View + Buffer * 2）
+- Virtual: 虚拟元素
+
+<aside>
+🛎️ 这里仅展示了垂直方向上的滚动，水平的实际与垂直一样
+
+</aside>
+
+### 元素
+
+列表元素的情况分为两种
+
+- 大小固定的元素
+- 大小动态的元素
+
+![Fixed List](/static/images/post-virtual-list/fixed-list.png)
+
+![Dynamic List](/static/images/post-virtual-list/dynamic-list.png)
+
+我们先来想下 🤔
+
+💬 一个列表，将要展示 1000 个元素
+
+💬 在高度固定的情况下
+
+1. 每个元素的高度都是 `30px` 
+2. 准确：如果这 1000 个元素都渲染出来，那滚动条的高度应该是 `1000 * 30px`
+
+💬 在高度动态的情况下
+
+1. 每个元素的高度是不固定的，但我们可以有一个预估均值 `μ = ∑x / 30` 这个30是我们取的一个片段（Section）
+2. 猜测：如果这 1000 个元素都渲染出来，那滚动条的高度大概 `1000 * μpx`
+
+<aside>
+🛎️ 我们无法直接知道准确的滚动条高度（那需要知道所有元素的高度）
+
+</aside>
+
+🤔 既然要虚拟，我们的目的就是让用户直接看到，或马上要看到的元素挂载在DOM上（全挂载的话大量DOM会出现卡顿等性能问题），未挂载的元素（虚拟元素）我们要计算（动态情况下可估算）总高度，来用高度撑起整个列表（有了高度，滚动条才会正常）。这一切都是为了让列表在看起来，用起来（交互）状态下和正常渲染（所有DOM直接挂载）是一样的，特殊的是虚拟列表性能表现更好（几乎没有的卡顿🤪）
+
+核心就是
+
+- 让 List 撑起来（滚动条要接近正常渲染的高度，我们才成正常监听滚动事件）
+- 监听滚动事件，来调整 Section 的“起始”，“结尾”
+- 根据 Section 来调整“前置填充”，“后置填充”
+
+## Coding
+
+### HTML 结构
+
+首先来确定 HTML 要如何嵌套（我们要实现列表滚动）
+
+```html
+<div 
+	ref="wrapRef" 
+	class="overflow-y-auto" 
+	:style="{ height: wrapHeight }" 
+	@scroll.passive="handleScroll"
+>
+    <div class="InnerList" :style="paddingStyle">
+      <template v-for="item in areaList" :key="item.id">
+        <slot name="item" v-bind="item" />
+      </template>
+    </div>
+</div>
+```
+
+![html struct](/static/images/post-virtual-list/html-struct.png)
+
+- Wrapper: 我们需要限制大小（高度），也需要设置 `overflow-y: auto`，当内部元素溢出容器时，自动以滚动的方式展示
+- InnerList: 实现元素的包装，我们主要是要在这个元素上设置 `Padding`, 来模拟虚拟元素撑起的高度，这样才能让 Wrapper 的滚动条有足够的滚动空间
+- Item：要渲染的元素（这里还不完整，后面会调整 - 实际上我们需要一个 Item 的包裹元素，用来随时获取元素的高度）
+
+### 初次加载
+
+我们要选择一部分元素来展示，这里我们先用一个常量 30 表示，代表在创建 DOM 时我们仅挂载 30 个元素，其他的均为虚拟的。
+
+```tsx
+const LIST_ITEMS_LEN = 1000
+const FIRST_KEEPS = 30
+let start = 0
+let end = start + FIRST_KEEPS
+```
+
+- 列表的元素实际为 1000 个
+- 第一次仅挂载 30 个真实的 DOM
+- 这 30 个真实的 DOM 是这 1000 个中 0 ~ 29
+
+<aside>
+🛎️ 这里的重点就是我们要知道虚拟额元素的高度（来模拟填充 Inner List 的 Padding，从而让 Wrapper 的滚动条像真实列表一样有滚动空间，之后我们才可以监听它的滚动位置，来调整 Section 的展现元素，来调整前后的 Padding）
+
+</aside>
+
+**固定大小列表**
+
+当元素是固定大小的情况，就很简单了, 我们先定一个常量，来表示具体固定的高度
+
+```tsx
+const ITEM_SIZE = 30 // height: 30px
+```
+
+<aside>
+🛎️ 这里要注意一下，你是否有疑问这里每个元素中间有间隔啊，这怎么算？这里就是上面我们为什么要为 Item 包裹一个元素，而这里元素的高度实际就是包裹元素的高度，我们不去管包裹元素内具体是如何布局或填充的。
+
+</aside>
+
+```tsx
+<template v-for="item in areaList" :key="item.id">
+	<div class="item">
+    <slot name="item" v-bind="item" />
+	</div>
+</template>
+```
+
+![fixed list first](/static/images/post-virtual-list/fixed-list-first.png)
+
+- First Keeps Height: `30 * 30px`
+- Virtual Height: `(1000 - 30) * 30px`
+- Wrapper Scroll Height: `1000 * 30px`
+
+<EmbedStackblitz id="vitejs-vite-xvkb5r" openFile={['src/components/VirtualList.vue']}/>
+
+**动态高度**
+
+动态高度有两种情况
+
+- 开发时，可以估算出整个列表元素的平均高度
+- 开发时无法估算，取决于元素内容，不同的内容元素的高度也不同
+
+<aside>
+🛎️ 如果是可估算的话，我们取一个估算常量，之后就和“固定高度的一样了”。不可估算的话，我们就把第一次加载的 DOM 的平均高度算出来，作为估算常量，接着就和“固定高度一样了”。
+
+</aside>
+
+![Dynamic list first](/static/images/post-virtual-list/dynamic-list-first.png)
+
+- First Keeps Height: `∑ItemSize`
+- First Keeps Average Height: `μ = ∑ItemSize / 30`
+- Virtual Height: `(1000 - 30) * μpx`
+- Wrapper Scroll Height: `1000 * μpx`
+
+这里我们的 ItemSize 就需要用到我们元素的包裹容器的高度了, 也就是 `class="item"` 元素，有了元素高度，先把它存起来，再使用。
+
+```tsx
+<template v-for="item in areaList" :key="item.id">
+	<div class="item">
+    <slot name="item" v-bind="item" />
+	</div>
+</template>
+```
+
+<EmbedStackblitz id="vitejs-vite-bujhde" openFile={['src/components/VirtualList.vue']}/>
+
+### 滚动监听
+
+我们完成了首次的加载，滚动条也有可用虚拟空间（虽然动态高度的虚拟空间可能不准确，这个我们可以在滚动期间，不断加载元素来调正具体高度），接下来就是监听滚动条的滚动，根据滚动位置，不断调整我们的 Section，以及前后 Padding
+
+<EmbedStackblitz id="vitejs-vite-aiztla" openFile={['src/App.vue']}/>
