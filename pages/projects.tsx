@@ -6,13 +6,13 @@ import contributionProjects from "../data/projects/contribution.json";
 export default function Projects() {
   return (
     <Container>
-      <div className="space-y-12">
+      <div className="space-y-14">
         {ownerProjects.map((project, idx) => (
           <Project key={idx} {...project} />
         ))}
       </div>
-      <div className="mt-12 mb-4">贡献</div>
-      <div className="space-y-12">
+      <div className="mt-14 mb-4">贡献</div>
+      <div className="space-y-14">
         {contributionProjects.map((project, idx) => (
           <Project key={idx} {...project} />
         ))}

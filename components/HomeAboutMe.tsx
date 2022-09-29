@@ -10,7 +10,7 @@ export default function HomeAboutMe() {
           TypeScript、Vue 和 Node。
         </p>
         <p>
-          目前，我正在构建<NextLink href="/projects">开源网站应用</NextLink>
+          目前，我正在构建 <NextLink href="/projects">开源网站应用</NextLink>
           ，帮助人们更轻松使用网页工具来学习和实践所学的知识。
         </p>
         <p>

@@ -8,6 +8,6 @@ export default function PostList({ posts }: any) {
   };
 
   return (
-    <div className="space-y-5">{posts.length > 0 ? renderPosts() : <span>Empty Posts</span>}</div>
+    <div className="space-y-6">{posts.length > 0 ? renderPosts() : <span>Empty Posts</span>}</div>
   );
 }

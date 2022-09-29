@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+
+@tailwind utilities;
+@tailwind screens;
+
+/* tailwind is configured to prefer this font */
+@font-face {
+  font-family: 'Inter';
+  src: url('/static/fonts/Inter.var.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/static/fonts/JetBrainsMono-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}

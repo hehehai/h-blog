@@ -13,7 +13,7 @@ export default function PostListItem(props: any) {
           {post.data.title}
         </a>
       </Link>
-      <div className="text-sm text-slate-700 dark:text-gray-200 flex justify-content space-x-2 mt-1.5">
+      <div className="text-sm text-slate-700 dark:text-gray-200 flex justify-content space-x-3 mt-3">
         {post.data.badges && renderBadge(post.data.badges)}
         {post.data.publicAt && <div>{post.data.publicAt}</div>}
         {!!readingTime && <div>约 {readingTime} 分钟</div>}

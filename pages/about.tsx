@@ -11,7 +11,7 @@ export default function About() {
           TypeScript、Vue 和 Node。
         </p>
         <p>
-          目前，我正在构建<NextLink href="/projects">开源网站应用</NextLink>
+          目前，我正在构建 <NextLink href="/projects">开源网站应用</NextLink> 
           ，帮助人们更轻松使用网页工具来学习和实践所学的知识。
         </p>
         <p>
@@ -35,7 +35,7 @@ export default function About() {
           </a>
           。
         </p>
-        <h2 className="font-bold">我的故事</h2>
+        <h3 className="font-bold">我的故事</h3>
         <p>
           我是在大二的时候接触了 PhotoShop
           之后开始自学计算机视觉设计的知识，了解颜色、文字排版、视图结构等。大三就在一家传媒公司做兼职，成为了一名平面设计师。
