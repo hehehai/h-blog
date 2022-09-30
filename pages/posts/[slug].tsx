@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import Head from "next/head";
 import path from "path";
 import Giscus from "@giscus/react";
-import mdxComponents from "../../components/MDXComponents";
+import mdxComponents from "../../components/MDX/MDXComponents";
 import { mdxToHtml, postFilePaths, POSTS_PATH } from "../../utils/mdx";
 
 import Container from "../../components/Container";

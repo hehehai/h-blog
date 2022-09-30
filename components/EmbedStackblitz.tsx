@@ -6,7 +6,9 @@ export interface EmbedStackblitzProps {
   id: string;
 }
 
-export default function EmbedStackblitz(props: EmbedStackblitzProps & Partial<EmbedOptions>) {
+export default function EmbedStackblitz(
+  props: EmbedStackblitzProps & Partial<EmbedOptions>
+) {
   const { id, ...options } = props;
   const embedRef = useRef<HTMLDivElement>(null);
   const instanceRef = useRef<VM | null>(null);
@@ -14,11 +16,10 @@ export default function EmbedStackblitz(props: EmbedStackblitzProps & Partial<Em
   const create = useCallback(async () => {
     if (!embedRef.current || instanceRef.current) return;
     try {
-      console.log(embedRef.current);
       // Replaces the HTML element with the id of "embed"
       // with https://stackblitz.com/edit/my-cool-project embedded in an iframe,
       instanceRef.current = await sdk.embedProjectId(embedRef.current, id, {
-        height: 600,
+        height: 700,
         ...options,
       });
     } catch (e) {
@@ -30,5 +31,9 @@ export default function EmbedStackblitz(props: EmbedStackblitzProps & Partial<Em
     create();
   }, []);
 
-  return <div className="embed-stackblitz" ref={embedRef} />;
+  return (
+    <div className="embed">
+      <div className="embed-stackblitz" ref={embedRef} />
+    </div>
+  );
 }

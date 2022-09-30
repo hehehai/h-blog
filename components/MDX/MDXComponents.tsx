@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/future/image";
-import EmbedStackblitz from "./EmbedStackblitz";
+import EmbedStackblitz from "../EmbedStackblitz";
+import InlineCode from "./InlineCode";
 
 const CustomLink = (props: any) => {
   const href = props.href;
@@ -33,6 +34,7 @@ function Callout(props: any) {
 const MDXComponents = {
   a: CustomLink,
   Image: RoundedImage,
+  code: InlineCode,
   Callout,
   EmbedStackblitz
 };

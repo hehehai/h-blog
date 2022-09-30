@@ -16,18 +16,12 @@ module.exports = {
         mono: ["JetBrains Mono", ...defaultTheme.fontFamily.mono],
       },
 
-      typography: theme => {
+      typography: (theme) => {
         // some fontSizes return [size, props], others just size :/
-        const fontSize = size => {
-          const result = theme(`fontSize.${size}`)
-          return Array.isArray(result) ? result[0] : result
-        }
-
-        const breakout = {
-          marginLeft: 0,
-          marginRight: 0,
-          gridColumn: '2 / span 10',
-        }
+        const fontSize = (size) => {
+          const result = theme(`fontSize.${size}`);
+          return Array.isArray(result) ? result[0] : result;
+        };
 
         return {
           // DEFAULT only holds shared stuff and not the things that change
@@ -35,89 +29,98 @@ module.exports = {
           DEFAULT: {
             css: [
               {
-                '> *': {
-                  gridColumn: '1 / -1',
+                "> *": {
+                  gridColumn: "1 / -1",
                 },
                 p: {
                   marginTop: 0,
-                  marginBottom: theme('spacing.6'),
-                  fontSize: fontSize('lg'),
+                  marginBottom: theme("spacing.6"),
+                  fontSize: fontSize("lg"),
                 },
-                '> div': {
+                "> div": {
                   marginTop: 0,
-                  marginBottom: theme('spacing.8'),
-                  fontSize: fontSize('lg'),
+                  marginBottom: theme("spacing.8"),
+                  fontSize: fontSize("lg"),
+                },
+                code: {
+                  backgroundColor: theme("colors.gray.100"),
+                },
+                "code::before": {
+                  content: "none",
+                },
+                "code::after": {
+                  content: "none",
                 },
                 strong: {
-                  fontWeight: theme('fontWeight.medium'),
-                  fontSize: fontSize('lg'),
+                  fontWeight: theme("fontWeight.medium"),
+                  fontSize: fontSize("lg"),
                 },
-                '.embed': {
-                  position: 'relative',
-                  marginLeft: '-10vw',
-                  marginRight: '-10vw',
-                  [`@media (min-width: ${theme('screens.lg')})`]: {
-                    ...breakout,
+                ".embed": {
+                  [`@media (min-width: ${theme("screens.lg")})`]: {
+                    position: "relative",
+                    marginLeft: "-8vw",
+                    marginRight: "-8vw",
+                    gridColumn: "2 / span 10",
                   },
                 },
-                '.embed > div': {
-                  height: '0px',
+                ".embed > div": {
+                  height: "0px",
                 },
-                '.embed > div > iframe': {
-                  height: '100% !important',
-                  width: '100% !important',
-                  top: '0',
-                  left: '0',
-                  position: 'absolute',
-                  border: 'none',
-                  borderRadius: '0 !important',
-                  [`@media (min-width: ${theme('screens.lg')})`]: {
-                    borderRadius: '0.5rem !important',
+                ".embed > div > iframe": {
+                  height: "100% !important",
+                  width: "100% !important",
+                  top: "0",
+                  left: "0",
+                  position: "absolute",
+                  border: "none",
+                  borderRadius: "0 !important",
+                  [`@media (min-width: ${theme("screens.lg")})`]: {
+                    borderRadius: "0.5rem !important",
                   },
                 },
                 ul: {
                   marginTop: 0,
-                  marginBottom: theme('spacing.6'),
+                  marginBottom: theme("spacing.6"),
                 },
                 ol: {
                   marginTop: 0,
-                  marginBottom: theme('spacing.6'),
+                  marginBottom: theme("spacing.6"),
                 },
                 // tailwind doesn't stick to this property order, so we can't make 'h3' overrule 'h2, h3, h4'
-                'h1, h2': {
-                  fontSize: fontSize('3xl'),
-                  marginTop: theme('spacing.20'),
-                  marginBottom: theme('spacing.10'),
+                "h1, h2": {
+                  fontSize: fontSize("3xl"),
+                  marginTop: theme("spacing.20"),
+                  marginBottom: theme("spacing.10"),
                 },
                 h3: {
-                  fontSize: fontSize('2xl'),
-                  marginTop: theme('spacing.16'),
-                  marginBottom: theme('spacing.10'),
+                  fontSize: fontSize("2xl"),
+                  marginTop: theme("spacing.16"),
+                  marginBottom: theme("spacing.10"),
                 },
-                'h4, h5, h6': {
-                  fontSize: fontSize('xl'),
+                "h4, h5, h6": {
+                  fontSize: fontSize("xl"),
                 },
                 img: {
                   // images are wrapped in <p>, which already has margin
                   marginTop: 0,
                   marginBottom: 0,
-                  borderRadius: theme('borderRadius.lg'),
+                  borderRadius: theme("borderRadius.lg"),
                 },
                 blockquote: {
-                  fontWeight: theme('fontWeight.normal'),
-                  border: 'none',
-                  borderRadius: theme('borderRadius.lg'),
-                  padding: theme('spacing.8'),
+                  fontWeight: theme("fontWeight.normal"),
+                  border: "none",
+                  borderRadius: theme("borderRadius.lg"),
+                  padding: theme("spacing.8"),
                   marginTop: 0,
-                  marginBottom: theme('spacing.10'),
+                  marginBottom: theme("spacing.10"),
                 },
-                'blockquote > :last-child': {
+                "blockquote > :last-child": {
                   marginBottom: 0,
                 },
               },
             ],
           },
-        }
+        };
       },
     },
   },
