@@ -1,12 +1,435 @@
 ---
-title: 文字长度
-description: 计算机如何计算文字的长度，不同的编码默认计算长度的方式是什么，如何统一
+title: JavaScript 字符长度计算
+description: 计算机如何计算文字的长度，不同的编码默认计算长度的方式是什么，如何统一?
 badges: note
 publicAt: "2022-04-12"
 ---
 
-关于 emoji 等高位码点的字符的长度问题，多数lib 使用 Array.from(str).length 来处理，这会处理基础字符的长度问题，也可以理解将 js utf-16的计算方式，做压缩处理，取长度内有效的字符长度。而 高级些的判断，可以使用 esnext 的 Intl 对象做国际化字符处理，但该方法目前在 stage 3 中，浏览器支持度不完全，还有就是使用 lodash.size 属性，lodash 内容实现了一个 unicodeSize 方法，可以对字符串中的 码点字符做长度计算，目前测试长度计算较准确，lodash.size 的 size 也很小。还有就是使用 https://github.com/orling/grapheme-splitter可计算长度，但该包的gzip就高达200kb，非必要情况下，不建议使用
+### 字符长度问题
+
+在日常的开发中，经常会遇到字符长度的统计以及在将数据发送到后端后字符长度计算方式的的统一。
+
+![Twitter Textarea](/static/images/character-length-calculation/twitter-textarea.png)
+
+可以看到基本的单词字符是计算没问题的，可以在 Console 中测试以下字符的长度
+
+```javascript
+["a".length, "嗨".length, "𠮷".length, "💩".length, "🤦🏻‍♂️".length];
+// [1, 1, 2, 2, 7]
+```
+
+这一切追根溯源，都和 Unicode 有关。而 Unicode 对我们来说是一个熟悉而又陌生的词。
+
+### Unicode 基础
+
+> Unicode 是计算机科学领域里的一项业界标准。它对世界上大部分的文字系统进行了整理、编码，使得电脑可以用更为简单的方式来呈现和处理文字。 —— wiki
+
+在 Unicode 中，每一个符号都会对应一个以 U+ 的形式记录的序列 (Code points 码点) ，代码点通常格式化为十六进制数字，用零填充至少四位数字。
+
+我们这里暂时不讨论 [UTF-8](https://zh.wikipedia.org/wiki/UTF-8) 的处理，大部分引擎是支持 [UTF-16](https://zh.wikipedia.org/wiki/UTF-16) 编码的，也是我们日常字符问题的根本原因。
+
+这里不介绍具体字符长度的计算问题如何产生的了，可以参考下面的文章。
+
+- [Unicode 与前端字符编码全揭秘](https://juejin.cn/post/7070079762429034526)
+- [Unicode 字符集与字符编码](https://zhuanlan.zhihu.com/p/165524551)
+
+### Emoji 在 Unicode 中的长度
+
+```javascript
+"🤦🏻‍♂️".length; // 7
+```
+
+这里问题的关键是 [零宽连字](https://zh.wikipedia.org/wiki/%E9%9B%B6%E5%AE%BD%E8%BF%9E%E5%AD%97)
+
+| 字符序列                                                                 | 绘制结果 | 描述                   |
+| ------------------------------------------------------------------------ | -------- | ---------------------- |
+| [Man 👨] [ZWJ] [Woman 👩] [ZWJ] [Boy 👦]                                 | 👨‍👩‍👦       | 家庭：男人，女人，男孩 |
+| [Waving white flag 🏳️] [ZWJ] [Rainbow 🌈]                                | 🏳️‍🌈       | 彩虹旗                 |
+| [Runner 🏃] [Emoji Modifier Fitzpatrick Type-1-2] [ZWJ] [Female Sign ♀️] | 🏃🏻‍♀️       | 奔跑的女人：浅肤色     |
+| [Runner 🏃] [Emoji Modifier Fitzpatrick Type-6] [ZWJ] [Female Sign ♀️]   | 🏃🏿‍♀️       | 奔跑的女人：深肤色     |
+
+可以在 Console 从尝试输入以下编码
+
+```javascript
+[...👨‍👩‍👦]
+```
+
+![Emoji Length](/static/images/character-length-calculation/emoji-length.png)
+
+### JavaScript 的长度处理
+
+我们就以 `a 嗨 𠮷 💩 🤦🏻‍♂️` 这些字符作为测试，先来看下他们的 Unicode
+
+```txt
+a   1  =>  \u0061
+嗨  1  =>  \u55e8
+𠮷  2  =>  \ud842\udfb7
+💩  2  =>  \ud83d\udca9
+🤦🏻‍♂️  7  =>  \ud83e\udd26\ud83c\udffb\u200d\u2642\ufe0f
+```
+
+这里字符的长度就是来自 Unicde 码点的数量
+
+#### 使用正则匹配范围
+
+可以使用正则表达式匹配码点的范围，替换为占位字符 `_` 长度为 1
+
+```javascript
+var regexAstralSymbols = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g;
+
+function countSymbols(string) {
+  return string.replace(regexAstralSymbols, "_").length;
+}
+
+// a 嗨 𠮷 💩 🤦🏻‍♂️
+// 1 1 1 1 5
+```
+
+这里我们已经解决的了汉字和一些 Emoji 的长度问题了。也可以使用 [Punycode.js](https://github.com/mathiasbynens/punycode.js) 提供的方法。
+
+```javascript
+function countSymbols(string) {
+  return punycode.ucs2.decode(string).length;
+}
+```
+
+#### 使用字符迭代器
+
+在 ES6 中，您可以执行类似的操作 Array.from，使用字符串的迭代器将其拆分为一个字符串数组，每个字符串包含一个符号。
+
+```javascript
+function countSymbols(string) {
+  return Array.from(string).length;
+}
+
+// a 嗨 𠮷 💩 🤦🏻‍♂️
+// 1 1 1 1 5
+```
+
+或者
+
+```javascript
+function countSymbols(string) {
+  return [...string].length;
+}
+```
+
+> 这也是多数前端库的选择，如：[AntDesignVue](https://github.com/vueComponent/ant-design-vue/blob/23a83688947020342f3f579d0c334e13e3046b9c/components/input/TextArea.tsx#L259-L266)
+
+#### 更加完善的正则
+
+- [Grapheme Splitter](https://github.com/orling/grapheme-splitter) 这是 [SemiDesign](https://semi.design/zh-CN/input/input#%E8%87%AA%E5%AE%9A%E4%B9%89%E8%AE%A1%E7%AE%97%E5%AD%97%E7%AC%A6%E4%B8%B2%E9%95%BF%E5%BA%A6) 的推荐
+- [Lodash.size()](https://github.com/lodash/lodash/blob/2da024c3b4/size.js)
+
+这里主要参考 Lodash.size 里的 stringSize 判断，Grapheme Splitter 打包后有 200kb 这...
+
+```javascript
+/**
+ * Gets the number of symbols in `string`.
+ *
+ * @private
+ * @param {string} string The string to inspect.
+ * @returns {number} Returns the string size.
+ */
+function stringSize(string) {
+  return hasUnicode(string) ? unicodeSize(string) : asciiSize(string);
+}
+```
+
+🪴 判断是否有 Unicode 字符存在
+
+```javascript
+/** Used to compose unicode character classes. */
+const rsAstralRange = "\\ud800-\\udfff";
+const rsComboMarksRange = "\\u0300-\\u036f";
+const reComboHalfMarksRange = "\\ufe20-\\ufe2f";
+const rsComboSymbolsRange = "\\u20d0-\\u20ff";
+const rsComboMarksExtendedRange = "\\u1ab0-\\u1aff";
+const rsComboMarksSupplementRange = "\\u1dc0-\\u1dff";
+const rsComboRange =
+  rsComboMarksRange +
+  reComboHalfMarksRange +
+  rsComboSymbolsRange +
+  rsComboMarksExtendedRange +
+  rsComboMarksSupplementRange;
+const rsVarRange = "\\ufe0e\\ufe0f";
+
+/** Used to compose unicode capture groups. */
+const rsZWJ = "\\u200d";
+
+/** Used to detect strings with [zero-width joiners or code points from the astral planes](http://eev.ee/blog/2015/09/12/dark-corners-of-unicode/). */
+const reHasUnicode = RegExp(
+  `[${rsZWJ + rsAstralRange + rsComboRange + rsVarRange}]`
+);
+
+/**
+ * Checks if `string` contains Unicode symbols.
+ *
+ * @private
+ * @param {string} string The string to inspect.
+ * @returns {boolean} Returns `true` if a symbol is found, else `false`.
+ */
+function hasUnicode(string) {
+  return reHasUnicode.test(string);
+}
+```
+
+🪴 匹配不同范围的 Unicode 字符，每个范围计为 1
+
+```javascript
+/** Used to compose unicode character classes. */
+const rsAstralRange = "\\ud800-\\udfff";
+const rsComboMarksRange = "\\u0300-\\u036f";
+const reComboHalfMarksRange = "\\ufe20-\\ufe2f";
+const rsComboSymbolsRange = "\\u20d0-\\u20ff";
+const rsComboMarksExtendedRange = "\\u1ab0-\\u1aff";
+const rsComboMarksSupplementRange = "\\u1dc0-\\u1dff";
+const rsComboRange =
+  rsComboMarksRange +
+  reComboHalfMarksRange +
+  rsComboSymbolsRange +
+  rsComboMarksExtendedRange +
+  rsComboMarksSupplementRange;
+const rsVarRange = "\\ufe0e\\ufe0f";
+
+/** Used to compose unicode capture groups. */
+const rsAstral = `[${rsAstralRange}]`;
+const rsCombo = `[${rsComboRange}]`;
+const rsFitz = "\\ud83c[\\udffb-\\udfff]";
+const rsModifier = `(?:${rsCombo}|${rsFitz})`;
+const rsNonAstral = `[^${rsAstralRange}]`;
+const rsRegional = "(?:\\ud83c[\\udde6-\\uddff]){2}";
+const rsSurrPair = "[\\ud800-\\udbff][\\udc00-\\udfff]";
+const rsZWJ = "\\u200d";
+
+/** Used to compose unicode regexes. */
+const reOptMod = `${rsModifier}?`;
+const rsOptVar = `[${rsVarRange}]?`;
+const rsOptJoin = `(?:${rsZWJ}(?:${[rsNonAstral, rsRegional, rsSurrPair].join(
+  "|"
+)})${rsOptVar + reOptMod})*`;
+const rsSeq = rsOptVar + reOptMod + rsOptJoin;
+const rsNonAstralCombo = `${rsNonAstral}${rsCombo}?`;
+const rsSymbol = `(?:${[
+  rsNonAstralCombo,
+  rsCombo,
+  rsRegional,
+  rsSurrPair,
+  rsAstral,
+].join("|")})`;
+
+/** Used to match [string symbols](https://mathiasbynens.be/notes/javascript-unicode). */
+const reUnicode = RegExp(`${rsFitz}(?=${rsFitz})|${rsSymbol + rsSeq}`, "g");
+
+/**
+ * Gets the size of a Unicode `string`.
+ *
+ * @private
+ * @param {string} string The string inspect.
+ * @returns {number} Returns the string size.
+ */
+function unicodeSize(string) {
+  let result = (reUnicode.lastIndex = 0);
+  while (reUnicode.test(string)) {
+    ++result;
+  }
+  return result;
+}
+```
+
+```javascript
+/**
+ * Gets the size of an ASCII `string`.
+ *
+ * @private
+ * @param {string} string The string inspect.
+ * @returns {number} Returns the string size.
+ */
+function asciiSize({ length }) {
+  return length;
+}
+```
+
+简化的核心代码，其实就是之前的正则范围匹配，但这里更加全面了，不同文字或 Emoji Unicode 范围边界。
+
+```javascript
+const hasUnicodeRex =
+  /[\u200d\ud800-\udfff\u0300-\u036f\ufe20-\ufe2f\u20d0-\u20ff\u1ab0-\u1aff\u1dc0-\u1dff\ufe0e\ufe0f]/;
+
+const reUnicodeRex =
+  /\ud83c[\udffb-\udfff](?=\ud83c[\udffb-\udfff])|(?:[^\ud800-\udfff][\u0300-\u036f\ufe20-\ufe2f\u20d0-\u20ff\u1ab0-\u1aff\u1dc0-\u1dff]?|[\u0300-\u036f\ufe20-\ufe2f\u20d0-\u20ff\u1ab0-\u1aff\u1dc0-\u1dff]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\ud800-\udfff])[\ufe0e\ufe0f]?(?:[\u0300-\u036f\ufe20-\ufe2f\u20d0-\u20ff\u1ab0-\u1aff\u1dc0-\u1dff]|\ud83c[\udffb-\udfff])?(?:\u200d(?:[^\ud800-\udfff]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff])[\ufe0e\ufe0f]?(?:[\u0300-\u036f\ufe20-\ufe2f\u20d0-\u20ff\u1ab0-\u1aff\u1dc0-\u1dff]|\ud83c[\udffb-\udfff])?)*/g;
+
+function stringSize(value: string) {
+  if (hasUnicodeRex.test(value)) {
+    let result = (reUnicodeRex.lastIndex = 0);
+    while (reUnicodeRex.test(value)) {
+      ++result;
+    }
+    return result;
+  }
+
+  return value.length;
+}
+
+// a 嗨 𠮷 💩 🤦🏻‍♂️
+// 1 1 1 1 1
+```
+
+- [Unicode 字符边界算法](http://www.unicode.org/reports/tr29/#Table_Sample_Grapheme_Clusters)
+- [ES2015 中的 Unicode 感知正则表达式](https://mathiasbynens.be/notes/es6-unicode-regex)
+
+### 正则匹配
+
+在上面的长度计算中，其实已经有正则匹配的内容了，这里要单独介绍的是 ES6 对正则表达式添加了 u 修饰符，含义为“Unicode 模式”，用来正确处理大于\uFFFF 的 Unicode 字符。也就是说，会正确处理四个字节的 UTF-16 编码。
+
+```javascript
+// 💩  2  =>  \ud83d\udca9
+
+/^\ud83d/u.test("\ud83d\udca9"); // false
+/^\ud83d/.test("\ud83d\udca9"); // true
+```
+
+上面代码中，\ud83d\udca9 是一个四个字节的 UTF-16 编码，代表一个字符。但是，ES5 不支持四个字节的 UTF-16 编码，会将其识别为两个字符，导致第二行代码结果为 true。加了 u 修饰符以后，ES6 就会识别其为一个字符，所以第一行代码结果为 false。
+
+一旦加上 u 修饰符号，就会修改下面这些正则表达式的行为。
+
+（1）点字符
+
+点（.）字符在正则表达式中，含义是除了换行符以外的任意单个字符。对于码点大于 0xFFFF 的 Unicode 字符，点字符不能识别，必须加上 u 修饰符。
+
+```javascript
+var s = '𠮷';
+
+/^.$/.test(s) // false
+/^.$/u.test(s) // true
+```
+
+上面代码表示，如果不添加 u 修饰符，正则表达式就会认为字符串为两个字符，从而匹配失败。
+
+（2）Unicode 字符表示法
+
+ES6 新增了使用大括号表示 Unicode 字符，这种表示法在正则表达式中必须加上 u 修饰符，才能识别当中的大括号，否则会被解读为量词。
+
+```javascript
+/\u{61}/.test("a") / // false
+  a /
+  u.test("a") / // true
+  𠮷 /
+  u.test("𠮷"); // true
+```
+
+上面代码表示，如果不加 u 修饰符，正则表达式无法识别\u{61}这种表示法，只会认为这匹配 61 个连续的 u。
+
+（3）量词
+
+使用 u 修饰符后，所有量词都会正确识别码点大于 0xFFFF 的 Unicode 字符。
+
+```javascript
+/a{2}/.test('aa') // true
+/a{2}/u.test('aa') // true
+/𠮷{2}/.test('𠮷𠮷') // false
+/𠮷{2}/u.test('𠮷𠮷') // true
+```
+
+（4）预定义模式
+
+u 修饰符也影响到预定义模式，能否正确识别码点大于 0xFFFF 的 Unicode 字符。
+
+```javascript
+/^\S$/.test('𠮷') // false
+/^\S$/u.test('𠮷') // true
+```
+
+上面代码的\S 是预定义模式，匹配所有非空白字符。只有加了 u 修饰符，它才能正确匹配码点大于 0xFFFF 的 Unicode 字符。
+
+利用这一点，可以写出一个正确返回字符串长度的函数。
+
+```javascript
+function codePointLength(text) {
+  var result = text.match(/[\s\S]/gu);
+  return result ? result.length : 0;
+}
+
+var s = "𠮷𠮷";
+
+s.length; // 4
+codePointLength(s); // 2
+```
+
+（5）i 修饰符
+
+有些 Unicode 字符的编码不同，但是字型很相近，比如，\u004B 与\u212A 都是大写的 K。
+
+```javascript
+/[a-z]/i.test("\u212A") / // false
+  [a - z] /
+  iu.test("\u212A"); // true
+```
+
+上面代码中，不加 u 修饰符，就无法识别非规范的 K 字符。
+
+（6）转义
+
+没有 u 修饰符的情况下，正则中没有定义的转义（如逗号的转义\,）无效，而在 u 模式会报错。
+
+```javascript
+/\,/ // /\,/
+/\,/u // 报错
+```
+
+上面代码中，没有 u 修饰符时，逗号前面的反斜杠是无效的，加了 u 修饰符就报错。
+
+- [ECMAScript 6 入门 - 正则 u 修饰符](https://es6.ruanyifeng.com/#docs/regex#u-%E4%BF%AE%E9%A5%B0%E7%AC%A6)
+- [正则表达式中的 Unicode 问题](https://mathiasbynens.be/notes/javascript-unicode#regex)
+
+### 遍历
+
+在 ECMAScript 5 中，您必须编写大量边界匹配代码来处理多码点字符：
+
+```javascript
+function getSymbols(string) {
+  var index = 0;
+  var length = string.length;
+  var output = [];
+  for (; index < length; ++index) {
+    var charCode = string.charCodeAt(index);
+    if (charCode >= 0xd800 && charCode <= 0xdbff) {
+      charCode = string.charCodeAt(index + 1);
+      if (charCode >= 0xdc00 && charCode <= 0xdfff) {
+        output.push(string.slice(index, index + 2));
+        ++index;
+        continue;
+      }
+    }
+    output.push(string.charAt(index));
+  }
+  return output;
+}
+
+var symbols = getSymbols("💩");
+symbols.forEach(function (symbol) {
+  assert(symbol == "💩");
+});
+```
+
+或者，您可以使用正则表达式，var regexCodePoint = /[^\ud800-\udfff]|[\uD800-\uDBFF][\udc00-\udfff]|[\uD800-\uDFFF]/g;并遍历匹配项。
+
+在 ECMAScript 6 中，您可以简单地使用 for…of. 字符串迭代器处理整个符号而不是代理对。
+
+```javascript
+for (const symbol of "💩") {
+  assert(symbol == "💩");
+}
+```
+
+### 参考
 
 [JavaScript has a Unicode problem](https://mathiasbynens.be/notes/javascript-unicode)
 
 [Intl - JavaScript | MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Intl)
+
+[Unicode与JavaScript详解](https://www.ruanyifeng.com/blog/2014/12/unicode.html)
+
+[Unicode in JavaScript](https://flaviocopes.com/javascript-unicode/)
+
+[探索emoji 🤦🏻‍♂️ 字符串长度之谜](https://juejin.cn/post/6945801630990204964#heading-0)
