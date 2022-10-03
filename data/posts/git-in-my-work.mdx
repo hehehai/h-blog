@@ -2,7 +2,957 @@
 title: 我工作中的 Git
 description: 目前在开发中 Git 作为版本管理是必不可少的，这篇文章我们就记录我再工作的 Git 使用。
 tags: 工具,Git
+badges: note
 publicAt: '2022-09-29'
 ---
 
-## 安装
+### 配置
+#### 用户信息
+
+该信息会作为 commit 的提议 author（作者）
+
+```bash
+git config --global user.name "xxx"
+git config --global user.email "xxx@xx.com"
+```
+
+- `--global` 用于设置全局 git 配置
+
+#### 显示当前系统的 config
+
+```bash
+git config --list
+```
+
+![My Git Config](/static/images/git-in-my-work/my-git-config.png)
+
+- `--show-origin`: 显示配置所在的文件
+
+![My Git Config List](/static/images/git-in-my-work/my-git-config-list.png)
+
+#### git 默认处理的编辑器
+
+```bash
+git config --global core.editor vim
+```
+
+- 默认是 vim
+- 可以使用 code, emacs
+
+#### 配置项删除
+
+```bash
+git config --global --unset user.name
+```
+
+或者直接编辑 `vim ~/.gitconfig`
+
+#### git 代理配置
+
+```bash
+git config --global https.proxy http://127.0.0.1:1080
+
+git config --global https.proxy https://127.0.0.1:1080
+
+git config --global --unset http.proxy
+
+git config --global --unset https.proxy
+
+npm config delete proxy
+```
+
+目前在 Windows 10 上使用 Clash
+
+```bash
+git config --global http.proxy socks5://127.0.0.1:7890
+git config --global https.proxy socks5://127.0.0.1:7890
+```
+
+如果只想对某个地址进行代理，比如对 `github.com` 代理，就这样：
+
+```bash
+git config --global http.https://github.com.proxy socks5://127.0.0.1:7890
+```
+
+#### 别名
+
+它的基本用法是  `git config --global alias.<简化的字符> 原始命令`
+
+如下面的例子：
+
+```bash
+$ git config --global alias.co checkout
+$ git config --global alias.ci commit
+$ git config --global alias.br branch
+```
+
+如果你在使用 [Oh My Zsh](https://github.com/ohmyzsh/ohmyzsh)，那么就可以配置内容的 [Git](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/git) 插件，支持很多简写的 Git 命令别名。
+
+### 远程仓库配置
+#### ssh key 生成
+
+```bash
+ssh-keygen -t rsa -C "email address"
+```
+
+![Generate git ssh key](/static/images/git-in-my-work/generate-git-ssh-key.png)
+
+#### ssh key 查看
+
+ssh 通常在 `.ssh` 文件夹中
+
+通过 `cd ~/.ssh` 进入文件夹，`ls` 查看文件
+
+![Git ssh file list](/static/images/git-in-my-work/git-ssh-file-list.png)
+
+#### 多个 key 管理
+
+情况：`gitlib`, `github`, `coding`, `gitee` 等
+
+管理文件 `vim ~/.ssh/config`
+
+```tsx
+# github
+Host github.com
+HostName github.com
+PreferredAuthentications publickey
+IdentityFile ~/.ssh/id_rsa_github
+
+# oschina
+Host gitee.com
+HostName gitee.com
+PreferredAuthentications publickey
+IdentityFile ~/.ssh/id_rsa_gitee
+
+# IP
+Host 67.101.99.102
+  HostName 67.101.99.102
+  User root
+
+# 其它
+...
+```
+
+#### 测试 key 是否有效（某个 domain）
+
+`ssh -T [git@github.com](mailto:git@github.com)`
+
+#### 报错处理
+
+删除 `~/.ssh` 文件下的 `known_host` 后，重试
+
+### .gitignore
+
+文件 `.gitignore` 的格式规范如下：
+
+- 所有空行或者以 `#` 开头的行都会被 Git 忽略。
+- 可以使用标准的 glob 模式匹配，它会递归地应用在整个工作区中。
+- 匹配模式可以以（`/`）开头防止递归。
+- 匹配模式可以以（`/`）结尾指定目录。
+- 要忽略指定模式以外的文件或目录，可以在模式前加上叹号（`!`）取反。
+
+所谓的 glob 模式是指 shell 所使用的简化了的正则表达式。 星号（`*`）匹配零个或多个任意字符；`[abc]` 匹配任何一个列在方括号中的字符 （这个例子要么匹配一个 a，要么匹配一个 b，要么匹配一个 c）； 问号（`?`）只匹配一个任意字符；如果在方括号中使用短划线分隔两个字符， 表示所有在这两个字符范围内的都可以匹配（比如 `[0-9]` 表示匹配所有 0 到 9 的数字）。 使用两个星号（`**`）表示匹配任意中间目录，比如 `a/**/z` 可以匹配 `a/z` 、 `a/b/z` 或 `a/b/c/z` 等。
+
+我们再看一个 `.gitignore` 文件的例子：
+
+```bash
+# 忽略所有的 .a 文件
+*.a
+
+# 但跟踪所有的 lib.a，即便你在前面忽略了 .a 文件
+!lib.a
+
+# 只忽略当前目录下的 TODO 文件，而不忽略 subdir/TODO
+/TODO
+
+# 忽略任何目录下名为 build 的文件夹
+build/
+
+# 忽略 doc/notes.txt，但不忽略 doc/server/arch.txt
+doc/*.txt
+
+# 忽略 doc/ 目录及其所有子目录下的 .pdf 文件
+doc/**/*.pdf
+```
+
+[gitignore.io](https://www.toptal.com/developers/gitignore)
+
+### 基础
+
+#### git status
+
+```bash
+git status
+git status -s
+```
+
+- 显示已跟踪文件的状态，以及未跟踪文件的信息
+- `-s`: 信息简写
+
+```bash
+$ git status -s
+ M README
+MM Rakefile
+A  lib/git.rb
+M  lib/simplegit.rb
+?? LICENSE.txt
+```
+
+![Git status short](/static/images/git-in-my-work/git-status-s.png)
+
+新添加的未跟踪文件前面有 `??` 标记，新添加到暂存区中的文件前面有 `A` 标记，修改过的文件前面有 `M` 标记。 输出中有两栏，左栏指明了暂存区的状态，右栏指明了工作区的状态。
+
+#### git add
+
+```bash
+git add filePath
+git add .
+```
+
+- filePath: `a.js`
+- `.` ： 暂存工作区所有可暂存的文件
+
+#### git reset
+
+```bash
+git reset HEAD^
+git reset --mixid HEAD^
+git reset --soft HEAD^
+git reset --hard HEAD^
+```
+
+- 空：取消上次提交，取消暂存（默认）
+- `—mixed`: 取消上次提交，也取消暂存（默认）
+- `—soft`: 取消上次提交，但保留暂存
+- `—hard`: 取消上次提交，取消暂存，删除工作区的变动
+
+#### git commit
+
+```bash
+git commit
+git commit -m
+git commit -am
+git commit --amend
+```
+
+- 空：会打开 git 默认的编辑器，来编辑 message
+- `-m`: 简单 message，无法换行
+- `-am`: `git add .` + `git commit -m`
+- `-amend`: 修改上一次提交的 commit（❗️会重新生成 Commit HASH）
+
+#### git pull
+
+```bash
+git pull <remote-origin> <remote-branch>:<lcoal-branch>
+git pull --rebase <remote-origin> <remote-branch>:<local-branch>
+```
+
+- 拉取远程分支到本地分支 （`git fetch` + `git merge`）
+- 拉取远程分支到本地分支，且使用 rebase 合并 commit
+
+#### git fetch
+
+```bash
+git fetch <remote-origin> <remote-branch>
+git fetch --all
+```
+
+- 拉取远程分支到本地（同步到本地），拉取后不会合并（`git merge`）
+- 拉取全部远程分支到本地
+
+#### git branch
+
+```bash
+git branch <branch-name>
+git branch
+git branch -r
+git branch -a
+git branch -D <branch-name>
+git branch -m <branch-name> <new-branch-name>
+```
+
+- `<branch-name>`: 分支名称
+- 空: 本地分支
+- `-r`: 远程分支
+- `-a`: 全部分支（本地，远程）
+- `-D`: 删除分支
+- `-m`: 重命名分支
+
+#### git remote
+
+```bash
+git remote
+git remote -v
+git remote add <remote-name> <remote-url>
+git remote show <remote-name>
+git remote rename <remote-name> <new-remote-name>
+git remote remove <remote-name>
+```
+
+- 空：远程仓库名称
+- `-v`：远程仓库列表（名称，地址，执行权限-fetch, push）
+- `add <remote-name> <remote-url>`: 添加远程仓库及仓库地址
+- `show <remote-name>`: 显示远程仓库的状态及信息
+
+![Git remote show](/static/images/git-in-my-work/git-remote-show.png)
+
+- `rename <remote-name> <new-remote-name>`： 远程仓库重命名
+- `remove <remote-name>`: 删除远程仓库
+
+#### git stash
+
+代码贮藏，通常用于保存暂时不需要提交到暂存库的代码更改
+
+```bash
+git stash
+git stash save <message>
+git stash list
+git stash show
+git stash apply <index>
+git stash drop <index>
+git stash clear
+git stash --keep-index
+git stash branch testchanges
+```
+
+- 空：暂存文件
+- `save <message>`: 暂存文件，且设置说明信息
+- `list`: 暂存列表
+- `show`：暂存差异信息
+- `apply <index>`: 将暂存回复，且不会删除暂存（index 是可选的）[index 格式 `stash@{index}`]
+- `drop <index>`: 删除某个贮藏
+- `clear`：删除全部
+- `—keep-index`: 仅贮藏没有在暂存库的文件
+- `branch <branch-name>`: 从贮藏创建分支
+
+#### git tag
+
+**打标签**
+
+像其他版本控制系统（VCS）一样，Git 可以给仓库历史中的某一个提交打上标签，以示重要。 比较有代表性的是人们会使用这个功能来标记发布结点（ `v1.0` 、 `v2.0` 等等）。 在本节中，你将会学习如何列出已有的标签、如何创建和删除新的标签、以及不同类型的标签分别是什么。
+
+**列出标签**
+
+在 Git 中列出已有的标签非常简单，只需要输入 `git tag` （可带上可选的 `-l` 选项 `--list`）：
+
+```bash
+$ git tag
+v1.0
+v2.0
+```
+
+这个命令以字母顺序列出标签，但是它们显示的顺序并不重要。
+
+你也可以按照特定的模式查找标签。 例如，Git 自身的源代码仓库包含标签的数量超过 500 个。 如果只对 1.8.5 系列感兴趣，可以运行：
+
+```bash
+$ git tag -l "v1.8.5*"
+v1.8.5
+v1.8.5-rc0
+v1.8.5-rc1
+v1.8.5-rc2
+v1.8.5-rc3
+v1.8.5.1
+v1.8.5.2
+v1.8.5.3
+v1.8.5.4
+v1.8.5.5
+```
+
+**创建标签**
+
+Git 支持两种标签：轻量标签（lightweight）与附注标签（annotated）。
+
+轻量标签很像一个不会改变的分支——它只是某个特定提交的引用。
+
+而附注标签是存储在 Git 数据库中的一个完整对象， 它们是可以被校验的，其中包含打标签者的名字、电子邮件地址、日期时间， 此外还有一个标签信息，并且可以使用 GNU Privacy Guard （GPG）签名并验证。 通常会建议创建附注标签，这样你可以拥有以上所有信息。但是如果你只是想用一个临时的标签， 或者因为某些原因不想要保存这些信息，那么也可以用轻量标签。
+
+**附注标签**
+
+在 Git 中创建附注标签十分简单。 最简单的方式是当你在运行 `tag` 命令时指定 `-a` 选项：
+
+```bash
+$ git tag -a v1.4 -m "my version 1.4"
+$ git tag
+v0.1
+v1.3
+v1.4
+```
+
+- `m` 选项指定了一条将会存储在标签中的信息。 如果没有为附注标签指定一条信息，Git 会启动编辑器要求你输入信息。
+
+通过使用 `git show` 命令可以看到标签信息和与之对应的提交信息：
+
+```bash
+$ git show v1.4
+tag v1.4
+Tagger: Ben Straub <ben@straub.cc>
+Date:   Sat May 3 20:19:12 2014 -0700
+
+my version 1.4
+
+commit ca82a6dff817ec66f44342007202690a93763949
+Author: Scott Chacon <schacon@gee-mail.com>
+Date:   Mon Mar 17 21:52:11 2008 -0700
+
+    changed the version number
+```
+
+输出显示了打标签者的信息、打标签的日期时间、附注信息，然后显示具体的提交信息。
+
+**轻量标签**
+
+另一种给提交打标签的方式是使用轻量标签。 轻量标签本质上是将提交校验和存储到一个文件中——没有保存任何其他信息。 创建轻量标签，不需要使用 `-a`、`-s` 或 `-m` 选项，只需要提供标签名字：
+
+```bash
+$ git tag v1.4-lw
+$ git tag
+v0.1
+v1.3
+v1.4
+v1.4-lw
+v1.5
+```
+
+这时，如果在标签上运行 `git show`，你不会看到额外的标签信息。 命令只会显示出提交信息：
+
+```bash
+$ git show v1.4-lw
+commit ca82a6dff817ec66f44342007202690a93763949
+Author: Scott Chacon <schacon@gee-mail.com>
+Date:   Mon Mar 17 21:52:11 2008 -0700
+
+    changed the version number
+```
+
+**后期打标签**
+
+你也可以对过去的提交打标签。 假设提交历史是这样的：
+
+```bash
+$ git log --pretty=oneline
+15027957951b64cf874c3557a0f3547bd83b3ff6 Merge branch 'experiment'
+a6b4c97498bd301d84096da251c98a07c7723e65 beginning write support
+0d52aaab4479697da7686c15f77a3d64d9165190 one more thing
+6d52a271eda8725415634dd79daabbc4d9b6008e Merge branch 'experiment'
+0b7434d86859cc7b8c3d5e1dddfed66ff742fcbc added a commit function
+4682c3261057305bdd616e23b64b0857d832627b added a todo file
+166ae0c4d3f420721acbb115cc33848dfcc2121a started write support
+9fceb02d0ae598e95dc970b74767f19372d61af8 updated rakefile
+964f16d36dfccde844893cac5b347e7b3d44abbc commit the todo
+8a5cbc430f1a9c3d00faaeffd07798508422908a updated readme
+```
+
+现在，假设在 v1.2 时你忘记给项目打标签，也就是在 “updated rakefile” 提交。 你可以在之后补上标签。 要在那个提交上打标签，你需要在命令的末尾指定提交的校验和（或部分校验和）：
+
+```bash
+$ git tag -a v1.2 9fceb02
+```
+
+可以看到你已经在那次提交上打上标签了：
+
+```bash
+$ git tag
+v0.1
+v1.2
+v1.3
+v1.4
+v1.4-lw
+v1.5
+
+$ git show v1.2
+tag v1.2
+Tagger: Scott Chacon <schacon@gee-mail.com>
+Date:   Mon Feb 9 15:32:16 2009 -0800
+
+version 1.2
+commit 9fceb02d0ae598e95dc970b74767f19372d61af8
+Author: Magnus Chacon <mchacon@gee-mail.com>
+Date:   Sun Apr 27 20:43:35 2008 -0700
+
+    updated rakefile
+...
+```
+
+**共享标签**
+
+默认情况下，`git push` 命令并不会传送标签到远程仓库服务器上。 在创建完标签后你必须显式地推送标签到共享服务器上。 这个过程就像共享远程分支一样——你可以运行 `git push origin <tagname>`。
+
+```bash
+$ git push origin v1.5
+Counting objects: 14, done.
+Delta compression using up to 8 threads.
+Compressing objects: 100% (12/12), done.
+Writing objects: 100% (14/14), 2.05 KiB | 0 bytes/s, done.
+Total 14 (delta 3), reused 0 (delta 0)
+To git@github.com:schacon/simplegit.git
+ * [new tag]         v1.5 -> v1.5
+```
+
+如果想要一次性推送很多标签，也可以使用带有 `--tags` 选项的 `git push` 命令。 这将会把所有不在远程仓库服务器上的标签全部传送到那里。
+
+```bash
+$ git push origin --tags
+Counting objects: 1, done.
+Writing objects: 100% (1/1), 160 bytes | 0 bytes/s, done.
+Total 1 (delta 0), reused 0 (delta 0)
+To git@github.com:schacon/simplegit.git
+ * [new tag]         v1.4 -> v1.4
+ * [new tag]         v1.4-lw -> v1.4-lw
+```
+
+现在，当其他人从仓库中克隆或拉取，他们也能得到你的那些标签。
+
+**删除标签**
+
+要删除掉你本地仓库上的标签，可以使用命令 `git tag -d <tagname>`。 例如，可以使用以下命令删除一个轻量标签：
+
+```bash
+$ git tag -d v1.4-lw
+Deleted tag 'v1.4-lw' (was e7d5add)
+```
+
+注意上述命令并不会从任何远程仓库中移除这个标签，你必须用 `git push <remote> :refs/tags/<tagname>` 来更新你的远程仓库：
+
+第一种变体是 `git push <remote> :refs/tags/<tagname>` ：
+
+```bash
+$ git push origin :refs/tags/v1.4-lw
+To /git@github.com:schacon/simplegit.git
+ - [deleted]         v1.4-lw
+```
+
+上面这种操作的含义是，将冒号前面的空值推送到远程标签名，从而高效地删除它。
+
+第二种更直观的删除远程标签的方式是：
+
+```bash
+$ git push origin --delete <tagname>
+```
+
+**检出标签**
+
+如果你想查看某个标签所指向的文件版本，可以使用 `git checkout` 命令， 虽然这会使你的仓库处于“分离头指针（detached HEAD）”的状态——这个状态有些不好的副作用：
+
+```bash
+$ git checkout 2.0.0
+Note: checking out '2.0.0'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by performing another checkout.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -b with the checkout command again. Example:
+
+  git checkout -b <new-branch>
+
+HEAD is now at 99ada87... Merge pull request #89 from schacon/appendix-final
+
+$ git checkout 2.0-beta-0.1
+Previous HEAD position was 99ada87... Merge pull request #89 from schacon/appendix-final
+HEAD is now at df3f601... add atlas.json and cover image
+```
+
+在“分离头指针”状态下，如果你做了某些更改然后提交它们，标签不会发生变化， 但你的新提交将不属于任何分支，并且将无法访问，除非通过确切的提交哈希才能访问。 因此，如果你需要进行更改，比如你要修复旧版本中的错误，那么通常需要创建一个新分支：
+
+```bash
+$ git checkout -b version2 v2.0.0
+Switched to a new branch 'version2'
+```
+
+如果在这之后又进行了一次提交，`version2` 分支就会因为这个改动向前移动， 此时它就会和 `v2.0.0` 标签稍微有些不同，这时就要当心了。
+
+<aside>
+⛔ 不要在 tag 上直接修改，要从 tag 检出分支处理
+</aside>
+
+`git push` 推送两种标签 使用 `git push <remote> --tags` 推送标签并不会区分轻量标签和附注标签， 没有简单的选项能够让你只选择推送一种标签。
+
+#### 移除文件以及取消对文件的跟踪
+
+**移除文件**
+
+要从 Git 中移除某个文件，就必须要从已跟踪文件清单中移除（确切地说，是从暂存区域移除），然后提交。可以用 git rm 命令完成此项工作，并连带从工作目录中删除指定的文件，这样以后就不会出现在未跟踪文件清单中了。
+
+如果只是简单地从工作目录中手工删除文件，运行 `git status` 时就会在 “Changes not staged for commit” 部分（也就是未暂存清单）看到：
+
+```bash
+$ rm grit.gemspec
+$ git status
+On branch master
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+ 
+        deleted:    grit.gemspec
+ 
+no changes added to commit (use "git add" and/or "git commit -a")
+```
+
+然后再运行 `git rm` 记录此次移除文件的操作：
+
+```bash
+$ git rm grit.gemspec
+rm 'grit.gemspec'
+$ git status
+On branch master
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+ 
+        deleted:    grit.gemspec
+```
+
+最后提交的时候，该文件就不再纳入版本管理了。如果删除之前修改过并且已经放到暂存区域的话，则必须要用强制删除选项 `-f`（译注：即 force 的首字母），以防误删除文件后丢失修改的内容。
+
+**取消对文件的追踪**
+
+另外一种情况是，我们想把文件从 Git 仓库中删除（亦即从暂存区域移除），但仍然希望保留在当前工作目录中。换句话说，仅是从跟踪清单中删除。比如一些大型日志文件或者一堆 .a 编译文件，不小心纳入仓库后，要移除跟踪但不删除文件，以便稍后在 `.gitignore` 文件中补上，用 `--cached` 选项即可：
+
+```bash
+$ git rm --cached readme.txt
+```
+
+后面可以列出文件或者目录的名字，也可以使用 [glob 模式](https://github.com/isaacs/node-glob)。比方说：
+
+```bash
+$ git rm log/\*.log
+```
+
+注意到星号 `*` 之前的反斜杠 `\`，因为 Git 有它自己的文件模式扩展匹配方式，所以我们不用 shell 来帮忙展开（译注：实际上不加反斜杠也可以运行，只不过按照 shell 扩展的话，仅仅删除指定目录下的文件而不会递归匹配。上面的例子本来就指定了目录，所以效果等同，但下面的例子就会用递归方式匹配，所以必须加反斜杠。）。此命令删除所有 `log/` 目录下扩展名为 `.log` 的文件。类似的比如：
+
+```bash
+$ git rm \*~
+```
+
+会递归删除当前目录及其子目录中所有 ~ 结尾的文件。
+
+取消对文件的跟踪还有一个命令：`git update-index --assume-unchanged <取消跟踪的文件>`
+注：该命令只能取消提交到暂存区之前的文件，可以先用`git reset <文件名>`将暂存区的文件回退到暂存区之前，然后再取消跟踪。
+
+#### 放弃修改，放弃增加文件操作
+
+**放弃修改**
+
+本地修改了一些文件 (并没有使用 `git add` 到暂存区)，想放弃修改
+
+单个文件/文件夹：
+
+```bash
+git checkout -- filename
+```
+
+所有文件/文件夹：
+
+```bash
+git checkout .
+```
+
+**放弃修改（含文件操作）**
+
+本地新增了一些文件 (并没有 `git add` 到暂存区)，想放弃修改
+
+单个文件/文件夹：
+
+```bash
+rm  -rf filename
+```
+
+所有文件：
+
+```bash
+git clean -xdf
+```
+
+<aside>
+删除新增的文件，如果文件已经已经 `git add` 到暂存区，并不会删除！
+</aside>
+
+所有文件和文件夹：
+
+```bash
+git clean -xdff
+```
+
+<aside>
+💣 本命令删除新增的文件和文件夹，如果文件已经已经 `git add` 到暂存区，并不会删除！
+</aside>
+
+**放弃暂寸**
+
+本地修改/新增了一些文件，已经 `git add` 到暂存区，想放弃修改
+
+单个文件/文件夹：
+
+```bash
+git reset HEAD filename
+```
+
+所有文件/文件夹：
+
+```bash
+git reset HEAD .
+```
+
+**放弃提交**
+
+本地通过 `git add` 和 `git commit` 后，想要撤销此次 `commit`
+
+撤销 `commit`, 同时保留该 `commit` 修改：
+
+```bash
+git reset commit_id
+```
+
+这个 `commit_id` 是你想要回到的那个节点，可以通过 `git log` 查看，可以只选前 6 位。
+
+<aside>
+⭐ 撤销之后，你所做的已经 `commit` 的修改还在工作区！
+</aside>
+
+撤销 `commit`, 同时本地删除该 `commit` 修改：
+
+```bash
+git reset --hard commit_id
+```
+
+这个 `commit_id` 是你想要回到的那个节点，可以通过 `git log` 查看，可以只选前6位
+
+<aside>
+💣 撤销之后，你所做的已经 `commit` 的修改将会清除，仍在工作区/暂存区的代码也将会清除！
+</aside>
+
+### HEAD ~ ^
+
+HEAD 就是当前活跃分支的游标。
+
+不过 HEAD 并非只能指向分支的最顶端（时间节点距今最近的那个），实际上它可以指向任何一个节点，它就是 Git内部用来追踪当前位置的东东。
+
+#### 区别
+
+在 HEAD 后面加 `^` 或者 `~` 其实就是以 HEAD 为基准，来表示之前的版本，因为 HEAD 被认为是当前分支的最新版本，那么 `HEAD~` 和 `HEAD^` 都是指次新版本，也就是倒数第二个版本，`HEAD~~` 和 `HEAD^^` 都是指次次新版本，也就是倒数第三个版本，以此类推。
+
+### 场景
+
+#### 使用 rebase 的流程
+
+`rebase` 是很好的工具，不过我其实反对合进 `master` 分支的时候做 `rebase` 或者 `fast-forward` ，我喜欢的方式是
+
+1. 待合并的分支 `rebase` 到 `master`
+2. `master merge` 待合并的分支（禁用 `fast-forward` ）
+
+这样最大的好处是能清楚看到每次 `merge` 到 `master` 分支的界限在哪里，万一出问题了，可以把整个 `merge` 都 `revert` 掉。最后的 `graph` 上大体是每次分出来一个 `branch` 然后马上合回来的形状，也没有比一条单链差很多。另外，`merge` 的 `commit` 自己可以有 `message`，如果发生了 `conflict` 也可以记录下来。
+
+当然如果这次合并的 `branch` 一共只有一个 `commit` 那么直接 `fast-forward` 也没有什么不可以的。
+
+反对滥用 `amend` 和 `squash`（以及 `soft reset`），这才是爱慕虚荣的表现，除了引入莫名其妙的 `conflict` 以外没有任何积极意义。保留每次提交的细粒度历史版本对于合并、回滚是非常重要的。比如说开发完成了一个新功能，突然发现其中对某个文件的某步修改是错误的，需要撤销，如果已经 `squash` 了那就难找了，可能这个文件被前后修改过很多遍，很难分离出来某一批次的修改了。再比如说 `cherry-pick`，可能`master` 分支上发现了一个重大的 `bug`，这个 `commit` 需要 `cherry-pick` 到各个版本分支和开发分支上，如果这个 `cherry-pick` 以后被 `squash` 掉了，再合并的时候就会出现 `conflict`。仅仅当很少的情况，比如这个 `commit` 仅仅是修复上个 `commit` 中的提交错误或低级失误的时候，用 `amend` 和 `squash` 有一定意义（去掉一堆无意义的 `bugfix` 提交）
+
+#### Git 时光机
+
+有的时候我们特别需要一个时光机器，来记录你的操作步骤，而不是仅仅有你的提交信息，尤其当你 `clone` 下来一个代码库，然后一阵操作，`merge` 一些 `branch`，添加删除一些代码，当你发现你误删了东西，弄坏了整个 build 等等，那么你就需要 `reflog + reset` 这两个命令的组合。
+
+我们来举个例子，比如我现在一阵操作，提交了一个对应的 `commit`，然后又修改了一个文件，现在我发现不行了，我希望倒带到之前的某个提交去。
+
+```bash
+# 显示你的 git 操作记录
+# 特别注意它和 git log 的区别，它不仅仅是提交的记录，还有其他git的操作记录
+git reflog
+# 会看到一系列的操作记录
+# 对应的记录号
+# 7b6e4f8 HEAD@{0}
+# e7d2c90 HEAD@{1} 等等
+git reset HEAD@{index}
+# 这个时候你就会回到之前的那个状态了
+```
+
+这里还有两个参数 `--hard`，就是啥都不要了，当前已经修改没有提交的文件我也不要了，我就想回到那个操作对应的状态。一下就清净了。
+
+- `-soft` 保留当前的修改回到对应的状态。
+
+**通过这个命令以及上面这两个参数, 可以衍生出其他的操作, 比如新的场景**:
+
+我想删除最前面的一个或者几个提交，我就可以直接跳转到对应的上次提交的 `log`，这个时候大家看它我们最前面的提交已经消失了。
+
+```bash
+git reflog
+
+# 7b6e4f8 (HEAD -> master) HEAD@{0}: commit: update test2.txt
+# ....
+# e7d2c90 HEAD@{13}: commit: add test2.txt
+# 找到对应的提交
+git reset HEAD@{13}
+```
+
+#### Git 后悔药
+
+**程序员很长时间都是在和 bug 奋战，而 bug 的来源经常是某次 commit 的提交，有可能是很久以前的，那么想要修改很久之前的一次提交，那么该怎么办呢？**
+
+我们可以通过几种方式来吃后悔药，第一个最传统也是最复杂的方式，就是使用 `git rebase -i`，`rebase` 是比较让人蛋疼的命令之一，它的复杂性以及操作性都让新手敢到害怕，比如说我们要修改或者删除之前的一次提交，要使用 rebase 会这样。
+
+```bash
+# 先看提交
+git log 
+# f9f6f3b commit 3
+# 2feb45f commit 2
+# 07a3cb6 commit 1
+# 我们要修改 2 的话，rebase 到它的下一个 commit，这里是 1
+git rebase 07a3cb6 -i
+# 然后在打开的对话框里面修改，之后还要一个个 rebase continue，非常容易出错
+```
+
+现在我给大家来使用一个命令就完成对应的功能，我们希望将某个特定提交中，特定的文件恢复到修改之前的内容。
+
+```bash
+# 先看提交
+git log 
+# f9f6f3b commit 3
+# 2feb45f commit 2
+# 07a3cb6 commit 1
+# commit2 出问题了，我们要恢复某个文件在 commit 1中的内容，先看看它修改了什么
+git show 2feb45f
+test.txt
+-hello there updated
++hello there deleted
+# 可以发现它将 test.txt 从 updated 换成了 deleted，我们希望恢复，使用一条命令
+git checkout 07a3cb6[之前提交的hash，也就是 commit1 的hash] -- test.txt[文件的路径]
+# 这个时候你就会发现 test.txt 恢复到了 hello there updated
+#   一条命令搞定
+```
+
+我希望删除对应的 `commit`，这次 `commit` 带来了各种 bug，我想一步h整理一下：
+
+```bash
+# 先看提交
+# f9f6f3b commit 3
+# 2feb45f commit 2
+# 07a3cb6 commit 1
+# commit2 出问题了，我们要一次性删除掉对应的提交,找到上面第二条对应的 hash 值
+git revert 2feb45f[第二条对应的 hash]
+# 这个时候它会创建一个新的 commit，并且弹出提交的对话框，修改保存就可以了。
+```
+
+#### 我刚才好像犯了个大错，能不能给我台时光机啊!?!
+
+```bash
+git reflog
+# 你将看到你在 git 上提交的所有改动记录被列
+# 了出来，而且囊括了所有的分支，和已被删除的
+# commit 哦！
+# 每一条记录都有一个类似 HEAD@{index} 的索
+# 引编号
+# 找到在犯错前的那个提交记录的索引号，然后执
+# 行：
+git reset HEAD@{index}
+# 哈哈，这就是你要的时光机！
+```
+
+你可以用这个方法来找回那些你不小心删除的东西、恢复一些你对 repo 改动、恢复一次错误的 merge 操作、或者仅仅想退回到你的项目还能正常工作的那一时刻。
+
+#### 我刚提交 commit 就发现还有一个小改动需要添加！
+
+```bash
+# 继续改动你的文件
+git add . # 或者你可以添加指定的文件
+git commit --amend --no-edit
+# 你这次的改动会被添加进最近一次的 commit 中
+# 警告: 千万别对公共的 commit 做这种操作
+```
+
+这经常发生在我提交了 `commit` 以后立马发现，妈蛋，我忘了在某个等号后面加空格了。当然，你也可以提交一个新的 `commit` 然后利用 `rebase -i` 命令来合并它们，但我觉得我的这种方式比你快 100 万倍。
+
+❗️*警告: 你千万不要在已推送的公共分支上做这个 `amend` 的操作! 只能在你本地 `commit` 上做这种修改，否则你会把事情搞砸的！*
+
+#### 我要修改我刚刚 commit 提交的信息！
+
+```bash
+git commit --amend
+# 按照提示修改信息就行啦
+```
+
+使用繁琐的提交信息格式
+
+#### 我不小心把本应在新分支上提交的东西提交到了 master!
+
+```bash
+# 基于当前 master 新建一个分支
+git branch some-new-branch-name
+# 在 master 上删除最近的那次 commit
+git reset HEAD~ --hard
+git checkout some-new-branch-name
+# 只有在这个新分支上才有你最近的那次 commit 哦
+```
+
+注意：如果你已将这个 commit 推送到了公共分支，那这波操作就不起作用了。如果你在此之前做了些其他的操作，那你可能需要使用 `HEAD@{number-of-commits-back}` 来替代 `HEAD~`。
+
+#### 我把这个 commit 提交错分支了！
+
+```bash
+# 撤回这次提交，但保留改动的内容
+git reset HEAD~ --soft
+git stash
+# 现在切到正确的那个分支去
+git checkout name-of-the-correct-branch
+git stash pop
+git add . # 或者你可以添加指定的文件
+git commit -m "your message here";
+# 现在你的改动就在正确的分支上啦
+```
+
+很多人建议使用 `cherry-pick` 来解决这个问题，其实两者都可以，你只要选择自己喜欢的方式就行了。
+
+```bash
+git checkout name-of-the-correct-branch
+# 抓取 master 分支上最新的那个 commit
+git cherry-pick master
+# 然后删掉 master 上的那个 commit
+git checkout master
+git reset HEAD~ --hard
+```
+
+#### 我想用 diff 命令看下改动内容，但啥都没看到?!
+
+如果对文件做了改动，但是通过 `diff` 命令却看不到，那很可能是你执行过 `add` 命令将文件改动添加到了 `暂存区` 了。你需要添加下面这个参数。
+
+```bash
+git diff --staged
+```
+
+#### 我想撤回一个很早以前的 commit！
+
+```bash
+# 先找到你想撤销的那个 commit
+git log
+# 如果在第一屏没找到你需要的那个 commit，可以用上下
+# 箭头来滚动显示的内容，找到了以后记下 commit 的
+# hash 值
+git revert [刚才记下的那个 hash 值]
+# git 会自动修改文件来抵消那次 commit 的改动，并创
+# 建一个新的 commit，你可以根据提示修改这个新 commit
+# 的信息，或者直接保存就完事了
+```
+
+这样你就不需要用回溯老版本然后再复制粘贴的方式了，那样做太费事了！如果你提交的某个 commit 导致了 bug，你直接用 `revert` 命令来撤回那次提交就行啦。
+
+所以就个人开发或个人 feature 分支而言，可以使用 `git reset` 来回滚代码，但在多人协作的集成分支上，`git revert` 更适合。这样，提交的历史记录不会被抹去，可以安全地进行撤回。
+
+你甚至可以恢复单个文件而不是一整个 commit！但那是另一套 git 命令咯...
+
+#### 我想撤回某一个文件的改动！
+
+```bash
+# 找到文件改动前的那个 commit
+git log
+# 如果在第一屏没找到你需要的那个 commit，可以用上下
+# 箭头来滚动显示的内容，找到了以后记下 commit 的
+# hash 值
+git checkout [刚才记下的那个 hash 值] -- path/to/file
+# 改动前的文件会保存到你的暂存区
+git commit -m "这样就不需要通过复制粘贴来撤回改动啦"
+```
+
+### 参考
+
+- [Git教程](https://www.liaoxuefeng.com/wiki/896043488029600)
+- [Reference](https://git-scm.com/docs)
+- [命令行通配符教程](http://www.ruanyifeng.com/blog/2018/09/bash-wildcards.html)
+- [Oh Shit, Git!?!](https://ohshitgit.com/zh)
