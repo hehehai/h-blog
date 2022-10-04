@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 const defaultTheme = require("tailwindcss/defaultTheme");
+const colors = require("tailwindcss/colors");
 
 module.exports = {
   content: [
@@ -41,9 +42,6 @@ module.exports = {
                   marginTop: 0,
                   marginBottom: theme("spacing.8"),
                   fontSize: fontSize("lg"),
-                },
-                code: {
-                  backgroundColor: theme("colors.gray.100"),
                 },
                 "code::before": {
                   content: "none",
