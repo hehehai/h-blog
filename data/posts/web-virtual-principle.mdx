@@ -139,7 +139,115 @@ const ITEM_SIZE = 30 // height: 30px
 - Virtual Height: `(1000 - 30) * 30px`
 - Wrapper Scroll Height: `1000 * 30px`
 
-<EmbedStackblitz id="vitejs-vite-xvkb5r" openFile={['src/components/VirtualList.vue']}/>
+<SandpackBlock 
+	template="vue3"
+	files={{
+		"/src/App.vue": {
+			code: `<template>
+  <VirtualList :list="fixedList">
+    <template #item="{ item }">
+      <span>{{ item }}</span>
+    </template>
+  </VirtualList>
+</template>
+
+<script>
+import VirtualList from "./VirtualList.vue";
+
+export default {
+  name: "App",
+  components: {
+    VirtualList,
+  },
+  setup() {
+    return {
+      fixedList: Array.from({ length: 1000 }, (_, idx) => idx),
+    };
+  },
+};
+</script>
+`
+		},
+		"/src/VirtualList.vue": {
+			active: true,
+			code: `<script>
+import { toRefs, computed } from "vue";
+
+export default {
+  name: "VirtualList",
+  props: {
+    list: {
+      type: Array,
+      default: () => [],
+    },
+  },
+  setup(props) {
+    const { list } = toRefs(props);
+
+    const FIRST_KEEPS = 30;
+    const ITEM_SIZE = 30;
+
+    let start = 0;
+    let end = start + FIRST_KEEPS;
+
+    const listLen = computed(() => list.value.length);
+    const areaList = computed(() => list.value.slice(start, end));
+    const itemPx = computed(() => ITEM_SIZE + "px");
+
+    const paddingStyle = computed(() => {
+      return {
+        paddingBottom: (listLen.value - FIRST_KEEPS) * ITEM_SIZE + 'px',
+      };
+    });
+
+    return {
+      paddingStyle,
+      areaList,
+      itemPx,
+    };
+  },
+};
+</script>
+  
+<template>
+  <div class="wrapper">
+    <div class="inner-list" :style="paddingStyle">
+      <template v-for="item in areaList" :key="item">
+        <div class="item">
+          <slot name="item" :item="item" />
+        </div>
+      </template>
+    </div>
+  </div>
+</template>
+  
+<style>
+.wrapper {
+  height: 400px;
+  overflow-y: auto;
+}
+
+/* custom style */
+.wrapper {
+  border: 2px dashed;
+  background-color: white;
+}
+
+.item {
+  height: v-bind("itemPx");
+  line-height: v-bind("itemPx");
+  padding: 0 15px;
+  background-color: #8f36ff;
+}
+
+.item:hover {
+  background-color: skyblue;
+}
+</style>
+`
+		}
+	}}
+/>
 
 **动态高度**
 
@@ -170,7 +278,197 @@ const ITEM_SIZE = 30 // height: 30px
 </template>
 ```
 
-<EmbedStackblitz id="vitejs-vite-bujhde" openFile={['src/components/VirtualList.vue']}/>
+<SandpackBlock 
+	template="vue3"
+	files={{
+		"/src/App.vue": {
+			code: `<script>
+import VirtualList from "./VirtualList.vue";
+
+// 生成随机值
+function genRandom(min, max) {
+  return Math.floor(Math.random() * (max - min) + min);
+}
+
+export default {
+  name: "App",
+  components: {
+    VirtualList,
+  },
+  setup() {
+    return {
+      fixedList: Array.from({ length: 10000 }, (_, idx) => ({
+        id: idx,
+        height: genRandom(30, 120) + 'px',
+      })),
+    };
+  },
+};
+</script>
+
+<template>
+  <VirtualList :list="fixedList">
+    <template #item="{ item }">
+      <div class="inner-item" :style="{ height: item.height }">
+        {{ item }}
+      </div>
+    </template>
+  </VirtualList>
+</template>
+
+<style scoped>
+.inner-item {
+  padding: 0 15px;
+}
+</style>
+`
+		},
+		"/src/VirtualList.vue": {
+			active: true,
+			code: `<script>
+import { ref, toRefs, computed, provide, reactive, onMounted } from "vue";
+import VirtualItem from "./VirtualItem.vue";
+
+export const VIRTUAL_CTX = Symbol("VIRTUAL");
+
+export default {
+  name: "VirtualList",
+  components: {
+    VirtualItem,
+  },
+  props: {
+    list: {
+      type: Array,
+      default: () => [],
+    },
+  },
+  setup(props) {
+    const { list } = toRefs(props);
+
+    const FIRST_KEEPS = 30;
+    // 元素高度缓存
+    const itemSizeMap = new Map();
+
+    // 元素高度
+    let itemSize = ref();
+    let start = 0;
+    let end = start + FIRST_KEEPS;
+
+    const listLen = computed(() => list.value.length);
+    const areaList = computed(() => list.value.slice(start, end));
+
+    const paddingStyle = computed(() => {
+      if (!itemSize.value) return;
+      return {
+        paddingBottom: (listLen.value - FIRST_KEEPS) * itemSize.value + 'px',
+      };
+    });
+
+    // 父子组件上下文
+    const handleChangeItemSize = (key, size) => {
+      itemSizeMap.set(key, size);
+    };
+
+    provide(
+      VIRTUAL_CTX,
+      reactive({
+        setSize: handleChangeItemSize,
+      })
+    );
+
+    const fistKeepsAverageHeight = () => {
+      let totalSize = 0;
+      for (let i = start; i < end; i++) {
+        totalSize += itemSizeMap.get(i) || 0;
+      }
+      itemSize.value = totalSize / FIRST_KEEPS;
+    };
+
+    // DOM 挂载后，更新 平均元素高度
+    onMounted(() => {
+      fistKeepsAverageHeight();
+    });
+
+    return {
+      paddingStyle,
+      areaList,
+    };
+  },
+};
+</script>
+
+<template>
+  <div class="wrapper">
+    <div class="inner-list" :style="paddingStyle">
+      <template v-for="item in areaList" :key="item">
+        <VirtualItem :id="item.id">
+          <slot name="item" :item="item" />
+        </VirtualItem>
+      </template>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.wrapper {
+  height: 400px;
+  overflow-y: auto;
+}
+
+/* custom style */
+.wrapper {
+  border: 2px dashed;
+  background-color: white;
+}
+</style>
+`
+		},
+		"/src/VirtualItem.vue": {
+			code: `<script>
+import { toRef, ref, inject, onMounted } from "vue";
+import { VIRTUAL_CTX } from "./VirtualList";
+
+export default {
+  name: "VirtualItem",
+  props: {
+    id: Number,
+  },
+  setup(props) {
+    const id = toRef(props, "id");
+    const itemRef = ref();
+    const virtualCtx = inject(VIRTUAL_CTX);
+
+    // 将当前元素的高度设置到高度缓存中
+    onMounted(() => {
+      if (virtualCtx && virtualCtx.setSize && itemRef.value) {
+        virtualCtx.setSize(id.value, itemRef.value.offsetHeight);
+      }
+    });
+
+    return {};
+  },
+};
+</script>
+
+<template>
+  <div class="item" ref="itemRef">
+    <slot name="default" />
+  </div>
+</template>
+
+<style scoped>
+.item {
+  background-color: #8f36ff;
+}
+
+.item:hover {
+  background-color: skyblue;
+}
+</style>
+`
+		}
+	}}
+/>
 
 ### 滚动监听
 

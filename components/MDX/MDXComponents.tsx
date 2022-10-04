@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/future/image";
 import EmbedStackblitz from "../EmbedStackblitz";
 import InlineCode from "./InlineCode";
+import SandpackBlock from "./SandpackBlock";
 
 const CustomLink = (props: any) => {
   const href = props.href;
@@ -36,7 +37,8 @@ const MDXComponents = {
   Image: RoundedImage,
   code: InlineCode,
   Callout,
-  EmbedStackblitz
+  EmbedStackblitz,
+  SandpackBlock
 };
 
 export default MDXComponents;

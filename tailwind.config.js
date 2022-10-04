@@ -55,7 +55,7 @@ module.exports = {
                   fontWeight: theme("fontWeight.medium"),
                   fontSize: fontSize("lg"),
                 },
-                ".embed": {
+                ".embed, .sandpack-root": {
                   [`@media (min-width: ${theme("screens.lg")})`]: {
                     position: "relative",
                     marginLeft: "-8vw",
