@@ -4,6 +4,11 @@ const badgeMap = {
     color: "white",
     background: "#8b5cf6",
   },
+  do: {
+    label: "实践",
+    color: "white",
+    background: "#722ED1",
+  },
   translate: {
     label: "翻译",
     color: "white",
@@ -12,7 +17,7 @@ const badgeMap = {
   docs: {
     label: "文档",
     color: "white",
-    background: "#0ea5e9",
+    background: "#165DFF",
   },
   note: {
     label: "笔记",
