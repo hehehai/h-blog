@@ -1,9 +1,9 @@
-import fs from "fs";
+import fs from "node:fs";
+import path from "node:path";
 import matter from "gray-matter";
 import { MDXRemote } from "next-mdx-remote";
 import dynamic from "next/dynamic";
 import Head from "next/head";
-import path from "path";
 import Giscus from "@giscus/react";
 import mdxComponents from "../../components/MDX/MDXComponents";
 import { mdxToHtml, postFilePaths, POSTS_PATH } from "../../utils/mdx";
@@ -96,7 +96,7 @@ export const getStaticProps = async ({ params }: any) => {
 export const getStaticPaths = async () => {
   const paths = postFilePaths
     // Remove file extensions for page paths
-    .map((path) => path.replace(/\.mdx?$/, ""))
+    .map(({ filePath }) => filePath.replace(/\.mdx?$/, ""))
     // Map the path into the static paths object required by Next.js
     .map((slug) => ({ params: { slug } }));
 

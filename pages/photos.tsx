@@ -1,5 +1,5 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 import Container from "../components/Container";
 import PhotoItem from "../components/PhotoItem";
 import { photoMetaPaths, PHOTOS_PATH } from "../utils/photo";

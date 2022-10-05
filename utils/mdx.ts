@@ -1,5 +1,5 @@
-import fs from 'fs'
-import path from 'path'
+import fs from 'node:fs'
+import path from 'node:path'
 import { serialize } from 'next-mdx-remote/serialize';
 import readingTime from 'reading-time';
 import remarkGfm from 'remark-gfm';
@@ -15,7 +15,13 @@ export const POSTS_PATH = path.join(process.cwd(), 'data/posts')
 export const postFilePaths = fs
   .readdirSync(POSTS_PATH)
   // Only include md(x) files
-  .filter((path) => /\.mdx?$/.test(path))
+  .filter((filePath) => /\.mdx?$/.test(filePath))
+  .map(filePath => ({
+    filePath,
+    birthtimeMs: fs.statSync(path.join(POSTS_PATH, filePath))?.birthtimeMs
+  }))
+  // new is first
+  .sort((a, b) => b.birthtimeMs - a.birthtimeMs)
 
 export async function mdxToHtml(content: string) {
   const mdxSource = await serialize(content, {

@@ -1,5 +1,5 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 import matter from "gray-matter";
 import Container from "../../components/Container";
 import { postFilePaths, POSTS_PATH } from "../../utils/mdx";
@@ -18,7 +18,7 @@ export default function Index({ posts }: any) {
 }
 
 export function getStaticProps() {
-  const posts = postFilePaths.map((filePath) => {
+  const posts = postFilePaths.map(({ filePath }) => {
     const source = fs.readFileSync(path.join(POSTS_PATH, filePath));
     const { content, data } = matter(source);
 

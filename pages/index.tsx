@@ -1,6 +1,6 @@
+import fs from "node:fs";
+import path from "node:path";
 import { Suspense } from "react";
-import fs from "fs";
-import path from "path";
 import matter from "gray-matter";
 import type { NextPage } from "next";
 import Container from "../components/Container";
@@ -37,7 +37,7 @@ export default Home;
 
 export function getStaticProps() {
   const hasMore = postFilePaths.length > 5;
-  const posts = postFilePaths.slice(0, 5).map((filePath) => {
+  const posts = postFilePaths.slice(0, 5).map(({ filePath }) => {
     const source = fs.readFileSync(path.join(POSTS_PATH, filePath));
     const { content, data } = matter(source);
 
