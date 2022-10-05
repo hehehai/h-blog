@@ -11,7 +11,7 @@ export default function Container(props: any) {
   const meta = {
     title: "Hehehai @一块木头 - 全栈开发，专注于前端应用程序和用户界面设计.",
     description: `我是一位全栈开发，专注于前端应用程序和用户界面设计。我的首选技术栈是 TypeScript、Vue 和 Node。`,
-    image: "http://hehehai.cn/favicon.svg",
+    image: "/favicon.svg",
     type: "website",
     ...customMeta,
   };
