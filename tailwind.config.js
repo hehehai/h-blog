@@ -76,24 +76,29 @@ module.exports = {
                     borderRadius: "0.5rem !important",
                   },
                 },
+                pre: {
+                  lineHeight: 1.8
+                },
                 ul: {
                   marginTop: 0,
                   marginBottom: theme("spacing.6"),
+                  fontSize: fontSize("lg"),
                 },
                 ol: {
                   marginTop: 0,
                   marginBottom: theme("spacing.6"),
+                  fontSize: fontSize("lg"),
                 },
                 // tailwind doesn't stick to this property order, so we can't make 'h3' overrule 'h2, h3, h4'
                 "h1, h2": {
                   fontSize: fontSize("3xl"),
-                  marginTop: theme("spacing.20"),
-                  marginBottom: theme("spacing.10"),
+                  marginTop: theme("spacing.16"),
+                  marginBottom: theme("spacing.8"),
                 },
                 h3: {
                   fontSize: fontSize("2xl"),
-                  marginTop: theme("spacing.16"),
-                  marginBottom: theme("spacing.10"),
+                  marginTop: theme("spacing.14"),
+                  marginBottom: theme("spacing.8"),
                 },
                 "h4, h5, h6": {
                   fontSize: fontSize("xl"),

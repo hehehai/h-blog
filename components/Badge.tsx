@@ -1,50 +1,22 @@
 const badgeMap = {
-  news: {
-    label: "最新",
-    color: "white",
-    background: "#8b5cf6",
-  },
-  do: {
-    label: "实践",
-    color: "white",
-    background: "#722ED1",
-  },
-  translate: {
-    label: "翻译",
-    color: "white",
-    background: "#22c55e",
-  },
-  docs: {
-    label: "文档",
-    color: "white",
-    background: "#165DFF",
-  },
-  note: {
-    label: "笔记",
-    color: "white",
-    background: "#f43f5e",
-  },
+  news: "最新",
+  do: "实践",
+  translate: "翻译",
+  docs: "文档",
+  note: "笔记",
 };
 
 export default function Badge(props: { type: "news" | "translate" | "docs" }) {
   const { type } = props;
 
-  const typeData = badgeMap[type];
+  const label = badgeMap[type];
 
-  if (!typeData) {
+  if (!label) {
     return null;
   }
 
   return (
-    <div
-      className="text-xs rounded px-1.5 py-0.5"
-      style={{
-        color: typeData.color,
-        background: typeData.background,
-      }}
-    >
-      {typeData.label}
-    </div>
+    <div className="text-xs rounded px-1.5 py-0.5 border rounded">{label}</div>
   );
 }
 
