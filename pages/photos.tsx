@@ -1,31 +1,42 @@
-import fs from "node:fs";
-import path from "node:path";
+import { useState, useCallback, useEffect } from "react";
 import Container from "../components/Container";
 import PhotoItem from "../components/PhotoItem";
-import { photoMetaPaths, PHOTOS_PATH } from "../utils/photo";
+import { Atlas } from "./interface/photo";
 
-export default function Photos({ photos }: any) {
+export default function Photos() {
+  const [loading, setLoading] = useState(false);
+  const [atlas, setAtlas] = useState<Atlas[]>([]);
+  const [page, setPage] = useState(1);
+
+  const getPhotos = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/photos?page=${page}`);
+      if (res.status === 200) {
+        const body = await res.json();
+        console.log(body);
+        setAtlas((atlasData) => [...atlasData, ...body]);
+      }
+    } catch (err) {
+      // empty
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log("run");
+    getPhotos();
+  }, []);
+
   return (
     <Container>
       <div className="space-y-10">
-        {photos.map((photo: any, idx: number) => (
-          <PhotoItem key={idx} {...photo} />
+        {atlas.map((item: Atlas, idx: number) => (
+          <PhotoItem key={idx} {...item} />
         ))}
+        {loading && <div>Loading...</div>}
       </div>
     </Container>
   );
-}
-
-export function getStaticProps() {
-  const photos = photoMetaPaths.map((filePath) => {
-    const source = fs.readFileSync(path.join(PHOTOS_PATH, filePath));
-    const meta = JSON.parse(source.toString());
-
-    return {
-      meta,
-      folderPath: filePath.replace(".json", ""),
-    };
-  });
-
-  return { props: { photos } };
 }

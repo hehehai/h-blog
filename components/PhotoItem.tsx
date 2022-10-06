@@ -1,16 +1,18 @@
 import Image from "next/image";
+import { Atlas } from "../pages/interface/photo";
 
-export default function PhotoItem(props: any) {
-  const { meta, folderPath } = props;
+export default function PhotoItem(props: Atlas) {
+  const { title, photos } = props;
 
   return (
     <div>
-      <div className="text-xl mb-4">{meta.name}</div>
+      <div className="text-xl mb-4">{title}</div>
       <div className="grid grid-cols-3 gap-4">
-        {meta.images.map((imagePath: string) => (
-          <div className="w-full h-72 relative" key={imagePath}>
+        {photos.map((photo) => (
+          <div className="w-full h-72 relative" key={photo.path}>
             <Image
-              src={`/photos/${folderPath}/${imagePath}`}
+              src={photo.path}
+              alt={photo.alt}
               layout="fill"
               objectFit="cover"
             />
