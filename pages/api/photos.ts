@@ -8,7 +8,7 @@ export default async function handler(
   res: NextApiResponse<Atlas[] | { message: string }>
 ) {
   const { page = 1 } = req.query
-  const url = `https://api.github.com/repos/hehehai/h-blog/issues?assignee=hehehai&labels=photos&sort=created&direction=desc&page=${page}`
+  const url = `https://api.github.com/repos/hehehai/h-blog/issues?assignee=hehehai&labels=photos&sort=created&direction=desc&per_page=100&page=${page}`
   
   try {
     const resData = await fetch(url)

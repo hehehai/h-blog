@@ -6,16 +6,14 @@ import { Atlas } from "./interface/photo";
 export default function Photos() {
   const [loading, setLoading] = useState(false);
   const [atlas, setAtlas] = useState<Atlas[]>([]);
-  const [page, setPage] = useState(1);
 
   const getPhotos = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/photos?page=${page}`);
+      const res = await fetch(`/api/photos?page=1`);
       if (res.status === 200) {
         const body = await res.json();
-        console.log(body);
-        setAtlas((atlasData) => [...atlasData, ...body]);
+        setAtlas(body);
       }
     } catch (err) {
       // empty
@@ -25,7 +23,6 @@ export default function Photos() {
   }, []);
 
   useEffect(() => {
-    console.log("run");
     getPhotos();
   }, []);
 
