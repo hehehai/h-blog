@@ -1,15 +1,5 @@
-const badgeMap = {
-  news: "最新",
-  do: "实践",
-  translate: "翻译",
-  docs: "文档",
-  note: "笔记",
-};
-
-export default function Badge(props: { type: "news" | "translate" | "docs" }) {
-  const { type } = props;
-
-  const label = badgeMap[type];
+export default function Badge(props: { label: string }) {
+  const { label } = props;
 
   if (!label) {
     return null;
@@ -28,7 +18,7 @@ export const renderBadge = (badges: string[] | string) => {
   return (
     <div className="flex justify-content space-x-2">
       {badgeArr.map((badge: any) => (
-        <Badge key={badge} type={badge} />
+        <Badge key={badge} label={badge} />
       ))}
     </div>
   );
