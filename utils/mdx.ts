@@ -7,6 +7,7 @@ import rehypeSlug from 'rehype-slug';
 import rehypeCodeTitles from 'rehype-code-titles';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import matter from 'gray-matter';
 
 // POSTS_PATH is useful when you want to get the path to a specific file
 export const POSTS_PATH = path.join(process.cwd(), 'data/posts')
@@ -22,6 +23,27 @@ export const postFilePaths = fs
   }))
   // new is first
   .sort((a, b) => b.birthtimeMs - a.birthtimeMs)
+
+export const postMdxData = (count = 999) => {
+  const posts = postFilePaths.map(({ filePath }) => {
+    const source = fs.readFileSync(path.join(POSTS_PATH, filePath));
+    const { content, data } = matter(source);
+
+    return {
+      content,
+      data,
+      publicAtMs: +new Date(data.publicAt ?? 0),
+      readingTime: readingTime(content).minutes,
+      filePath,
+      fileName: filePath.replace(/\.mdx?$/, ""),
+    };
+  })
+  .sort((a, b) => {
+    return b.publicAtMs - a.publicAtMs
+  })
+
+  return posts.slice(0, count);
+} 
 
 export async function mdxToHtml(content: string) {
   const mdxSource = await serialize(content, {
