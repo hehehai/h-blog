@@ -1,10 +1,11 @@
 import Link from "next/link";
+import { Post } from "../pages/interface/post";
 import Badge, { renderBadge } from "./Badge";
 
-export default function PostListItem(props: any) {
+export default function PostListItem(props: { post: Post }) {
   const { post } = props;
 
-  const readingTime = Number.parseInt(post.readingTime);
+  const readingTime = Number.parseInt(String(post.readingTime));
 
   return (
     <div>

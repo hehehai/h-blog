@@ -1,8 +1,9 @@
 import Container from "../../components/Container";
 import { postMdxData } from "../../utils/mdx";
 import PostList from "../../components/PostList";
+import { Post } from "../interface/post";
 
-export default function Index({ posts }: any) {
+export default function Index({ posts }: { posts: Post[] }) {
   return (
     <Container>
       <div>

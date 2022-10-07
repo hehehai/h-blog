@@ -8,6 +8,7 @@ import rehypeCodeTitles from 'rehype-code-titles';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import matter from 'gray-matter';
+import { Post } from '../pages/interface/post';
 
 // POSTS_PATH is useful when you want to get the path to a specific file
 export const POSTS_PATH = path.join(process.cwd(), 'data/posts')
@@ -17,15 +18,9 @@ export const postFilePaths = fs
   .readdirSync(POSTS_PATH)
   // Only include md(x) files
   .filter((filePath) => /\.mdx?$/.test(filePath))
-  .map(filePath => ({
-    filePath,
-    birthtimeMs: fs.statSync(path.join(POSTS_PATH, filePath))?.birthtimeMs
-  }))
-  // new is first
-  .sort((a, b) => b.birthtimeMs - a.birthtimeMs)
 
-export const postMdxData = (count = 999) => {
-  const posts = postFilePaths.map(({ filePath }) => {
+export const postMdxData = (count = 999) : Post[] => {
+  const posts = postFilePaths.map((filePath) => {
     const source = fs.readFileSync(path.join(POSTS_PATH, filePath));
     const { content, data } = matter(source);
 

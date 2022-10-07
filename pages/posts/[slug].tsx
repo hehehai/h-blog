@@ -11,6 +11,7 @@ import { mdxToHtml, postFilePaths, POSTS_PATH } from "../../utils/mdx";
 import Container from "../../components/Container";
 import { renderBadge } from "../../components/Badge";
 import { renderTag } from "../../components/Tag";
+import { PostMatter } from "../interface/post";
 
 // Custom components/renderers to pass to MDX.
 // Since the MDX files aren't loaded by webpack, they have no knowledge of how
@@ -25,8 +26,16 @@ const components = {
   Head,
 };
 
-export default function Post({ html, frontMatter, readingTime }: any) {
-  readingTime = Number.parseInt(readingTime);
+export default function Post({
+  html,
+  frontMatter,
+  readingTime,
+}: {
+  html: any;
+  frontMatter: PostMatter;
+  readingTime: string;
+}) {
+  let readingTimeNum = Number.parseInt(readingTime);
 
   const seoMeta = {
     title: frontMatter.title,
@@ -47,7 +56,7 @@ export default function Post({ html, frontMatter, readingTime }: any) {
           <div className="text-sm text-slate-700 dark:text-gray-200 flex justify-content space-x-2 mt-1.5">
             {frontMatter.badges && renderBadge(frontMatter.badges)}
             {frontMatter.publicAt && <div>{frontMatter.publicAt}</div>}
-            {!!readingTime && <div>约 {readingTime} 分钟</div>}
+            {!!readingTimeNum && <div>约 {readingTimeNum} 分钟</div>}
           </div>
         </div>
         <main>
@@ -96,7 +105,7 @@ export const getStaticProps = async ({ params }: any) => {
 export const getStaticPaths = async () => {
   const paths = postFilePaths
     // Remove file extensions for page paths
-    .map(({ filePath }) => filePath.replace(/\.mdx?$/, ""))
+    .map((filePath) => filePath.replace(/\.mdx?$/, ""))
     // Map the path into the static paths object required by Next.js
     .map((slug) => ({ params: { slug } }));
 

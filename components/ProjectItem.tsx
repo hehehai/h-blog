@@ -1,8 +1,20 @@
-import Image from "next/image";
 import Github from "./icons/Github";
 import Website from "./icons/Website";
 
-export default function Project(props: any) {
+interface ProjectLink {
+  github?: string;
+  site?: string;
+}
+
+interface ProjectProps {
+  cover: string;
+  name: string;
+  subtitle: string;
+  description: string;
+  links: ProjectLink;
+}
+
+export default function Project(props: ProjectProps) {
   const { cover, name, subtitle, description, links } = props;
 
   return (

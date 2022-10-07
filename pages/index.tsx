@@ -5,8 +5,12 @@ import HomeAboutMe from "../components/HomeAboutMe";
 import PostList from "../components/PostList";
 import NextLink from "next/link";
 import { postFilePaths, postMdxData } from "../utils/mdx";
+import { Post } from "./interface/post";
 
-const Home: NextPage = ({ posts, hasMore }: any) => {
+const Home: NextPage<{
+  posts: Post[];
+  hasMore: boolean;
+}> = ({ posts, hasMore }) => {
   return (
     <Suspense fallback={null}>
       <Container>

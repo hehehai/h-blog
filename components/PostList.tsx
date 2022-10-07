@@ -1,8 +1,9 @@
+import { Post } from "../pages/interface/post";
 import PostListItem from "./PostListItem";
 
-export default function PostList({ posts }: any) {
+export default function PostList({ posts }: {posts: Post[]}) {
   const renderPosts = () => {
-    return posts.map((post: any) => (
+    return posts.map((post) => (
       <PostListItem key={post.filePath} post={post} />
     ));
   };
