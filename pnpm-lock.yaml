@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@codesandbox/sandpack-react': ^1.12.1
+  '@codesandbox/sandpack-react': ^1.15.2
   '@giscus/react': ^2.2.0
   '@stackblitz/sdk': ^1.8.0
   '@tailwindcss/typography': ^0.5.4
@@ -34,7 +34,7 @@ specifiers:
   typescript: 4.8.2
 
 dependencies:
-  '@codesandbox/sandpack-react': registry.npmmirror.com/@codesandbox/sandpack-react/1.12.1_biqbaboplfbrettd7655fr4n2y
+  '@codesandbox/sandpack-react': registry.npmmirror.com/@codesandbox/sandpack-react/1.15.2_biqbaboplfbrettd7655fr4n2y
   '@giscus/react': registry.npmmirror.com/@giscus/react/2.2.0_biqbaboplfbrettd7655fr4n2y
   '@stackblitz/sdk': registry.npmmirror.com/@stackblitz/sdk/1.8.0
   '@tailwindcss/typography': registry.npmmirror.com/@tailwindcss/typography/0.5.4_tailwindcss@3.1.8
@@ -328,11 +328,11 @@ packages:
       lodash.isequal: registry.npmmirror.com/lodash.isequal/4.5.0
     dev: false
 
-  registry.npmmirror.com/@codesandbox/sandpack-react/1.12.1_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-f4wsq7KI8vvllWbUmhGpBKSYZeTcFtxkFPmLrvh1SPqAFRDGKIHBke/rsd1fNNi4k0blX2bIp6NKA8svANV8Mg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@codesandbox/sandpack-react/-/sandpack-react-1.12.1.tgz}
-    id: registry.npmmirror.com/@codesandbox/sandpack-react/1.12.1
+  registry.npmmirror.com/@codesandbox/sandpack-react/1.15.2_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-LAI2/mdL4+2wRRUfRMuPErXd0kqAMj8JV3bePxzOGinSduAkPFLN0rv+mwhUjKxu9oET0ejAL8tk5woZjZrgMw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@codesandbox/sandpack-react/-/sandpack-react-1.15.2.tgz}
+    id: registry.npmmirror.com/@codesandbox/sandpack-react/1.15.2
     name: '@codesandbox/sandpack-react'
-    version: 1.12.1
+    version: 1.15.2
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18
       react-dom: ^16.8.0 || ^17 || ^18

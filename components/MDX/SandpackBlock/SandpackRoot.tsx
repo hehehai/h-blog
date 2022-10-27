@@ -15,6 +15,10 @@ export default function SandpackRoot(props: SandpackProps) {
           showInlineErrors: true, // default - false
           wrapContent: true, // default - false
           editorHeight: 550, // default - 300
+          externalResources: [
+            "https://cdn.tailwindcss.com",
+          ],
+          ...props.options
         }}
       />
     </div>

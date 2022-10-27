@@ -14,7 +14,14 @@ function SandpackHolder({ code }: { code: string }) {
 export default memo(function SandpackWrapper(props: any): any {
   return (
     <Suspense fallback={<SandpackHolder code={"Hello World!"} />}>
-      <SandpackRoot {...props} />
+      <SandpackRoot
+        {...props}
+        options={{
+          externalResources: [
+            "https://unpkg.com/@tailwindcss/ui/dist/tailwind-ui.min.css",
+          ],
+        }}
+      />
     </Suspense>
   );
 });
