@@ -111,11 +111,6 @@ window.getComputedStyle(element, "::after");
       active: true,
 			code: `import { useEffect, useRef, useState } from "react";
 
-const boxWrapper = {
-  height: "300px",
-  marginTop: "10px"
-};
-
 const boxStyle = {
   backgroundColor: "skyblue",
   padding: "20px",
@@ -175,18 +170,18 @@ export default function App() {
   }, [boxRef, boxSizing]);
 
   return (
-    <div className="App">
+    <div className="p-2">
       <div>
-        <button onClick={handleToggleBoxSizing}>Toggle Box Sizing Mode</button>
+        <button class="bg-orange-500 text-white p-1 mr-3" onClick={handleToggleBoxSizing}>Toggle Box Sizing Mode</button>
         <span>{boxSizing}</span>
       </div>
-      <div style={boxWrapper}>
+      <div className="h-72 mt-3">
         <div ref={boxRef} style={{...boxStyle, boxSizing}}>
           <div style={innerBoxStyle}></div>
         </div>
       </div>
 
-      <pre style={{lineHeight: '20px'}}>
+      <pre class="leading-7">
         {JSON.stringify(rectData, undefined, 4)}
       </pre>
     </div>
