@@ -3,21 +3,7 @@ import Image from "next/future/image";
 import EmbedStackblitz from "../EmbedStackblitz";
 import InlineCode from "./InlineCode";
 import SandpackBlock from "./SandpackBlock";
-
-const CustomLink = (props: any) => {
-  const href = props.href;
-  const isInternalLink = href && (href.startsWith("/") || href.startsWith("#"));
-
-  if (isInternalLink) {
-    return (
-      <Link href={href}>
-        <a {...props}>{props.children}</a>
-      </Link>
-    );
-  }
-
-  return <a target="_blank" rel="noopener noreferrer" {...props} />;
-};
+import CustomLink from "../CustomLink";
 
 function RoundedImage(props: any) {
   return <Image alt={props.alt} className="rounded-lg" {...props} />;

@@ -8,6 +8,7 @@ export default function ThemeToggleIcon(props: {
     <svg
       width={size}
       height={size}
+      className="inline-block"
       viewBox="0 0 24 24"
       fill="currentColor"
     >
