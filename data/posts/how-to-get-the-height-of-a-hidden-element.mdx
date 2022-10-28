@@ -303,7 +303,7 @@ export default defineComponent({
             collapseRefHeight.value,
             200,
             (val) => {
-              collapseHeight.value += val;
+              collapseHeight.value = val;
             },
             () => {
               animating.value = false;
@@ -317,7 +317,7 @@ export default defineComponent({
           0,
           200,
           (val) => {
-            collapseHeight.value -= val;
+            collapseHeight.value = val;
           },
           () => {
             animating.value = false;
