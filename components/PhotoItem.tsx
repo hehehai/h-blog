@@ -10,7 +10,7 @@ export default function PhotoItem(props: Atlas) {
         <span>{title}</span>
         <span className="text-sm ml-2">{time}</span>
       </div>
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {photos.map((photo) => (
           <div className="w-full h-72 relative" key={photo.path}>
             <Image

@@ -47,7 +47,7 @@ export default function Post({
     <Container {...seoMeta}>
       <div>
         <div className="mb-10">
-          <div className="text-3xl leading-8 font-medium underline underline-offset-8 decoration-2 decoration-slate-700 mb-4">
+          <div className="text-2xl md:text-3xl leading-relaxed font-medium underline underline-offset-8 decoration-2 decoration-slate-700 mb-4">
             {frontMatter.title}
           </div>
           <div className="text-sm text-slate-700 dark:text-gray-200 flex justify-content space-x-2 mt-1.5">

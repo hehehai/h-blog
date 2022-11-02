@@ -20,7 +20,7 @@ export default function HeaderButton(props: {
     <TagName
       href={link}
       {...TagAttr}
-      className="rounded-lg text-slate-900 dark:text-white dark:bg-white/[0.03] font-semibold transition flex items-center text-[0.8125rem] leading-6 py-1 px-2 hover:bg-slate-900/[0.03] cursor-pointer"
+      className="rounded-lg text-slate-900 dark:text-white dark:bg-white/[0.03] font-semibold transition flex items-center text-[0.8125rem] leading-6 py-1 px-2 hover:bg-slate-900/[0.03] bg-slate-900/[0.03] md:bg-transparent cursor-pointer"
       onClick={(e: any) => onClick?.(e)}
     >
       {children}

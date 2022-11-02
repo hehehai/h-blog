@@ -14,11 +14,11 @@ export default function Header() {
   };
 
   return (
-    <div className="flex justify-between items-center py-12">
+    <div className="md:flex justify-between items-center py-12">
       <div className="text-2xl font-medium">
         <NextLink href="/">Hehehai.cn</NextLink>
       </div>
-      <div className="flex items-center space-x-4">
+      <div className="mt-5 md:mt-0 flex items-center space-x-4">
         <HeaderButton label="Github" link="https://github.com/hehehai">
           <Github size={22} />
         </HeaderButton>
