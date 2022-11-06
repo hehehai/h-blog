@@ -9,6 +9,6 @@ export default function PostList({ posts }: {posts: Post[]}) {
   };
 
   return (
-    <div className="space-y-6">{posts.length > 0 ? renderPosts() : <span>Empty Posts</span>}</div>
+    <div className="space-y-8">{posts.length > 0 ? renderPosts() : <span>Empty Posts</span>}</div>
   );
 }

@@ -10,7 +10,7 @@ export default function PostListItem(props: { post: Post }) {
   return (
     <div>
       <Link as={`/posts/${post.fileName}`} href={`/posts/[slug]`}>
-        <a className="text-xl leading-relaxed font-medium underline underline-offset-8 decoration-2 decoration-slate-700 hover:hover:decoration-dotted">
+        <a className="text-xl leading-relaxed font-medium underline underline-offset-8 decoration-2 decoration-slate-700 hover:decoration-dotted">
           {post.data.title}
         </a>
       </Link>
