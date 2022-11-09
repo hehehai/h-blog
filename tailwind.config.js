@@ -43,6 +43,9 @@ module.exports = {
                   marginBottom: theme("spacing.8"),
                   fontSize: fontSize("lg"),
                 },
+                "code": {
+                  fontWeight: '500'
+                },
                 "code::before": {
                   content: "none",
                 },
