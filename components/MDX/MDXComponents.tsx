@@ -1,13 +1,12 @@
-import Link from "next/link";
 import Image from "next/future/image";
 import EmbedStackblitz from "../EmbedStackblitz";
 import InlineCode from "./InlineCode";
 import SandpackBlock from "./SandpackBlock";
 import CustomLink from "../CustomLink";
 
-function RoundedImage(props: any) {
-  return <Image alt={props.alt} className="rounded-lg" {...props} />;
-}
+// function RoundedImage(props: any) {
+//   return <Image alt={props.alt} className="rounded-lg" {...props}/>;
+// }
 
 function Callout(props: any) {
   return (
@@ -20,11 +19,11 @@ function Callout(props: any) {
 
 const MDXComponents = {
   a: CustomLink,
-  Image: RoundedImage,
+  // img: RoundedImage,
   code: InlineCode,
   Callout,
   EmbedStackblitz,
-  SandpackBlock
+  SandpackBlock,
 };
 
 export default MDXComponents;

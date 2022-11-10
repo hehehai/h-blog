@@ -110,7 +110,10 @@ module.exports = {
                   // images are wrapped in <p>, which already has margin
                   marginTop: 0,
                   marginBottom: 0,
-                  borderRadius: theme("borderRadius.lg"),
+                  borderRadius: theme("borderRadius.md"),
+                  [`@media (min-width: ${theme("screens.lg")})`]: {
+                    borderRadius: theme("borderRadius.lg"),
+                  },
                 },
                 blockquote: {
                   fontWeight: theme("fontWeight.normal"),
