@@ -423,3 +423,943 @@ npm run dev
 7. 点击 "Sign out", 此时成功退出，将跳转到首页, 这也是 NextAuth 默认的 `/`
 
 想要确认已经退出的话，可以访问: `http://localhost:3000/api/auth/session`
+
+### 基础 UI
+
+下面我们将编写一个简单的 UI，方便我们之后的操作。这里我们也会根据当前的登录状态显示隐藏一些界面元素。
+
+先来介绍一下 NextAuth 封装的客户端登录信息获取
+
+#### [useSession()](https://next-auth.js.org/getting-started/client#usesession)
+
+```ts
+import { useSession } from "next-auth/react";
+
+export default function Component() {
+  const { data: session, status } = useSession();
+
+  if (status === "authenticated") {
+    return <p>Signed in as {session.user.email}</p>;
+  }
+
+  return <a href="/api/auth/signin">Sign in</a>;
+}
+```
+
+#### [getSession()](https://next-auth.js.org/getting-started/client#getsession)
+
+```ts
+async function myFunction() {
+  const session = await getSession();
+  /* ... */
+}
+```
+
+#### Header
+
+`components/Header.tsx`
+
+```tsx
+import { useMemo } from "react";
+import Link from "next/link";
+import { useSession } from "next-auth/react";
+
+const Header = () => {
+  const { data: session, status } = useSession();
+
+  const isLoading = useMemo(() => {
+    return status === "loading";
+  }, [status]);
+
+  return (
+    <div className="px-8 py-4 mx-auto">
+      <div className="bg-white px-6 py-4 flex items-center justify-between">
+        <div className="space-x-6">
+          <Link href="/">
+            <a className="bold">首页</a>
+          </Link>
+        </div>
+        {isLoading ? (
+          <div>验证中...</div>
+        ) : (
+          <div className="flex items-center space-x-6">
+            {session ? (
+              <>
+                <p>
+                  {session?.user?.name} ({session?.user?.email})
+                </p>
+                <Link href="/api/auth/signout">
+                  <a>退出</a>
+                </Link>
+              </>
+            ) : (
+              <Link href="/api/auth/signin">
+                <a>登录</a>
+              </Link>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default Header;
+```
+
+- `useSession()`: 这里是一个 hook，内部是有获取 Context 的，我们需要设置 NextAuthReact 的 `SessionProvider` （见下文）
+- `status === 'loading'`: `Session` 有三个状态（`loading` 验证中, `authenticated` 已认证, `unauthenticated` 未认证）
+- `session`: `Session` 中的信息可在 [`api/auth/session`](http://localhost:3000/api/auth/session) 查看
+
+```json
+{
+  "user": {
+    "name": "一块木头",
+    "email": "riverhohai@gmail.com",
+    "image": "https://avatars.githubusercontent.com/u/12692552?v=4"
+  },
+  "expires": "2022-12-13T01:33:02.088Z"
+}
+```
+
+`pages/_app.tsx`
+
+```tsx
+import { AppProps } from "next/app";
+import { SessionProvider } from "next-auth/react";
+import { Session } from "next-auth";
+
+import "styles/globals.css";
+
+const App = ({ Component, pageProps }: AppProps<{ session?: Session }>) => {
+  return (
+    <SessionProvider session={pageProps.session}>
+      <Component {...pageProps} />
+    </SessionProvider>
+  );
+};
+
+export default App;
+```
+
+`components/Layout.tsx`
+
+```tsx
+import React, { ReactNode } from "react";
+import Header from "./Header";
+
+const Layout: React.FC<{ children?: ReactNode }> = (props) => (
+  <div>
+    <Header />
+    <div className="px-8">{props.children}</div>
+  </div>
+);
+
+export default Layout;
+```
+
+`components/index.tsx`
+
+```tsx
+import Layout from "../components/Layout";
+
+export default function () {
+  return (
+    <Layout>
+      <main className="bg-white">
+        <div className="text-red-500 p-4">hello</div>
+      </main>
+    </Layout>
+  );
+}
+```
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221113093518.png)
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221113093808.png)
+
+文件树
+
+```txt
+.
+├── components
+│   ├── Header.tsx
+│   └── Layout.tsx
+├── pages
+│   ├── _app.tsx
+│   ├── api
+│   │   └── auth
+│   │       └── [...nextauth].ts
+│   └── index.tsx
+├── .env
+├── .gitignore
+├── next-env.d.ts
+├── package.json
+├── pnpm-lock.yaml
+├── postcss.config.js
+├── styles
+│   └── globals.css
+├── tailwind.config.js
+└── tsconfig.json
+```
+
+### 基础 Prisma
+
+```shell
+pnpm add prisma @prisma/client @next-auth/prisma-adapter
+```
+
+`package.json`
+
+```json
+"dependencies": {
+	...
+    "@next-auth/prisma-adapter": "^1.0.5",
+    "@prisma/client": "^4.6.1",
+    "prisma": "^4.6.1",
+    ...
+},
+```
+
+初始化 Prisma 项目
+
+```shell
+npx prisma init
+
+✔ Your Prisma schema was created at prisma/schema.prisma
+  You can now open it in your favorite editor.
+
+warn You already have a .gitignore file. Don't forget to add `.env` in it to not commit any private information.
+
+Next steps:
+1. Set the DATABASE_URL in the .env file to point to your existing database. If your database has no tables yet, read https://pris.ly/d/getting-started
+2. Set the provider of the datasource block in schema.prisma to match your database: postgresql, mysql, sqlite, sqlserver, mongodb or cockroachdb.
+3. Run prisma db pull to turn your database schema into a Prisma schema.
+4. Run prisma generate to generate the Prisma Client. You can then start querying your database.
+
+More information in our documentation:
+https://pris.ly/d/getting-started
+```
+
+可以看到新文件 `prisma/schema.prisma`
+
+```txt
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+```
+
+- `generator client`: 是 Prisma 用于客户端类型生成的配置，这里 `provider` 使用目前官方的 `prisma-client-js` （目前官方近这一个生成器）
+- `datasource db`: 数据库连接器的配置，这里连接的是 `postgresql` 地址这里使用环境变量
+
+我们再看 `.env` 文件，可以发现 Prisma 初始化自动为我们添加了 `DATABASE_URL`。
+
+```txt
+# Github OAuth
+GITHUB_ID=Github_Client_ID
+GITHUB_SECRET=Github_Client_secret
+
+
+# This was inserted by `prisma init`:
+# Environment variables declared in this file are automatically made available to Prisma.
+# See the documentation for more detail: https://pris.ly/d/prisma-schema#accessing-environment-variables-from-the-schema
+
+# Prisma supports the native connection string format for PostgreSQL, MySQL, SQLite, SQL Server, MongoDB and CockroachDB.
+# See the documentation for all the connection string options: https://pris.ly/d/connection-strings
+
+DATABASE_URL="postgresql://johndoe:randompassword@localhost:5432/mydb?schema=public"
+```
+
+- **User**: 数据库名称
+- **Password**: 数据库密码
+- **Host**: 数据库 IP 地址
+- **Port**: 数据库 端口
+- **Database name**: 数据库名称
+- 其他的为连接查询参数配置，可选
+
+1. 创建数据库
+   首先你的电脑要有安装 Postgresql 数据库，并且配置了 Bin Path，这要才可以更方便的使用终端命令
+
+```shell
+createdb my-blog
+```
+
+```shell
+🤙  my-blog git:(main) ✗ psql
+psql (14.5 (Homebrew))
+Type "help" for help.
+
+guanwei=# \l
+                            List of databases
+    Name    |  Owner  | Encoding | Collate | Ctype |  Access privileges
+------------+---------+----------+---------+-------+---------------------
+ my-blog    | guanwei | UTF8     | C       | C     |
+ ...
+(7 rows)
+
+guanwei=#
+```
+
+否则，可以使用 UI 来连接创建数据库
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221113102921.png)
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221113102951.png)
+
+测试我们是否配置正常，我们执行 `npx prisma db pull`
+
+```shell
+🤙  my-blog git:(main) ✗ npx prisma db pull
+Prisma schema loaded from prisma/schema.prisma
+Environment variables loaded from .env
+Datasource "db": PostgreSQL database "my-blog", schema "public" at "localhost:5432"
+
+✖ Introspecting based on datasource defined in prisma/schema.prisma
+Error:
+P4001 The introspected database was empty:
+
+prisma db pull could not create any models in your schema.prisma file and you will not be able to generate Prisma Client with the prisma generate command.
+
+To fix this, you have two options:
+
+- manually create a table in your database.
+- make sure the database connection URL inside the datasource block in schema.prisma points to a database that is not empty (it must contain at least one table).
+
+Then you can run prisma db pull again.
+```
+
+- `db pull`: 从数据库拉取表结构，生成对应的 Prisma Schema
+
+此时我们的数据库是空的，所以这里有一个 `P4001` 的错误，不过别担心，起码我们可以连接到数据库了。
+
+2. 编写 Prisma Schema
+   `prisma/schema.prisma`
+
+```txt
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime? @map("email_verified")
+  image         String?
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime? @updatedAt @map("updated_at")
+
+  accounts Account[]
+  sessions Session[]
+
+  @@map("users")
+}
+
+model Account {
+  id                String   @id @default(cuid())
+  type              String
+  provider          String
+  providerAccountId String   @map("provider_account_id")
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  createdAt         DateTime @default(now()) @map(name: "created_at")
+  updatedAt         DateTime @updatedAt @map(name: "updated_at")
+  userId            String   @map("user_id")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  expires      DateTime
+  userId       String   @map("user_id")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+```
+
+此数据来自 [NextAuthPrismaAdapter](https://next-auth.js.org/adapters/prisma#setup) 这里有些简单的表和字段的名称调整，不过你要是直接使用 NextAuth 的也可以，原谅我强迫症 🫣。
+
+有关 Prisma Schema 的语法，可以参考[官方文档](https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference)，下面我近介绍些基本的语法，方便理解
+
+- `model`: 理解为数据库表，而 `model` 后的名称，默认是数据库表名，但但我们在 Schema 底部设置了 `@@map('...')` 时，Prisma 将以该名称映射到数据库表
+- `String Int DateTime` 代码的数据类型，因为我们使用的是 Postgresql 所以这里直接使用 Prisma 处理的默认类型就行，若是 MySQL 的话，对于 `access_token` Prisma 的 `String` 会默认使用 `CARHCAR(191)` 的长度，这里可能不够，需要使用 `String @db.Text` 这种，标明数据库字段类型
+- `?` 表示该字段值可以为空，这其实就是 `DEFAULT NULL`，相反的是 `NOT NULL`
+- `@id`：表主键
+- `@unique`：唯一键，这里不在字段后使用的，而在 Schema 中直接设置的 `@@unique([...])` 表示符合唯一键
+- `@default(...)`: 字段默认值，但字段没有 `?` 并且没有设置默认值，那么这个字段就是必填的
+- `@map(...)`: 表字段名称
+- `@updatedAt` 和创建时间默认时间为现在的不同，这里是 Prisma 表示修改时间，实际 Prisma 会识别该值为一个 hook，在数据修改时，调用 hook 修改该时间（原子操作），这样就不需要我们再处理了
+- `cuid(), now()` 这些是 Prisma Schema 中内置的函数，执行后会返回一个或多个值，方便其他函数自己调用
+- `@relation` 这就是表关联的标识，如果你清楚 SQL 类数据库的表关联形式，那么这个 Schema 实际很直观，这几不多介绍了，可参考[官网文档](https://www.prisma.io/docs/concepts/components/prisma-schema/relations)
+
+ok，再来介绍下，这些表分别是干什么的
+
+- `User`: 用户
+- `Account`: 账号
+- `Session`: 登录身份标识
+- `VerificationToken`: 验证信息
+
+在 NextAuth 的设计中，用户是以 `email` 做唯一标识的，这就代表，用户 A 它有一个 Github 账号，使用了 `a@gmail.com` 注册的，还有一个 Apple 账号也使用 `a@gmail.com` 那么此只有一个 用户 A ，但有两个账号 Github, Apple 他们因 `a@gmail.com` 产生关联。
+
+`Session` 的话其实和我们之前查看的 `/api/auth/session` 有关联，这会键登录身份在服务端持久化，且这里报错的验证 token 确保客户端的 `session` 数据有效
+
+`VerificationToken` 是用来存储验证信息的，场景：服务器给 用户 X 的 `x@gmail.com` 发送了一个验证邮件，用户 X 收到邮件，点击验证连接（或看到一串验证码），返回我们的页面，输入信息点击验证，此时我们服务器拿到数据信息，需要和数据库查询验证信息的有效性（是否为该邮件的，有没有过期）。同理我们国内常用的手机短信验证。
+
+3. 映射 Schema 到数据库
+
+```shell
+🤙  my-blog git:(main) npx prisma migrate dev --name auth-base
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma/schema.prisma
+Datasource "db": PostgreSQL database "my-blog", schema "public" at "localhost:5432"
+
+Applying migration `20221113032027_auth_base`
+
+The following migration(s) have been created and applied from new schema changes:
+
+migrations/
+  └─ 20221113032027_auth_base/
+    └─ migration.sql
+
+Your database is now in sync with your schema.
+
+✔ Generated Prisma Client (4.6.1 | library) to ./node_modules/.pnpm/registry.npmmirror.com+@prisma+client@4.6.1_prisma@4.6.1/node_module
+s/@prisma/client in 204ms
+```
+
+- `migrate dev`: 这是 Prisma 内置的数据结构管理工具，这里使用 `dev` 开发模式
+- `--name auth-base`: 自定义 migrate 名称
+
+这里其实可以直接使用 `npx prisma db push` 此命令将 Schema 强制映射到数据库，这也是因为数据库是空的，否则不建议使用（除非你确定你在干什么）！
+
+执行完该命令后，会在 `prisma/` 下生成 migrate 管理文件
+
+```txt
+prisma/
+├── migrations
+│   ├── 20221113032027_auth_base
+│   │   └── migration.sql
+│   └── migration_lock.toml
+└── schema.prisma
+```
+
+查看数据库
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221113112627.png)
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221113112801.png)
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221113112823.png)
+
+可以注意下表结构，关联表是使用了外键的方式处理。
+
+### 使用 Prisma
+
+首先我们要做的就是连接 Prisma，这里要创建一个全局的连接单例
+`lib/db/prisma.ts` 在顶层新建一个 `lib` 目录
+
+```ts
+import { PrismaClient } from "@prisma/client";
+
+declare global {
+  var __db__: PrismaClient;
+}
+
+let prisma: PrismaClient;
+
+if (process.env.NODE_ENV === "production") {
+  prisma = new PrismaClient();
+} else {
+  if (!global.__db__) {
+    global.__db__ = new PrismaClient();
+  }
+  prisma = global.__db__;
+  prisma.$connect();
+}
+
+export const db = prisma;
+```
+
+- `declare gloabl __db__`: 全局变量类型
+- 生产环境下，我们的服务在部署的时候会运行，也就代表仅在部署启动的时候会连接一次
+- 非生产环境，热开发的情况为了避免多次创建连接实例，这里将第一次创建的实例挂在到全局，下一次直接使用乙存在的实例即可
+- `prisma.$connect()`: 初始化的时间先做一次连接，这是为了解决在开发模式下，重启服务后缓存是热开发的增量，此时数据库请求会出现未连接的错误（刷新页面-会好）。
+
+这里为了方便引用，我们在 `tsconfig.json` 中设置路径别名
+
+```json
+{
+	"compilerOptions": {
+		...
+		"baseUrl": ".",
+		"paths": {
+		  "~/lib/*": [
+			"lib/*"
+		  ],
+		  "~/components/*": [
+			"components/*"
+		  ]
+		}
+	}
+}
+```
+
+这样，我们就可以以下面这种方式引用 `lib` 和 `components`
+
+```ts
+import { db } from "~/lib/db/prisma";
+import Layout from "~/components/Layout";
+```
+
+ok, 先将 `pages/index.tsx` 中的路径优化下
+
+```tsx
+// import Layout from "../components/Layout"; 替换
+import Layout from "~/components/Layout";
+
+...
+```
+
+接着我们优化下 `.env` 文件，并且配置两个新的额环境变量
+
+```txt
+# prisma db connect url
+DATABASE_URL="postgresql://johndoe:randompassword@localhost:5432/mydb?schema=public"
+
+# Github OAuth - https://github.com/settings/developers
+GITHUB_ID=Github_Client_ID
+GITHUB_SECRET=Github_Client_secret
+
+# Next Auth url
+NEXTAUTH_URL=http://localhost:3000
+
+# Next Auth secret
+SECRET=Some_secret
+```
+
+- `NEXTAUTH_URL`: 在生产环境下有效，这里我们介绍一下，改值被 NextAuth 使用作为路径补全的，通常设置为部署应用的网址。如果使用 [Vercel](https://vercel.com/) 可以不设置，部署环境变量会存在该值。更详细参考[官网](https://next-auth.js.org/configuration/options#nextauth_url)
+- `SECRET`: 用户签发令牌的加密，之前设置是因为开发陌生下 NextAuth 会自己生成，这里我们自己设置下。`Some_secret` 为你的密钥
+
+如果你使用类 `unix` 系统，可以使用 `openssl` 生成一个
+
+```shell
+openssl rand 32 -base64
+
+# qu0ue5LgDsYC+v4fvRzfBGJxUVwTOttVRSF6QdPo0Dw=
+```
+
+为 NextAuth 设置 Prisma 转接器
+
+```ts
+import { NextApiHandler } from "next";
+import { NextAuthOptions } from "next-auth";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import GitHubProvider from "next-auth/providers/github";
+import NextAuth from "next-auth/next";
+import { db } from "~/lib/db/prisma";
+
+const authOptions: NextAuthOptions = {
+  adapter: PrismaAdapter(db),
+  secret: process.env.SECRET,
+  providers: [
+    GitHubProvider({
+      clientId: process.env.GITHUB_ID,
+      clientSecret: process.env.GITHUB_SECRET,
+    }),
+  ],
+};
+
+const authHandler: NextApiHandler = (req, res) =>
+  NextAuth(req, res, authOptions);
+
+export default authHandler;
+```
+
+- `adapter: PrismaAdapter(db)`: 这里是官方的[转接器](https://next-auth.js.org/adapters/prisma)，传递一个 Prisma 实例即可
+- `secret: process.env.SECRET`: 这里使用刚刚设置的密钥环境变量
+
+```txt
+.
+├── components
+│   ├── Header.tsx
+│   └── Layout.tsx
+├── lib
+│   └── db
+│       └── prisma.ts
+├── pages
+│   ├── _app.tsx
+│   ├── api
+│   │   └── auth
+│   │       └── [...nextauth].ts
+│   └── index.tsx
+├── .env
+├── .gitignore
+├── next-env.d.ts
+├── package.json
+├── pnpm-lock.yaml
+├── postcss.config.js
+├── prisma
+│   ├── migrations
+│   │   ├── 20221113032027_auth_base
+│   │   │   └── migration.sql
+│   │   └── migration_lock.toml
+│   └── schema.prisma
+├── styles
+│   └── globals.css
+├── tailwind.config.js
+└── tsconfig.json
+```
+
+ok, 下面我们启动
+
+```shell
+npm run dev
+```
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221113093518.png)
+
+登录后，查看数据库。这里我们使用 Prisma 官方提供的 数据连接 UI 管理来查看
+
+```shell
+npx prisma studio
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma/schema.prisma
+Prisma Studio is up on http://localhost:5555
+```
+
+打开: `http://localhost:5555`
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221113153440.png)
+
+点击 "User"
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221113153527.png)
+
+点击 "Account"
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221113153607.png)
+
+点击 "Session"
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221113153623.png)
+
+此时我们退出登录，刷新 Prisma Studio, 或点击“Filters” 前面的刷新按钮
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221113153824.png)
+
+可以看到，"Session" 没有了
+
+### 邮件登录
+
+如果使用邮件，那么 NextAuth 必须有连接数据库，这也就是我们在设置了 Prisma 后，才使用 Email。
+
+Email 的话，我们需要一个 SMTP 代理服务，这里我们直接使用 [QQ 邮箱](https://wx.mail.qq.com/) 这在国内更常用，可以更好的理解邮件登录的逻辑。
+
+NextAuth 的邮件服务是使用 [Nodemailer](https://nodemailer.com/about/)
+
+```shell
+pnpm add nodemailer
+```
+
+`package.json`
+
+```json
+"dependencies": {
+    ...
+    "nodemailer": "^6.8.0",
+	...
+},
+```
+
+#### 环境变量
+
+`.env`
+
+```txt
+...
+
+# Next Auth Email
+EMAIL_SERVER_HOST=smtp.qq.com
+EMAIL_SERVER_PORT=465
+EMAIL_SERVER_USER=Your_qq_number@qq.com
+EMAIL_SERVER_PASSWORD=Your_password
+EMAIL_FROM=Your_qq_number@qq.com
+```
+
+- `EMAIL_SERVER_HOST` 和 `EMAIL_SERVER_PORT`
+  这是[官方](https://service.mail.qq.com/cgi-bin/help?id=28&no=167&subtype=1)的地址 `smtp.qq.com`, 端口可以使用 `465` 或 `587`
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221113160039.png)
+
+- `EMAIL_SERVER_USER`: 填完整的邮箱名，如：`123456789@qq.com`，包括`@qq.com`部分。
+- `EMAIL_SERVER_PASSWORD`: 密码，这里要填授权码，不是我们登录的密码注意，下面我们申请一下。
+- `EMAIL_FROM`: 是我们（发送方）的邮件地址，这里和 `EMAIL_SERVER_USER` 相同就好
+
+#### 申请邮箱授权码
+
+1. 登录 [QQ 邮箱](https://wx.mail.qq.com/)
+2. 点击 "设置"
+   ![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221113160431.png)
+
+3. 点击 "帐户"
+   ![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221113160527.png)
+
+4. 点击 "开启", 我们需要 SMTP 服务
+   ![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221113160632.png)
+
+开启时应该会需要验证，这里 QQ 邮箱时使用我们发短信给 QQ 邮箱认证中心相应的文字，来验证
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221113160840.png)
+
+❗️ 如果我们有设置密保工具的话，点击 "验不了,试试其他"来使用（这样你就不用花短信费了）
+
+5. 当发送短信后，点击 "我已发送"，此时验证成功会弹出授权码信息
+   ![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221113161338.png)
+
+我们复制该授权码。添加到 `EMAIL_SERVER_PASSWORD` 后，注意该授权码可以多次申请
+
+如果我们忘记了授权码，可以点击 "生成授权码" 再次验证申请
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221113163217.png)
+
+#### 配置 NextAuth
+
+```ts
+import { NextApiHandler } from "next";
+import { NextAuthOptions } from "next-auth";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import GitHubProvider from "next-auth/providers/github";
+import EmailProvider from "next-auth/providers/email";
+import NextAuth from "next-auth/next";
+import { db } from "~/lib/db/prisma";
+
+const authOptions: NextAuthOptions = {
+  adapter: PrismaAdapter(db),
+  secret: process.env.SECRET,
+  providers: [
+    GitHubProvider({
+      clientId: process.env.GITHUB_ID,
+      clientSecret: process.env.GITHUB_SECRET,
+    }),
+    EmailProvider({
+      server: {
+        host: process.env.EMAIL_SERVER_HOST,
+        port: process.env.EMAIL_SERVER_PORT,
+        auth: {
+          user: process.env.EMAIL_SERVER_USER,
+          pass: process.env.EMAIL_SERVER_PASSWORD,
+        },
+      },
+      from: process.env.EMAIL_FROM,
+    }),
+  ],
+};
+
+const authHandler: NextApiHandler = (req, res) =>
+  NextAuth(req, res, authOptions);
+
+export default authHandler;
+```
+
+官方更详细说明: https://next-auth.js.org/providers/email
+
+#### 登录
+
+1. 启动服务
+
+```shell
+npm run dev
+```
+
+2. 点击 "登录"
+   ![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221113163636.png)
+
+可以看到已经有 "邮箱登录" 方式了（登录方式的顺序来自 NextAuth Providers 配置的顺序）
+
+3. 这里输入一个测试邮箱，点击 "Sign in with Email"
+   你会跳转到 `/api/auth/verify-request` 页面，这是 NextAuth 默认的
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221113163907.png)
+
+❗️ 我这里的测试邮件地址和之前的 Github 登录用户的邮件一样，如果你的不一样，那么会是一个新的用户
+
+可以看到，用户 `emailVerified` 是空的
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221113175236.png)
+而 `VerificationToken` 中已经有一条验证信息了
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221113175458.png)
+
+4. 到我们的测试邮箱中，会有一份来自 `localhost:3000` 标题的邮件
+   如果没找到的话，请在 垃圾邮件中确认下，否则可能就是配置有错误
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221113164318.png)
+
+5. 点击 "Sign in"
+   ![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221113164431.png)
+
+6. 查看数据库
+
+```shell
+npx prisma studio
+```
+
+可以看到 `emailVerified` 已经有值了，是验证完成的时间
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221113175601.png)
+
+ok, 我们来梳理下 NextAuth 邮件登录的逻辑
+
+- 没有注册，用户第一次登录即会创建新用户
+- 每次邮件登录，都需要发送邮件，验证
+- 邮件登录不需要用户密码
+
+其实我们更常见的是
+
+- 首次登录（就是注册），发送验证邮件，用户点击验证链接
+- 跳转到用户帐户信息确认页面，确认账号，填写密码，完成首次用户登录
+- 第二次登录，直接输入账号，密码，完成登录
+
+🤪 这要下一个教程了
+
+### 基础 Blog
+
+我们要完成
+
+- 创建文章
+- 文章发布
+- 文章详情
+- 查询文章
+- 文章删除
+
+#### 文章表
+
+1. 创建文章表 `prisma/schema.prisma`
+
+```txt
+model User {
+	id            String    @id @default(cuid())
+	...
+	Post     Post[]
+
+	@@map("users")
+}
+
+...
+
+model Post {
+	id        String   @id @default(cuid())
+	title     String
+	content   String?
+	published Boolean  @default(false)
+	createdAt DateTime @default(now()) @map(name: "created_at")
+	updatedAt DateTime @updatedAt @map(name: "updated_at")
+	authorId  String?
+
+	author User? @relation(fields: [authorId], references: [id])
+
+	@@map("posts")
+}
+```
+
+这里要关联 `User` 和 `Post` 是一对多的关系
+
+2. 将新的 Schema 映射到数据库
+
+```shell
+🤙  my-blog git:(main) npx prisma migrate dev --name posts
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma/schema.prisma
+Datasource "db": PostgreSQL database "my-blog", schema "public" at "localhost:5432"
+
+Applying migration `20221113103115_posts`
+
+The following migration(s) have been created and applied from new schema changes:
+
+migrations/
+  └─ 20221113103115_posts/
+    └─ migration.sql
+
+Your database is now in sync with your schema.
+
+✔ Generated Prisma Client (4.6.1 | library) to ./node_modules/.pnpm/registry.npmmirror.com+@prisma+client@4.6.1_prisma@4.6.1/node_module
+s/@prisma/client in 98ms
+```
+
+文件树
+
+```txt
+.
+├── components
+│   ├── Header.tsx
+│   └── Layout.tsx
+├── lib
+│   └── db
+│       └── prisma.ts
+├── pages
+│   ├── _app.tsx
+│   ├── api
+│   │   └── auth
+│   │       └── [...nextauth].ts
+│   └── index.tsx
+├── .env
+├── .gitignore
+├── next-env.d.ts
+├── package.json
+├── pnpm-lock.yaml
+├── postcss.config.js
+├── prisma
+│   ├── migrations
+│   │   ├── 20221113032027_auth_base
+│   │   │   └── migration.sql
+│   │   ├── 20221113103115_posts
+│   │   │   └── migration.sql
+│   │   └── migration_lock.toml
+│   └── schema.prisma
+├── styles
+│   └── globals.css
+├── tailwind.config.js
+└── tsconfig.json
+```
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221113183527.png)
+
+Come Soon!
