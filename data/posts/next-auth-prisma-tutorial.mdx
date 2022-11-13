@@ -1,0 +1,425 @@
+---
+title: Next + NextAuth + Prisma 简单博客
+description: Next + NextAuth + Prisma 简单博客
+badges: 实践
+tags: Next,NextAuth,Prisma
+publicAt: "2022-11-13"
+---
+
+### 基础 Next
+
+```shell
+mkdir my-blog
+cd my-blog
+npm init -y
+
+# Wrote to my-blog/package.json:
+```
+
+初始化 `package.json`
+
+```json
+{
+  "name": "my-blog",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
+```
+
+安装 next，这里使用 `pnpm` 当然你也可以使用其他的包管理工具，安装版本为 `12+` 目前 next 已有 `13 alpha` 版本，但为了相关库的兼容性，我们还是使用 `12`
+
+```shell
+pnpm add next@12.3.3 react react-dom
+```
+
+```json
+{
+  "dependencies": {
+    "next": "12.3.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}
+```
+
+文件结构
+
+```txt
+.
+├── components
+├── pages
+├── package.json
+└── pnpm-lock.yaml
+```
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221112161049.png)
+
+### 基础 Typescript
+
+```shell
+pnpm add -D ts-node typescript @types/node @types/react
+```
+
+```json
+{
+  "devDependencies": {
+    "@types/node": "^18.11.9",
+    "@types/react": "^18.0.25",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.4"
+  }
+}
+```
+
+创建 `tsconfig.json`
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2019",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true
+  },
+  "exclude": ["node_modules"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
+}
+```
+
+`next typescript` 类型全局支持 `next-env.d.ts`
+
+```ts
+/// <reference types="next" />
+/// <reference types="next/image-types/global" />
+
+// NOTE: This file should not be edited
+// see https://nextjs.org/docs/basic-features/typescript for more information.
+```
+
+再设置下执行脚本，此时的 `package.json`
+
+```json
+{
+  "name": "my-blog",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "next": "12.3.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.9",
+    "@types/react": "^18.0.25",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.4"
+  }
+}
+```
+
+### 创建首页
+
+`pages/index.tsx`
+
+```tsx
+export default function () {
+  return <div>hello</div>;
+}
+```
+
+运行
+
+```shell
+npm run dev
+
+> my-blog@1.0.0 dev my-blog
+> next
+
+ready - started server on 0.0.0.0:3000, url: http://localhost:3000
+```
+
+打开 `http://localhost:3000`
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221112162300.png)
+
+### 基础 Tailwindcss
+
+为了写些基础样式更方便，我们使用 [tailwind next.js](https://tailwindcss.com/docs/guides/nextjs)
+
+```shell
+pnpm add -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+```
+
+`package.json`
+
+```json
+"devDependencies": {
+	...
+	"autoprefixer": "^10.4.13",
+	"postcss": "^8.4.19",
+	"tailwindcss": "^3.2.4",
+	...
+}
+```
+
+文件树
+
+```txt
+.
+├── components
+├── pages
+│   └── index.tsx
+├── next-env.d.ts
+├── pnpm-lock.yaml
+├── postcss.config.js
+├── tailwind.config.js
+└── tsconfig.json
+```
+
+配置 `tailwind.config.js`
+
+```js
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./app/**/*.{js,ts,jsx,tsx}",
+    "./pages/**/*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
+```
+
+引入基础样式 `styles/globals.css`
+
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 网页背景色 */
+body {
+  @apply bg-gray-200;
+}
+```
+
+样式我们需要全局引入 `pages/_app.tsx`
+
+```tsx
+import { AppProps } from "next/app";
+
+import "styles/globals.css";
+
+const App = ({ Component, pageProps }: AppProps) => {
+  return <Component {...pageProps} />;
+};
+
+export default App;
+```
+
+修改 `pages/index.tsx` 试试，tailwind 是否生效
+
+```tsx
+export default function () {
+  return <div className="text-red-500 p-4">hello</div>;
+}
+```
+
+```shell
+npm run dev
+```
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221112164013.png)
+
+ok, 这里我们的基础就搭建好了，下面，我们先来直接安装 NextAuth
+
+### 使用 NextAuth
+
+```shell
+pnpm add next-auth
+```
+
+当前 `package.json`
+
+```json
+"dependencies": {
+	...
+	"next-auth": "^4.16.4",
+	...
+},
+```
+
+创建 next auth 接口代理 `pages/api/auth/[...nextauth].ts`
+
+```ts
+import { NextApiHandler } from "next";
+import { NextAuthOptions } from "next-auth";
+import GitHubProvider from "next-auth/providers/github";
+import NextAuth from "next-auth/next";
+
+const authOptions: NextAuthOptions = {
+  providers: [
+    GitHubProvider({
+      clientId: process.env.GITHUB_ID,
+      clientSecret: process.env.GITHUB_SECRET,
+    }),
+  ],
+};
+
+// 需要一个导出的 handler，使用 next auth 做代理
+const authHandler: NextApiHandler = (req, res) =>
+  NextAuth(req, res, authOptions);
+
+export default authHandler;
+```
+
+- `[...nextauth].ts`: 为什么是这样的？这是 Next api path 匹配，这将会匹配 `/api/auth/**/*` 所以路径的请求
+- `GitHubProvider`: 使用 Github 的 OAuth
+- `process.env`: 获取环境变量，他可以来自你的 `.env` 脚本参数，系统环境等环境变量
+
+此时，我们需要去申请一个 Github OAuth 的 token，用于请求
+
+### 申请 Github OAuth App Token
+
+1. [Github OAuth Apps](https://github.com/settings/developers)
+
+我这里已经有 App, 你的可能是空的，但不要紧，我们创建一个新的 app
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221112170734.png)
+
+2. 点击 "New OAuth App"，完成身份认证
+3. 填写内容
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221112171103.png)
+
+- `Application name`: 应用名称，随便填
+- `Homepage URL`: 应用首页，随便填
+- `Application description`: 应用说明，随便填
+- `Authorization callback URL`: 认证回执地址，`/api/auth/callback/github` 路径需要填写 next auth 的代理，这用于 next auth 来接收 OAuth 认证的结果。也可以直接使用 `/api/auth` next auth 会识别回执的, 完整: `http://localhost:3000/api/auth/callback/github`
+
+4. 点击 "Register application"
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221112171707.png)
+
+我们已经看到有 `Client ID` 了，但 `Client secrets` 还没有，我们来生成一个
+
+5. 点击 "Generate a new client secret"
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221112171915.png)
+
+nice!, 我们已经有自己的 Github OAuth token，下面开始配置吧！
+
+### 配置 ENV
+
+创建 `.env`
+
+```txt
+# Github OAuth
+GITHUB_ID=Client_ID
+GITHUB_SECRET=Client_secrets
+```
+
+❗️ 强烈建议，将该文件添加到 `.gitignore` 中，避免敏感信息泄漏，在部署时我们可以使用运行时的宿主环境的环境变量替代该文件
+
+```txt
+node_modules/
+.next/
+.DS_STORE
+.env
+```
+
+文件树
+
+```txt
+.
+├── components
+├── pages
+│   ├── _app.tsx
+│   ├── api
+│   │   └── auth
+│   │       └── [...nextauth].ts
+│   └── index.tsx
+├── .env
+├── .gitignore
+├── pnpm-lock.yaml
+├── next-env.d.ts
+├── package.json
+├── postcss.config.js
+├── styles
+│   └── globals.css
+├── tailwind.config.js
+└── tsconfig.json
+```
+
+### 使用 NextAuth Github 登录
+
+NextAuth 是支持不适应数据库做身份认证登录的，实际使用 OAuth 可以每次登录的时候获取用户信息，无需数据库存储了。我们先来验证下。
+
+1. 运行
+
+```shell
+npm run dev
+```
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221112172909.png)
+
+2. 当前 `Session` 信息，访问 `http://localhost:3000/api/auth/session`
+
+该接口是 NextAuth 代理，会返回当前登录的 `Session` 信息，可以看到这里为空，那就代表没有登录。
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221112173056.png)
+
+3. 登录，访问: `http://localhost:3000/api/auth/signin` 该接口是 NextAuth 代理，返回一个登录页面，这里可以看到我们配置的 Github OAuth 登录是有的
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221112173246.png)
+
+4. 点击登录 "Sign in with GitHub"
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221112173433.png)
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221112173445.png)
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221112173453.png)
+
+这里登录后跳转到我们的首页了，这是 NextAuth 默认的登录成功跳转页 `/`
+
+5. 查看登录 `Session` 访问: `http://localhost:3000/api/auth/session`
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221112173630.png)
+
+6. 退出登录，访问: `http://localhost:3000/api/auth/signout`
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221112174214.png)
+
+7. 点击 "Sign out", 此时成功退出，将跳转到首页, 这也是 NextAuth 默认的 `/`
+
+想要确认已经退出的话，可以访问: `http://localhost:3000/api/auth/session`
