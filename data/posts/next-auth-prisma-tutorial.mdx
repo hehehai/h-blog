@@ -1362,4 +1362,636 @@ s/@prisma/client in 98ms
 
 ![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221113183527.png)
 
-Come Soon!
+#### 创建
+
+**场景**
+
+1. 登录状态下，点击头部 "新文章" 入口按钮
+2. 进入新建文章页面，填写内容，点击 "创建" 按钮
+3. 成功创建一篇草稿文章
+
+4. 在头部组件，登录状态下，新增按钮，可跳转到 `/create` 页面（稍后创建）
+
+`components/Header.tsx`
+
+```tsx
+...
+<>
+	<p>
+	  {session?.user?.name} ({session?.user?.email})
+	</p>
+	<Link href="/create">
+	  <a>新文章</a>
+	</Link>
+	<Link href="/api/auth/signout">
+	  <a>退出</a>
+	</Link>
+</>
+...
+```
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221114153014.png)
+
+2. 编写创建文章接口
+
+`pages/api/post/index.ts`
+
+```ts
+import { NextApiRequest, NextApiResponse } from "next";
+import { getSession } from "next-auth/react";
+import { db } from "~/lib/db/prisma";
+
+export default async function (req: NextApiRequest, res: NextApiResponse) {
+  // 请求体的 标题，内容
+  const { title, content } = req.body;
+
+  // 登录信息
+  const session = await getSession({ req });
+
+  // 用户未登录，无法创建
+  if (!session?.user) {
+    return res.status(403);
+  }
+
+  // 创建文章
+  const result = await db.post.create({
+    data: {
+      title,
+      content,
+      // 文章作者是当前登录人
+      author: { connect: { email: session.user?.email } },
+    },
+  });
+
+  res.json(result);
+}
+```
+
+这里创建文章的时候，直接以当前登录人为作者做关联（Prisma 会根据用户 `email` 查找用户后关联 `id`）
+
+3. 编写创建文章页面
+
+`pages/create.tsx`
+
+```tsx
+import React, { useState } from "react";
+import Layout from "~/components/Layout";
+import Router from "next/router";
+
+const CreatePost: React.FC = () => {
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+
+  const submitData = async (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    try {
+      const body = { title, content };
+      // 发送创建请求
+      await fetch("/api/post", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      // 成功后，将跳转到 草稿页面（后面回完成）
+      await Router.push("/drafts");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return (
+    <Layout>
+      <div>
+        <form onSubmit={submitData}>
+          <h1 className="text-2xl mb-4">新文章（草稿）</h1>
+          <div>
+            <input
+              className="block w-full p-3 mb-5"
+              autoFocus
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="标题"
+              type="text"
+            />
+            <textarea
+              className="w-full p-3"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="内容"
+              rows={8}
+            />
+            <p>内容支持 Markdown</p>
+            <div className="space-x-4 mt-5">
+              <input
+                className="bg-indigo-500 px-6 py-2 text-white hover:bg-indigo-500/80 cursor-pointer disabled:hover:bg-indigo-500 disabled:cursor-not-allowed"
+                disabled={!content || !title}
+                type="submit"
+                value="创建"
+              />
+              <a
+                href="#"
+                onClick={() => Router.push("/")}
+                className="text-red-500 underline underline-offset-2 hover:text-red-500/80"
+              >
+                取消
+              </a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </Layout>
+  );
+};
+
+export default CreatePost;
+```
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221114153950.png)
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221114154146.png)
+
+点击创建，此时成功的话会跳转到 `/drafts` 但该页面目前我们创建，是 `404`。我们先来看下文章
+
+```shell
+npx prisma studio
+```
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221114154405.png)
+
+可以看到 `published` 默认是 `false`（未发布），也就是草稿
+
+#### 草稿
+
+**场景**
+
+1. 登录状态下（只能看到自己的草稿），点击头部 "我的草稿"
+2. 跳转到草稿页面，展示我的草稿列表（不含已发布）
+3. 点击草稿文章，可跳转到 "草稿详情"（稍后完成）
+
+我们的文章内容需要支持 `Markdown`, 所以这需要一个解析器
+
+```shell
+pnpm add react-markdown
+```
+
+`package.json`
+
+```json
+"dependencies": {
+    ...
+    "react-markdown": "^8.0.3"
+  },
+```
+
+1. 在头部新增 "我的草稿按钮"
+   `components/Header.tsx`
+
+```tsx
+...
+<div className="space-x-6">
+  <Link href="/">
+	<a className="bold">首页</a>
+  </Link>
+  {session && (
+	<Link href="/drafts">
+	  <a>我的草稿</a>
+	</Link>
+  )}
+</div>
+...
+```
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221114161715.png)
+
+2. 编写文章列表的文章卡片组件
+
+`components/Post.tsx`
+
+```tsx
+import React from "react";
+import Router from "next/router";
+import ReactMarkdown from "react-markdown";
+
+export type PostProps = {
+  id: string;
+  title: string;
+  author: {
+    name: string;
+    email: string;
+  } | null;
+  content: string;
+  published: boolean;
+};
+
+const Post: React.FC<{ post: PostProps }> = ({ post }) => {
+  const authorName = post.author ? post.author.name : "Unknown author";
+  return (
+    <div
+      onClick={() => Router.push(`/p/${post.id}`)}
+      className="py-4 px-6 bg-white cursor-pointer hover:shadow-lg"
+    >
+      <h2 className="text-2xl mb-4">{post.title}</h2>
+      <div className="mb-3 italic">作者：{authorName}</div>
+      <ReactMarkdown children={post.content} />
+    </div>
+  );
+};
+
+export default Post;
+```
+
+点击文章可以跳转到文章详情 `/p/[id]`
+
+3. 编写草稿页面
+
+`pages/drafts.tsx`
+
+```tsx
+import { getSession, useSession } from "next-auth/react";
+import { GetServerSideProps } from "next/types";
+import Layout from "~/components/Layout";
+import Post, { PostProps } from "~/components/Post";
+import { db } from "~/lib/db/prisma";
+
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const session = await getSession({ req });
+  if (!session) {
+    res.statusCode = 403;
+    return { props: { drafts: [] } };
+  }
+
+  // 查询文章（草稿）
+  const drafts = await db.post.findMany({
+    where: {
+      author: { email: session?.user?.email },
+      published: false,
+    },
+    // 关联查询作者（用户）
+    include: {
+      author: {
+        select: { name: true },
+      },
+    },
+  });
+
+  return { props: { drafts } };
+};
+
+type Props = {
+  drafts: PostProps[];
+};
+
+const Drafts: React.FC<Props> = (props) => {
+  const { data: session } = useSession();
+
+  if (!session) {
+    return (
+      <Layout>
+        <h1>我的草稿</h1>
+        <div>请先登录</div>
+      </Layout>
+    );
+  }
+
+  return (
+    <Layout>
+      <div>
+        <h1 className="mb-3">My Drafts</h1>
+        <main className="space-y-6">
+          {props.drafts.map((post) => (
+            <div key={post.id}>
+              <Post post={post} />
+            </div>
+          ))}
+        </main>
+      </div>
+    </Layout>
+  );
+};
+
+export default Drafts;
+```
+
+这里不需要在写查询接口，直接在 `getServerSideProps` 获取就可以，这会在服务端执行，和之前的创建文章客户端请求有区别。
+
+当我们打开草稿页面，此时应该有一篇草稿文章的（我们刚刚创建的）
+
+❗️但这里可能会出现该错误，这是在 `getServerSideProps` 返回数据做 JSON 处理时，无法序列化 `Date` 类型
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221114161835.png)
+
+可以手动处理，将 `getServerSideProps` 的返回值，遍历处理 `Date` 数据为字符串。
+
+我们这里使用 [`superjson`](https://github.com/blitz-js/superjson) 处理，安装
+
+```shell
+pnpm add superjson babel-plugin-superjson-next
+```
+
+`package.json`
+
+```json
+"dependencies": {
+	...
+	"babel-plugin-superjson-next": "^0.4.4",
+	"superjson": "^1.11.0"
+}
+```
+
+这里使用 Babel 插件，作为默认的 JSON 序列化，新建 `.babelrc`
+
+```json
+{
+  "presets": ["next/babel"],
+  "plugins": [
+    "superjson-next" // 👈
+  ]
+}
+```
+
+该文件会自动被 Next 使用，但如果使用 Babel 的话，Next 会关闭使用 SWC，虽然 SuperJSON 也有提供 SWC 插件，但目前不稳定。
+
+设置完毕后，重新启动
+
+```shell
+npm run dev
+```
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221114163251.png)
+
+点击文章卡片，跳转详情页面 `/p/[id]` (页面还不存在)
+
+#### 文章详情
+
+新建文件 `pages/p/[id].tsx`
+
+```tsx
+import React from "react";
+import { GetServerSideProps } from "next";
+import ReactMarkdown from "react-markdown";
+import Layout from "~/components/Layout";
+import { PostProps } from "~/components/Post";
+import { db } from "~/lib/db/prisma";
+
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+  const postId = params?.id;
+
+  const post = await db.post.findUnique({
+    where: { id: String(postId) },
+    include: {
+      author: {
+        select: { name: true, email: true },
+      },
+    },
+  });
+
+  return {
+    props: post,
+  };
+};
+
+const Post: React.FC<PostProps> = (props) => {
+  let title = props.title;
+  if (!props.published) {
+    title = `${title} (草稿)`;
+  }
+
+  return (
+    <Layout>
+      <div className="bg-white px-6 py-4">
+        <h2 className="text-2xl mb-4">{title}</h2>
+        <p className="italic mb-4">
+          作者：{props?.author?.name || "Unknown author"}
+        </p>
+        <ReactMarkdown children={props.content} />
+      </div>
+    </Layout>
+  );
+};
+
+export default Post;
+```
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221114164224.png)
+
+#### 发布和删除
+
+场景
+
+1. 文章详情页面，未登录或文章不属于当前登录人
+2. 不显示操作按钮（发布，删除）
+3. 否则-显示操作按钮，若文章是草稿，显示发布按钮，否则隐藏
+
+删除文章接口 `pages/api/post/[id].ts`
+
+```ts
+import { NextApiRequest, NextApiResponse } from "next";
+import { db } from "~/lib/db/prisma";
+
+export default async function (req: NextApiRequest, res: NextApiResponse) {
+  if (req.method === "DELETE") {
+    const postId = req.query.id;
+    const post = await db.post.delete({ where: { id: String(postId) } });
+
+    res.json(post);
+  } else {
+    throw new Error(`The HTTP ${req.method} method is not supported`);
+  }
+}
+```
+
+发布文章接口 `pages/api/publish/[id].ts`
+
+```ts
+import { NextApiRequest, NextApiResponse } from "next";
+import { db } from "~/lib/db/prisma";
+
+export default async function (req: NextApiRequest, res: NextApiResponse) {
+  const postId = req.query.id;
+  const post = await db.post.update({
+    where: { id: String(postId) },
+    data: { published: true },
+  });
+
+  res.json(post);
+}
+```
+
+`pages/p/[id].tsx`
+
+```tsx
+import React from "react";
+import { GetServerSideProps } from "next";
+import Router from "next/router";
+import ReactMarkdown from "react-markdown";
+import Layout from "~/components/Layout";
+import { PostProps } from "~/components/Post";
+import { db } from "~/lib/db/prisma";
+import { useSession } from "next-auth/react";
+
+export const getServerSideProps: GetServerSideProps<any, any> = async ({
+  params,
+}) => {
+  // 文章id，来自访问路由 [id]
+  const postId = params?.id;
+
+  const post = await db.post.findUnique({
+    where: { id: String(postId) },
+    include: {
+      author: {
+        select: { name: true, email: true },
+      },
+    },
+  });
+
+  return {
+    props: post,
+  };
+};
+
+async function publishPost(id: string): Promise<void> {
+  await fetch(`/api/publish/${id}`, {
+    method: "PUT",
+  });
+
+  Router.push("/");
+}
+
+async function deletePost(id: string): Promise<void> {
+  await fetch(`/api/post/${id}`, { method: "DELETE" });
+
+  Router.push("/");
+}
+
+const Post: React.FC<PostProps> = (props) => {
+  const { data: session, status } = useSession();
+  if (status === "loading") {
+    return <div>Authenticating ...</div>;
+  }
+
+  // 用户已登录？
+  const userHasValidSession = Boolean(session);
+  // 属于当前登录人？
+  const postBelongsToUser = session?.user?.email === props.author?.email;
+
+  let title = props.title;
+  if (!props.published) {
+    title = `${title} (草稿)`;
+  }
+
+  const renderControl = () => {
+    if (!userHasValidSession || !postBelongsToUser) return null;
+    return (
+      <div className="mt-10 space-x-6">
+        {!props.published && (
+          <button
+            className="bg-sky-500 text-white hover:bg-sky-500/80 px-6 py-2"
+            key="publish"
+            onClick={() => publishPost(props.id)}
+          >
+            发布
+          </button>
+        )}
+        <button
+          className="bg-red-500 text-white hover:bg-red-500/80 px-6 py-2"
+          key="delete"
+          onClick={() => deletePost(props.id)}
+        >
+          删除
+        </button>
+      </div>
+    );
+  };
+
+  return (
+    <Layout>
+      <div className="bg-white px-6 py-4">
+        <h2 className="text-2xl mb-4">{title}</h2>
+        <p className="italic mb-4">
+          作者：{props?.author?.name || "Unknown author"}
+        </p>
+        <ReactMarkdown children={props.content} />
+        {renderControl()}
+      </div>
+    </Layout>
+  );
+};
+
+export default Post;
+```
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221114165228.png)
+
+点击 "发布"
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221114165309.png)
+
+先不要测试删除，我们先来实现首页
+
+#### 首页（所有已发布文章）
+
+`pages/index.tsx`
+
+```tsx
+import React from "react";
+import { GetStaticProps } from "next";
+import Layout from "~/components/Layout";
+import Post, { PostProps } from "~/components/Post";
+import { db } from "~/lib/db/prisma";
+
+export const getStaticProps: GetStaticProps = async () => {
+  const feed = await db.post.findMany({
+    where: {
+      // 已发布的文章
+      published: true,
+    },
+    include: {
+      author: {
+        select: { name: true },
+      },
+    },
+    // 降序，最新创建的文章在最前
+    orderBy: { createdAt: "desc" },
+  });
+  return {
+    props: { feed },
+    // 10 秒
+    revalidate: 10,
+  };
+};
+
+type Props = {
+  feed: PostProps[];
+};
+
+const Home: React.FC<Props> = (props) => {
+  return (
+    <Layout>
+      <h1 className="mb-3">最新文章</h1>
+      <main className="space-y-6">
+        {props.feed.map((post) => (
+          <div key={post.id}>
+            <Post post={post} />
+          </div>
+        ))}
+      </main>
+    </Layout>
+  );
+};
+
+export default Home;
+```
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221114165730.png)
+
+此时我们先退出登录，可以看到首页的文章，但 "我的草稿"，"创建文章" 均隐藏
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221114165806.png)
+
+点击文章卡片，可以看到 "删除" 按钮也隐藏
+
+![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221114165912.png)
+
+我们再重新登录，"删除" 文章
+
+完整源码：[next-auth-prisma](https://github.com/hehehai/next-auth-prisma)
