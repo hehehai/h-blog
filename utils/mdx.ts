@@ -8,7 +8,7 @@ import rehypeCodeTitles from 'rehype-code-titles';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import matter from 'gray-matter';
-import { Post } from '../pages/interface/post';
+import { Post } from '~/types/post';
 
 // POSTS_PATH is useful when you want to get the path to a specific file
 export const POSTS_PATH = path.join(process.cwd(), 'data/posts')

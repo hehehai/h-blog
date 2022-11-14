@@ -1,4 +1,3 @@
-import { Sandpack } from "@codesandbox/sandpack-react";
 import { lazy, memo, Suspense } from "react";
 
 const SandpackRoot = lazy(() => import("./SandpackRoot"));

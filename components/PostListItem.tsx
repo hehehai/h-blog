@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { Post } from "../pages/interface/post";
-import Badge, { renderBadge } from "./Badge";
+import { Post } from "~/types/post";
+import { renderBadge } from "./Badge";
 
 export default function PostListItem(props: { post: Post }) {
   const { post } = props;

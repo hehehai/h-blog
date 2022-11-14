@@ -1,7 +1,3 @@
-/*
- * Copyright (c) Facebook, Inc. and its affiliates.
- */
-
 import { SandpackTheme } from "@codesandbox/sandpack-react";
 import tailwindConfig from "../../../tailwind.config";
 

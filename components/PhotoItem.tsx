@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Atlas } from "../pages/interface/photo";
+import { Atlas } from "~/types/photo";
 
 export default function PhotoItem(props: Atlas) {
   const { title, photos, time } = props;

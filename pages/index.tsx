@@ -1,11 +1,11 @@
 import { Suspense } from "react";
 import type { NextPage } from "next";
-import Container from "../components/Container";
-import HomeAboutMe from "../components/HomeAboutMe";
-import PostList from "../components/PostList";
+import Container from "~/components/Container";
+import HomeAboutMe from "~/components/HomeAboutMe";
+import PostList from "~/components/PostList";
 import NextLink from "next/link";
-import { postFilePaths, postMdxData } from "../utils/mdx";
-import { Post } from "./interface/post";
+import { postFilePaths, postMdxData } from "~/utils/mdx";
+import { Post } from "~/types/post";
 
 const Home: NextPage<{
   posts: Post[];

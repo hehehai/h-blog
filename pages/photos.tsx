@@ -1,8 +1,8 @@
 import { GetServerSideProps } from "next";
-import Container from "../components/Container";
-import PhotoItem from "../components/PhotoItem";
-import { getAtlas } from "../utils/photo";
-import { Atlas } from "./interface/photo";
+import Container from "~/components/Container";
+import PhotoItem from "~/components/PhotoItem";
+import { getAtlas } from "~/utils/photo";
+import { Atlas } from "~/types/photo";
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   let atlas: Atlas[] = [];

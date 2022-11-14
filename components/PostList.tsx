@@ -1,4 +1,4 @@
-import { Post } from "../pages/interface/post";
+import { Post } from "~/types/post";
 import PostListItem from "./PostListItem";
 
 export default function PostList({ posts }: {posts: Post[]}) {

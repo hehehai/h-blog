@@ -1,12 +1,7 @@
-import Image from "next/future/image";
 import EmbedStackblitz from "../EmbedStackblitz";
 import InlineCode from "./InlineCode";
 import SandpackBlock from "./SandpackBlock";
 import CustomLink from "../CustomLink";
-
-// function RoundedImage(props: any) {
-//   return <Image alt={props.alt} className="rounded-lg" {...props}/>;
-// }
 
 function Callout(props: any) {
   return (

@@ -2,16 +2,15 @@ import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
 import { MDXRemote } from "next-mdx-remote";
-import dynamic from "next/dynamic";
 import Head from "next/head";
 import Giscus from "@giscus/react";
-import mdxComponents from "../../components/MDX/MDXComponents";
-import { mdxToHtml, postFilePaths, POSTS_PATH } from "../../utils/mdx";
+import mdxComponents from "~/components/MDX/MDXComponents";
+import { mdxToHtml, postFilePaths, POSTS_PATH } from "~/utils/mdx";
 
-import Container from "../../components/Container";
-import { renderBadge } from "../../components/Badge";
-import { renderTag } from "../../components/Tag";
-import { PostMatter } from "../interface/post";
+import Container from "~/components/Container";
+import { renderBadge } from "~/components/Badge";
+import { renderTag } from "~/components/Tag";
+import { PostMatter } from "~/types/post";
 
 // Custom components/renderers to pass to MDX.
 // Since the MDX files aren't loaded by webpack, they have no knowledge of how
@@ -22,7 +21,7 @@ const components = {
   // It also works with dynamically-imported components, which is especially
   // useful for conditionally loading components for certain routes.
   // See the notes in README.md for more details.
-  TestComponent: dynamic(() => import("../../components/TestComponent")),
+  // TestComponent: dynamic(() => import("../../components/TestComponent")),
   Head,
 };
 
@@ -86,7 +85,11 @@ export default function Post({
   );
 }
 
-export const getStaticProps = async ({ params }: any) => {
+export const getStaticProps = async ({
+  params,
+}: {
+  params: { slug: string };
+}) => {
   const postFilePath = path.join(POSTS_PATH, `${params.slug}.mdx`);
   const source = fs.readFileSync(postFilePath);
 

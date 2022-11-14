@@ -1,4 +1,4 @@
-import { AtlasMeta, Issue, Photo } from '../pages/interface/photo'
+import { AtlasMeta, Issue, Photo } from '~/types/photo'
 
 const MetaKeyMap: Record<keyof AtlasMeta, string> = {
   description: 'Description: ',

@@ -1,5 +1,5 @@
-import Container from "../components/Container";
-import Project from "../components/ProjectItem";
+import Container from "~/components/Container";
+import Project from "~/components/ProjectItem";
 import ownerProjects from "../data/projects/owner.json";
 import contributionProjects from "../data/projects/contribution.json";
 
