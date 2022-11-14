@@ -1,4 +1,4 @@
-import { AtlasMeta, Photo } from '../pages/interface/photo'
+import { AtlasMeta, Issue, Photo } from '../pages/interface/photo'
 
 const MetaKeyMap: Record<keyof AtlasMeta, string> = {
   description: 'Description: ',
@@ -36,5 +36,26 @@ export const atlasParser = (body: string) => {
   return {
     meta,
     photos
+  }
+}
+
+export async function getAtlas(page = 1) {
+  const url = `https://api.github.com/repos/hehehai/h-blog/issues?assignee=hehehai&labels=photos&sort=created&direction=desc&per_page=100&page=${page}`
+
+  const resData = await fetch(url)
+  if (resData.status === 200) {
+    const issues: Issue[] = await resData.json()
+    return issues.map(issue => {
+      const { meta, photos } = atlasParser(issue.body)
+      return {
+        issuesId: issue.id,
+        title: issue.title,
+        ...meta,
+        photos,
+        labels: issue.labels.map(label => ({ id: label.id, name: label.name, color: label.color }))
+      }
+    })
+  } else {
+    return []
   }
 }

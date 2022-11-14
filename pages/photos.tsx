@@ -1,30 +1,23 @@
-import { useState, useCallback, useEffect } from "react";
+import { GetServerSideProps } from "next";
 import Container from "../components/Container";
 import PhotoItem from "../components/PhotoItem";
+import { getAtlas } from "../utils/photo";
 import { Atlas } from "./interface/photo";
 
-export default function Photos() {
-  const [loading, setLoading] = useState(false);
-  const [atlas, setAtlas] = useState<Atlas[]>([]);
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  let atlas: Atlas[] = [];
 
-  const getPhotos = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await fetch(`/api/photos?page=1`);
-      if (res.status === 200) {
-        const body = await res.json();
-        setAtlas(body);
-      }
-    } catch (err) {
-      // empty
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  try {
+    atlas = await getAtlas();
+  } catch (err) {
+    // fetch err
+  }
 
-  useEffect(() => {
-    getPhotos();
-  }, []);
+  return { props: { atlas } };
+};
+
+export default function Photos(props: { atlas: Atlas[] }) {
+  const { atlas = [] } = props;
 
   return (
     <Container>
@@ -32,7 +25,6 @@ export default function Photos() {
         {atlas.map((item: Atlas, idx: number) => (
           <PhotoItem key={idx} {...item} />
         ))}
-        {loading && <div>Loading...</div>}
       </div>
     </Container>
   );
