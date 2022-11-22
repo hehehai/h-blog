@@ -15,7 +15,7 @@ function Callout(props: any) {
 const MDXComponents = {
   a: CustomLink,
   // img: RoundedImage,
-  code: InlineCode,
+  // code: InlineCode,
   Callout,
   EmbedStackblitz,
   SandpackBlock,

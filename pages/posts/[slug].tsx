@@ -1,16 +1,40 @@
-import fs from "node:fs";
-import path from "node:path";
-import matter from "gray-matter";
-import { MDXRemote } from "next-mdx-remote";
 import Head from "next/head";
 import Giscus from "@giscus/react";
 import mdxComponents from "~/components/MDX/MDXComponents";
-import { mdxToHtml, postFilePaths, POSTS_PATH } from "~/utils/mdx";
+import { useMDXComponent } from "next-contentlayer/hooks";
 
 import Container from "~/components/Container";
 import { renderBadge } from "~/components/Badge";
 import { renderTag } from "~/components/Tag";
-import { PostMatter } from "~/types/post";
+import { allPosts } from "contentlayer/generated";
+import type { Post } from "contentlayer/generated";
+import rdTime from "reading-time";
+import { format, parseISO } from "date-fns";
+
+interface PostPageProps {
+  params: {
+    slug: string;
+  };
+}
+
+export async function getStaticProps({ params }: PostPageProps) {
+  const post = allPosts.find((post) => post.slugAsParams === params?.slug);
+
+  return {
+    props: {
+      post,
+    },
+  };
+}
+
+export async function getStaticPaths() {
+  const paths = allPosts.map((post) => post.slug);
+
+  return {
+    paths,
+    fallback: false,
+  };
+}
 
 // Custom components/renderers to pass to MDX.
 // Since the MDX files aren't loaded by webpack, they have no knowledge of how
@@ -25,21 +49,15 @@ const components = {
   Head,
 };
 
-export default function Post({
-  html,
-  frontMatter,
-  readingTime,
-}: {
-  html: any;
-  frontMatter: PostMatter;
-  readingTime: string;
-}) {
-  let readingTimeNum = Number.parseInt(readingTime);
+export default function Post({ post }: { post: Post }) {
+  const MdxComponent = useMDXComponent(post.body.code);
+
+  const readingTime = Number.parseInt(String(rdTime(post.body.raw).minutes));
 
   const seoMeta = {
-    title: frontMatter.title,
-    description: frontMatter.description,
-    date: frontMatter.publicAt,
+    title: post.title,
+    description: post.description,
+    date: post.date,
   };
 
   return (
@@ -47,20 +65,23 @@ export default function Post({
       <div>
         <div className="mb-10">
           <div className="text-2xl md:text-3xl leading-relaxed font-medium underline underline-offset-8 decoration-2 decoration-slate-700 mb-4">
-            {frontMatter.title}
+            {post.title}
           </div>
           <div className="text-sm text-slate-700 dark:text-gray-200 flex justify-content space-x-2 mt-1.5">
-            {frontMatter.tags && renderTag(frontMatter.tags)}
+            {post.tags && renderTag(post.tags)}
           </div>
           <div className="text-sm text-slate-700 dark:text-gray-200 flex justify-content space-x-2 mt-1.5">
-            {frontMatter.badges && renderBadge(frontMatter.badges)}
-            {frontMatter.publicAt && <div>{frontMatter.publicAt}</div>}
-            {!!readingTimeNum && <div>约 {readingTimeNum} 分钟</div>}
+            {post.badges && renderBadge(post.badges)}
+            {post.date && (
+              <div>{format(parseISO(post.date), "yyyy-MM-dd")}</div>
+            )}
+            {!!readingTime && <div>约 {readingTime} 分钟</div>}
           </div>
         </div>
         <main>
           <article className="w-full mt-4 prose dark:prose-invert max-w-none">
-            <MDXRemote {...html} components={components} />
+            {/* <MDXRemote {...html} components={components} /> */}
+            <MdxComponent components={components} />
           </article>
         </main>
         <div className="mt-12">
@@ -84,36 +105,3 @@ export default function Post({
     </Container>
   );
 }
-
-export const getStaticProps = async ({
-  params,
-}: {
-  params: { slug: string };
-}) => {
-  const postFilePath = path.join(POSTS_PATH, `${params.slug}.mdx`);
-  const source = fs.readFileSync(postFilePath);
-
-  const { content, data } = matter(source);
-
-  const htmlData = await mdxToHtml(content);
-
-  return {
-    props: {
-      ...htmlData,
-      frontMatter: data,
-    },
-  };
-};
-
-export const getStaticPaths = async () => {
-  const paths = postFilePaths
-    // Remove file extensions for page paths
-    .map((filePath) => filePath.replace(/\.mdx?$/, ""))
-    // Map the path into the static paths object required by Next.js
-    .map((slug) => ({ params: { slug } }));
-
-  return {
-    paths,
-    fallback: false,
-  };
-};
