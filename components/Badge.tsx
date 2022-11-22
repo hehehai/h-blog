@@ -6,14 +6,14 @@ export default function Badge(props: { label: string }) {
   }
 
   return (
-    <div className="text-xs rounded px-1.5 py-0.5 border rounded">{label}</div>
+    <div className="text-xs rounded px-1.5 py-0.5 border">{label}</div>
   );
 }
 
 export const renderBadge = (badges: string[] | string) => {
   const badgeArr = Array.isArray(badges)
     ? badges
-    : badges.split(",").map((badge: any) => badge.trim());
+    : badges.split(",").map((badge: string) => badge.trim());
 
   return (
     <div className="flex justify-content space-x-2">

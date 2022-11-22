@@ -22,7 +22,7 @@ export const Post = defineDocumentType(() => ({
       type: "string",
       required: false,
     },
-    publicAt: {
+    date: {
       type: "date",
       required: true,
     },

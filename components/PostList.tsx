@@ -1,10 +1,10 @@
-import { Post } from "~/types/post";
+import { Post } from "contentlayer/generated";
 import PostListItem from "./PostListItem";
 
 export default function PostList({ posts }: {posts: Post[]}) {
   const renderPosts = () => {
     return posts.map((post) => (
-      <PostListItem key={post.filePath} post={post} />
+      <PostListItem key={post._id} post={post} />
     ));
   };
 

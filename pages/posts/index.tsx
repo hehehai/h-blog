@@ -1,7 +1,7 @@
 import Container from "~/components/Container";
-import { postMdxData } from "~/utils/mdx";
 import PostList from "~/components/PostList";
-import { Post } from "~/types/post";
+import { compareDesc } from "date-fns";
+import { allPosts, Post } from "contentlayer/generated";
 
 export default function Index({ posts }: { posts: Post[] }) {
   return (
@@ -14,6 +14,9 @@ export default function Index({ posts }: { posts: Post[] }) {
   );
 }
 
-export function getStaticProps() {
-  return { props: { posts: postMdxData() } };
+export async function getStaticProps() {
+  const posts = allPosts.sort((a, b) => {
+    return compareDesc(new Date(a.date), new Date(b.date))
+  })
+  return { props: { posts } }
 }

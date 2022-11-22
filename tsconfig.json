@@ -18,7 +18,8 @@
     "paths": {
       "~/utils/*": ["utils/*"],
       "~/components/*": ["components/*"],
-      "~/types/*": ["types/*"]
+      "~/types/*": ["types/*"],
+      "contentlayer/generated": ["./.contentlayer/generated"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

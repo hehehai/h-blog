@@ -4,13 +4,13 @@ import Container from "~/components/Container";
 import HomeAboutMe from "~/components/HomeAboutMe";
 import PostList from "~/components/PostList";
 import NextLink from "next/link";
-import { postFilePaths, postMdxData } from "~/utils/mdx";
-import { Post } from "~/types/post";
+import { allPosts, Post } from "contentlayer/generated";
+import { compareDesc } from "date-fns";
 
 const Home: NextPage<{
   posts: Post[];
   hasMore: boolean;
-}> = ({ posts, hasMore }) => {
+}> = ({ posts = [], hasMore }) => {
   return (
     <Suspense fallback={null}>
       <Container>
@@ -35,8 +35,15 @@ const Home: NextPage<{
 
 export default Home;
 
-export function getStaticProps() {
-  const hasMore = postFilePaths.length > 5;
-
-  return { props: { posts: postMdxData(5), hasMore } };
+export async function getStaticProps() {
+  const posts = allPosts.sort((a, b) => {
+    return compareDesc(new Date(a.date), new Date(b.date));
+  });
+  
+  return {
+    props: {
+      posts: posts.slice(0, 5),
+      hasMore: posts.length > 5
+    },
+  };
 }
