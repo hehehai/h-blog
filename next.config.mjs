@@ -1,3 +1,5 @@
+import { withContentlayer } from 'next-contentlayer'
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -10,4 +12,4 @@ const nextConfig = {
   experimental: { images: { allowFutureImage: true } },
 };
 
-module.exports = nextConfig;
+export default withContentlayer(nextConfig);
