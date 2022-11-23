@@ -68,7 +68,7 @@ const components = {
   pre: ({ className, ...props }) => (
     <pre
       className={cn(
-        "mt-6 mb-4 overflow-x-auto rounded-lg bg-slate-800 dark:bg-[#1d1f28] py-4",
+        "mt-6 mb-4 overflow-x-auto rounded-lg bg-slate-800 dark:bg-[#1d1f28] py-3",
         className
       )}
       {...props}
@@ -77,7 +77,7 @@ const components = {
   code: ({ className, ...props }) => (
     <code
       className={cn(
-        "relative text-secondary dark:text-secondary-dark bg-slate-300 bg-opacity-30 px-1.5 py-0.5 rounded-md no-underline break-words",
+        "relative text-secondary dark:text-secondary-dark bg-slate-200 bg-opacity-20 px-1 py-0.5 rounded-[4px] no-underline break-words",
         className
       )}
       {...props}

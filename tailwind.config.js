@@ -69,6 +69,7 @@ module.exports = {
                 },
                 pre: {
                   backgroundColor: 'transparent',
+                  padding: 0,
                   lineHeight: 1.8
                 },
                 ul: {
