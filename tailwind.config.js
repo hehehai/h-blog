@@ -38,18 +38,7 @@ module.exports = {
                   fontSize: fontSize("lg"),
                 },
                 "> div": {
-                  marginTop: 0,
-                  marginBottom: theme("spacing.8"),
                   fontSize: fontSize("lg"),
-                },
-                "code": {
-                  fontWeight: '500'
-                },
-                "code::before": {
-                  content: "none",
-                },
-                "code::after": {
-                  content: "none",
                 },
                 strong: {
                   fontWeight: theme("fontWeight.medium"),
@@ -79,6 +68,7 @@ module.exports = {
                   },
                 },
                 pre: {
+                  backgroundColor: 'transparent',
                   lineHeight: 1.8
                 },
                 ul: {
@@ -104,15 +94,6 @@ module.exports = {
                 },
                 "h4, h5, h6": {
                   fontSize: fontSize("xl"),
-                },
-                img: {
-                  // images are wrapped in <p>, which already has margin
-                  marginTop: 0,
-                  marginBottom: 0,
-                  borderRadius: theme("borderRadius.md"),
-                  [`@media (min-width: ${theme("screens.lg")})`]: {
-                    borderRadius: theme("borderRadius.lg"),
-                  },
                 },
                 blockquote: {
                   fontWeight: theme("fontWeight.normal"),

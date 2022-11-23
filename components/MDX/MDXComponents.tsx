@@ -22,7 +22,10 @@ const components = {
     ...props
   }: React.ImgHTMLAttributes<HTMLImageElement>) => (
     <img
-      className={cn("rounded-md border border-slate-200", className)}
+      className={cn(
+        "rounded-md lg:rounded-lg lg:border border-slate-200/10",
+        className
+      )}
       alt={alt}
       {...props}
     />
@@ -62,17 +65,24 @@ const components = {
       {...props}
     />
   ),
-  code: ({ className, ...props }) => (
-    <code
+  pre: ({ className, ...props }) => (
+    <pre
       className={cn(
-        "inline text-secondary dark:text-secondary-dark bg-gray-200 dark:bg-gray-700 px-1 rounded-md no-underline break-words",
+        "mt-6 mb-4 overflow-x-auto rounded-lg bg-slate-800 dark:bg-[#1d1f28] py-4",
         className
       )}
       {...props}
     />
   ),
-  // img: RoundedImage,
-  // TestComponent: dynamic(() => import("../../components/TestComponent")),
+  code: ({ className, ...props }) => (
+    <code
+      className={cn(
+        "relative text-secondary dark:text-secondary-dark bg-slate-300 bg-opacity-30 px-1.5 py-0.5 rounded-md no-underline break-words",
+        className
+      )}
+      {...props}
+    />
+  ),
   Callout,
   EmbedStackblitz,
   SandpackBlock,
