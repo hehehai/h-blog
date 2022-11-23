@@ -1,5 +1,5 @@
 import Link from "next/link";
-import JumpLink from "./icons/JumpLink";
+import JumpLink from "../icons/JumpLink";
 
 export default function CustomLink(props: any) {
   const href = props.href;

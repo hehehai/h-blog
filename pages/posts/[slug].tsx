@@ -1,7 +1,4 @@
-import Head from "next/head";
-import Giscus from "@giscus/react";
-import mdxComponents from "~/components/MDX/MDXComponents";
-import { useMDXComponent } from "next-contentlayer/hooks";
+import { Mdx } from "~/components/MDX/MDXComponents";
 
 import Container from "~/components/Container";
 import { renderBadge } from "~/components/Badge";
@@ -10,6 +7,8 @@ import { allPosts } from "contentlayer/generated";
 import type { Post } from "contentlayer/generated";
 import rdTime from "reading-time";
 import { format, parseISO } from "date-fns";
+import { Giscus } from "~/components/Giscus";
+import { useTheme } from "next-themes";
 
 interface PostPageProps {
   params: {
@@ -36,21 +35,8 @@ export async function getStaticPaths() {
   };
 }
 
-// Custom components/renderers to pass to MDX.
-// Since the MDX files aren't loaded by webpack, they have no knowledge of how
-// to handle import statements. Instead, you must include components in scope
-// here.
-const components = {
-  ...mdxComponents,
-  // It also works with dynamically-imported components, which is especially
-  // useful for conditionally loading components for certain routes.
-  // See the notes in README.md for more details.
-  // TestComponent: dynamic(() => import("../../components/TestComponent")),
-  Head,
-};
-
 export default function Post({ post }: { post: Post }) {
-  const MdxComponent = useMDXComponent(post.body.code);
+  const { resolvedTheme } = useTheme();
 
   const readingTime = Number.parseInt(String(rdTime(post.body.raw).minutes));
 
@@ -80,25 +66,16 @@ export default function Post({ post }: { post: Post }) {
         </div>
         <main>
           <article className="w-full mt-4 prose dark:prose-invert max-w-none">
-            {/* <MDXRemote {...html} components={components} /> */}
-            <MdxComponent components={components} />
+            <Mdx code={post.body.code} />
           </article>
         </main>
         <div className="mt-12">
           <Giscus
-            id="comments"
             repo="hehehai/h-blog"
             repoId="R_kgDOH7HVQQ"
             category="Announcements"
             categoryId="DIC_kwDOH7HVQc4CRL4m"
-            mapping="pathname"
-            term="Welcome to @giscus/react component!"
-            reactionsEnabled="1"
-            emitMetadata="0"
-            inputPosition="top"
-            theme="light"
-            lang="zh-CN"
-            loading="lazy"
+            theme={resolvedTheme === "dark" ? "dark" : "light"}
           />
         </div>
       </div>
