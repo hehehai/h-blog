@@ -1,4 +1,3 @@
-import NextLink from "next/link";
 import Container from "~/components/Container";
 
 export default function About() {
@@ -7,15 +6,15 @@ export default function About() {
       <article className="prose dark:prose-invert">
         <h2 className="font-bold">@一块木头</h2>
         <p>
-          我是一位自学的软件开发人员，专注于前端应用程序和用户界面设计。我的首选技术栈是
-          TypeScript、Vue 和 Node。
+          我是一位专注于前端开发的工程师。我深具探索精神,热衷于使用最新的技术来带来创新用户体验。
+          <br />
+          我擅长使用 TypeScript、React 和 Vue
+          等流行框架来构建互动和响应式的用户界面。我善于运用最佳实践来设计系统架构,确保应用程序扩展性强、可维护性好。
         </p>
+        <p>目前，我正在探索 Open Graph 的设计和网站数据分析 Soon。</p>
         <p>
-          目前，我正在构建 <NextLink href="/projects">开源网站应用</NextLink>
-          ，帮助人们更轻松使用网页工具来学习和实践所学的知识。
-        </p>
-        <p>
-          我对设计系统、网页可访问性、前端架构和设计模式非常感兴趣。要联系我，请使用
+          我热衷于学习新技术和设计理念。如果您正寻找一位前端开发人员,欢迎与我联系。我期待以专业和负责任的态度为您的项目作出贡献。
+          <br />
           <a
             href="mailto: riverhohai@gmail.com"
             className="mx-1"

@@ -43,6 +43,11 @@ a {
   @apply m-0;
 }
 
+.prose img + img {
+  /* Don't apply styles to next/image */
+  @apply mt-3;
+}
+
 .prose > :first-child {
   /* Override removing top margin, causing layout shift */
   margin-top: 1.25em !important;

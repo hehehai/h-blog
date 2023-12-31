@@ -12,7 +12,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['GeistSans', "MISans", ...defaultTheme.fontFamily.sans],
+        sans: ["MISans", ...defaultTheme.fontFamily.sans],
         mono: ["GeistMono", ...defaultTheme.fontFamily.mono],
       },
       colors: {
@@ -47,7 +47,8 @@ module.exports = {
                   fontSize: fontSize("lg"),
                 },
                 "code": {
-                  fontWeight: '500'
+                  fontWeight: '500',
+                  fontSize: '0.94rem',
                 },
                 "code::before": {
                   content: "none",
