@@ -20,10 +20,10 @@ export default function Header() {
       </div>
       <div className="mt-5 md:mt-0 flex items-center space-x-4">
         <HeaderButton label="Github" link="https://github.com/hehehai">
-          <Github size={22} />
+          <Github size={24} />
         </HeaderButton>
         <HeaderButton label="Twitter" link="https://twitter.com/riverhohai">
-          <Twitter size={22} />
+          <Twitter size={20} />
         </HeaderButton>
         <HeaderButton onClick={handleToggleTheme}>
           <Theme size={24} theme={resolvedTheme} />

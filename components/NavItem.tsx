@@ -13,13 +13,15 @@ export default function NavItem({ href, text }: NavItemProps) {
 
   return (
     <NextLink href={href}>
-      <a
-        className={cn([
-          "border-b-4",
-          isActive ? "border-cyan-400" : "border-transparent",
-        ])}
-      >
-        <span className="">{text}</span>
+      <a className={cn(["relative group"])}>
+        <span>{text}</span>
+        <span
+          className={cn(
+            isActive ? "opacity-100" : "opacity-0",
+            "group-hover:opacity-100",
+            "absolute -bottom-2 inset-x-0 h-1 rounded-full bg-zinc-700/10"
+          )}
+        ></span>
       </a>
     </NextLink>
   );

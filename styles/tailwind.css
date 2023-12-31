@@ -4,6 +4,19 @@
 @tailwind utilities;
 @tailwind screens;
 
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --crimson: 0 66.52% 55.49%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --black-11: 222.2 84% 4.9%;
+  }
+}
+
 /* tailwind is configured to prefer this font */
 @font-face {
   font-family: "MISans";

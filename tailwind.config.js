@@ -15,6 +15,10 @@ module.exports = {
         sans: ['GeistSans', "MISans", ...defaultTheme.fontFamily.sans],
         mono: ["GeistMono", ...defaultTheme.fontFamily.mono],
       },
+      colors: {
+        background: "hsl(var(--background))",
+        crimson: "hsl(var(--crimson))",
+      },
 
       typography: (theme) => {
         // some fontSizes return [size, props], others just size :/
@@ -79,6 +83,7 @@ module.exports = {
                   },
                 },
                 pre: {
+                  fontSize: '0.94rem',
                   lineHeight: 1.8
                 },
                 ul: {
