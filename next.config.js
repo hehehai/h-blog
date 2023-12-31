@@ -7,7 +7,6 @@ const nextConfig = {
       "user-images.githubusercontent.com", // Github
     ],
   },
-  experimental: { images: { allowFutureImage: true } },
 };
 
 module.exports = nextConfig;

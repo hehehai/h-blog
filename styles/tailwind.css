@@ -6,16 +6,24 @@
 
 /* tailwind is configured to prefer this font */
 @font-face {
-  font-family: 'Inter';
-  src: url('/static/fonts/Inter.var.woff2') format('woff2');
+  font-family: "MISans";
+  src: url("/static/fonts/MiSans-Regular.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'JetBrains Mono';
-  src: url('/static/fonts/JetBrainsMono-Regular.woff2') format('woff2');
+  font-family: "GeistSans";
+  src: url("/static/fonts/Geist-Regular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "GeistMono";
+  src: url("/static/fonts/GeistMono-Regular.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
   font-display: swap;

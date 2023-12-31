@@ -6,7 +6,7 @@ export default function Badge(props: { label: string }) {
   }
 
   return (
-    <div className="text-xs rounded px-1.5 py-0.5 border rounded">{label}</div>
+    <div className="text-xs rounded px-1.5 py-0.5 border">{label}</div>
   );
 }
 
