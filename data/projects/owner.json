@@ -1,7 +1,17 @@
 [
   {
+    "name": "Coolos",
+    "subtitle": "🌈 快速轻松地发现颜色：您的快速和简单的颜色伴侣!",
+    "description": "- Next.js / Clerk / Prisma / Shadcn UI。\n- 颜色选择、色板生成、热门颜色查询。\n- 数据管理、身份认证、信息统计。",
+    "cover": "/static/images/coolos-cover.png",
+    "links": {
+      "github": "https://github.com/hehehai/coolos",
+      "site": "https://coolos.hehehai.cn/"
+    }
+  },
+  {
     "name": "CrateHub",
-    "subtitle": "自动展示 Github Rust 项目依赖列表的浏览器插件",
+    "subtitle": "🦀 自动展示 Github Rust 项目依赖列表的浏览器插件",
     "description": "- Rust 项目依赖列表。\n- crates.io 包信息。\n- Workspaces 目录列表",
     "cover": "/static/images/cratehub-cover.png",
     "links": {
@@ -24,7 +34,8 @@
     "description": "使用终端表格渲染布局，监听键盘事件操作。\n- 游戏分数展示。\n- 操作流畅。",
     "cover": "https://github.com/hehehai/2048/raw/main/2048.gif",
     "links": {
-      "github": "https://github.com/hehehai/2048"
+      "github": "https://github.com/hehehai/2048",
+      "site": "https://replit.com/@RiverHohai/2048?v=1"
     }
   }
 ]

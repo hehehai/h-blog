@@ -47,7 +47,7 @@ export default function Project(props: ProjectProps) {
               <a
                 href={links.github}
                 target="_blank"
-                className="rounded-lg text-slate-900 dark:text-white dark:bg-white/[0.03] font-semibold transition flex items-center text-[0.6125rem] leading-6 py-1 px-2 bg-slate-900/[0.03] cursor-pointer"
+                className="rounded-lg text-slate-900 dark:text-white dark:bg-white/[0.03] dark:hover:bg-white/[0.06] font-semibold transition flex items-center text-sm leading-6 py-1 px-2 bg-slate-900/[0.03] hover:bg-slate-900/[0.06] cursor-pointer"
                 rel="noreferrer"
               >
                 <Github size={18} />
@@ -58,7 +58,7 @@ export default function Project(props: ProjectProps) {
               <a
                 href={links.site}
                 target="_blank"
-                className="rounded-lg text-slate-900 dark:text-white dark:bg-white/[0.03] font-semibold transition flex items-center text-[0.6125rem] leading-6 py-1 px-2 bg-slate-900/[0.03] cursor-pointer"
+                className="rounded-lg text-slate-900 dark:text-white dark:bg-white/[0.03] dark:hover:bg-white/[0.06] font-semibold transition flex items-center text-sm leading-6 py-1 px-2 bg-slate-900/[0.03] hover:bg-slate-900/[0.06] cursor-pointer"
                 rel="noreferrer"
               >
                 <Website size={18} />

@@ -19,9 +19,9 @@ export default function NavItem({ href, text }: NavItemProps) {
           className={cn(
             isActive ? "opacity-100" : "opacity-0",
             "group-hover:opacity-100",
-            "absolute -bottom-2 inset-x-0 h-1 rounded-full bg-zinc-700/10"
+            "absolute -bottom-2 inset-x-0 h-1 rounded-full bg-zinc-700/10 dark:bg-white/20"
           )}
-        ></span>
+        />
       </a>
     </NextLink>
   );

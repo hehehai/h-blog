@@ -8,5 +8,14 @@
       "github": "https://github.com/arco-design/arco-design-vue",
       "site": "https://arco.design/vue/docs/start"
     }
+  },
+  {
+    "name": "MemoMe",
+    "subtitle": "📝 备份新浪微博到本地。",
+    "description": "- 基于 Electron 实现。\n- 身份状态缓存、数据获取。\n- 本地数据持久化、文件生成与导出。",
+    "cover": "/static/images/memome-cover.png",
+    "links": {
+      "site": "https://speechless.fun/"
+    }
   }
 ]
