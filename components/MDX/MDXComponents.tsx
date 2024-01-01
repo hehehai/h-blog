@@ -2,6 +2,7 @@ import EmbedStackblitz from "../EmbedStackblitz";
 import InlineCode from "./InlineCode";
 import SandpackBlock from "./SandpackBlock";
 import CustomLink from "../CustomLink";
+import PreCode from "./PreCode";
 
 function Callout(props: any) {
   return (
@@ -16,6 +17,7 @@ const MDXComponents = {
   a: CustomLink,
   // img: RoundedImage,
   code: InlineCode,
+  pre: PreCode,
   Callout,
   EmbedStackblitz,
   SandpackBlock,

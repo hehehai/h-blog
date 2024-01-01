@@ -3,7 +3,7 @@ import path from "node:path";
 import matter from "gray-matter";
 import { MDXRemote } from "next-mdx-remote";
 import Head from "next/head";
-import Giscus from "@giscus/react";
+// import Giscus from "@giscus/react";
 import mdxComponents from "~/components/MDX/MDXComponents";
 import { mdxToHtml, postFilePaths, POSTS_PATH } from "~/utils/mdx";
 
@@ -63,7 +63,7 @@ export default function Post({
             <MDXRemote {...html} components={components} />
           </article>
         </main>
-        <div className="mt-12">
+        {/* <div className="mt-12">
           <Giscus
             id="comments"
             repo="hehehai/h-blog"
@@ -79,7 +79,7 @@ export default function Post({
             lang="zh-CN"
             loading="lazy"
           />
-        </div>
+        </div> */}
       </div>
     </Container>
   );

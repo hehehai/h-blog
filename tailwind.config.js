@@ -17,7 +17,6 @@ module.exports = {
       },
       colors: {
         background: "hsl(var(--background))",
-        crimson: "hsl(var(--crimson))",
       },
 
       typography: (theme) => {

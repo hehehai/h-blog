@@ -16,6 +16,7 @@ export default function PhotoItem(props: Atlas) {
             <Image
               src={photo.path}
               alt={photo.alt}
+              lazyBoundary="200px"
               layout="fill"
               objectFit="cover"
             />

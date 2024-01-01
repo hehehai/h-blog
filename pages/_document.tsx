@@ -4,7 +4,7 @@ import { Html, Head, Main, NextScript } from "next/document";
 export default function Document() {
   return (
     <Html
-      lang="zh-cmn-Hans"
+      lang="zh-CN"
       className={cn("bg-background font-sans antialiased")}
     >
       <Head>
