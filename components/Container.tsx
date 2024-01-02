@@ -10,8 +10,9 @@ export default function Container(props: any) {
 
   const meta = {
     title: "Hehehai @一块木头 - 全栈开发，专注于前端应用程序和用户界面设计.",
-    description: `我是一位全栈开发，专注于前端应用程序和用户界面设计。我的首选技术栈是 TypeScript、Vue 和 Node。`,
+    description: `我是一位全栈开发，专注于前端应用程序和用户界面设计。我的首选技术栈是 TypeScript、React、Vue 和 NodeJS。`,
     image: "/favicon.svg",
+    og: '/og.png',
     type: "website",
     ...customMeta,
   };
@@ -34,14 +35,14 @@ export default function Container(props: any) {
         <meta property="og:site_name" content="Hehehai @一块木头" />
         <meta property="og:description" content={meta.description} />
         <meta property="og:title" content={meta.title} />
-        <meta property="og:image" content={meta.image} />
+        <meta property="og:image" content={meta.og} />
 
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:url" content="https://hehehai.cn" />
         <meta name="twitter:site" content="@riverhohai" />
         <meta name="twitter:title" content={meta.title} />
         <meta name="twitter:description" content={meta.description} />
-        <meta name="twitter:image" content={meta.image} />
+        <meta name="twitter:image" content={meta.og} />
         {meta.date && (
           <meta property="article:published_time" content={meta.date} />
         )}
