@@ -1,0 +1,316 @@
+---
+title: 一个事件发生器要具备什么
+description: 独立的作用域让我们的代码更加安全，同样的这也让深层上下文数据共享更麻烦些，虽然这很容易解决。但在网页开发的简单场景中，全局的数据或事件是更有效的处理方式。
+tags: JS,TS,NodeJS
+badges: 笔记
+publicAt: "2024-01-02"
+---
+
+在文件模块化的今天，我们很难再接收一个文件上千行的代码了，独立的作用域让我们的代码更加安全，同样的这也让深层上下文数据共享更麻烦些，虽然这很容易解决。但在网页开发的简单场景中，全局的数据或事件是更有效的处理方式。
+
+本篇文章实现一个必要功能的事件管理器对象。
+
+## 事件的核心
+
+![Event Manager Core](/static/images/write-a-simple-event-emitter/event-manager-core.png)
+
+- event manger: 事件管理器，来记录被绑定的事件。
+- on：绑定且监听该事件，当事件触发后，执行绑定的函数，一个事件是可以绑定多个执行函数的，这也是 事件管理器 key 的值是多个 fn 的原因。
+- emit：事件触发，触发后会执行对应事件下的所有 fn 。事件触发器可以传递函数参数，该参数会传递给每个 fn。
+
+```js
+// 事件发生器
+const eventGenerator = {
+  events: {},
+
+  // 注册事件监听器
+  on(eventName, callback) {
+    this.events[eventName] = this.events[eventName] || [];
+    this.events[eventName].push(callback);
+  },
+
+  // 触发事件
+  emit(eventName, data) {
+    if (this.events[eventName]) {
+      this.events[eventName].forEach((callback) => callback(data));
+    }
+  },
+};
+
+// 事件源
+class User {
+  constructor(name) {
+    this.name = name;
+  }
+
+  login() {
+    // 产生登录事件
+    eventGenerator.emit("login", this);
+  }
+}
+
+// 订阅登录事件
+eventGenerator.on("login", (user) => {
+  console.log(`${user.name} logged in!`);
+});
+
+// 产生事件
+const user = new User("John");
+user.login();
+```
+
+实际在 dom 环境和 nodejs 都有内置的自定义事件，这里就不过多介绍了，他们的核心是和上面 👆 一样的，只是使用方式的差异。
+
+- Dom: https://zh.javascript.info/dispatch-events
+- NodeJS: https://nodejs.org/en/learn/asynchronous-work/the-nodejs-event-emitter
+- Custom Event: https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
+
+## 业务化
+
+在实际的业务中，事件管理管理器需要做一些封装来简化事件的管理，最基本的有：
+
+- on：绑定且监听
+- emit：触发
+- remove/unbind：解除绑定
+
+我们基于上面的例子实现一个基本的功能。
+
+```js
+const eventGenerator = {
+  events: {},
+
+  // 注册事件监听器
+  on(eventName, callback) {
+    this.events[eventName] = this.events[eventName] || [];
+    this.events[eventName].push(callback);
+  },
+
+  // 触发事件
+  emit(eventName, data) {
+    if(this.events[eventName]) {
+      this.events[eventName].forEach(callback => callback(data));
+    }
+  }
+
+  // 删除事件监听器
+  unbind(eventName, callback) {
+    if (!this.events[eventName]) {
+      return;
+    }
+
+    this.events[eventName] = this.events[eventName].filter(
+      c => c !== callback
+    );
+  }
+}
+```
+
+### 增强功能
+
+on 函数绑定后返回一个取消绑定事件，执行后可取消对应的事件绑定。
+
+```js
+// 注册事件监听器
+on(eventName, callback) {
+  this.events[eventName] = this.events[eventName] || [];
+  this.events[eventName].push(callback);
+
+  return () => {
+    this.unbind(eventName, callback);
+  }
+},
+
+// example
+const unbind = eventGenerator.on('login', callback);
+unbind()
+```
+
+emit 执行 `*` 事件名称，代表触发所有事件的所有函数。
+
+```js
+// 触发全部
+emitAll(data) {
+  Object.keys(this.events).forEach(eventName => {
+    if(this.events[eventName]) {
+      this.events[eventName].forEach(callback => {
+        callback(data);
+      });
+    }
+  });
+},
+
+// 触发事件
+emit(eventName, data) {
+  if(eventName === '*') {
+    this.emitAll(data)
+  } else if(this.events[eventName]) {
+    this.events[eventName].forEach(callback => callback(data));
+  }
+}
+
+// example
+eventGenerator.on('login', callback1);
+eventGenerator.on('logout', callback2);
+
+eventGenerator.emit("*", user)
+```
+
+once 只监听一次该事件。
+
+```js
+once(eventName, callback) {
+  const unbind = this.on(eventName, (data) => {
+    unbind();
+    callback(data);
+  })
+  // 可用于在函数未执行前，解除绑定
+  return unbind();
+}
+
+// example
+eventGenerator.once('login', callback1);
+```
+
+完整的代码
+
+```js
+const eventGenerator = {
+  events: {},
+
+  // 注册事件监听器
+  on(eventName, callback) {
+	this.events[eventName] = this.events[eventName] || [];
+	this.events[eventName].push(callback);
+
+	return () => {
+	  this.unbind(eventName, callback);
+    }
+  },
+
+  // 只监听一次
+  once(eventName, callback) {
+	const unbind = this.on(eventName, (data) => {
+	  unbind();
+	  callback(data);
+	})
+	// 可用于在函数未执行前，解除绑定
+	return unbind();
+  }
+
+  // 触发全部
+  emitAll(data) {
+	Object.keys(this.events).forEach(eventName => {
+	  if(this.events[eventName]) {
+	    this.events[eventName].forEach(callback => {
+	      callback(data);
+	    });
+	   }
+    });
+  },
+
+  // 触发事件
+  emit(eventName, data) {
+    if(eventName === '*') {
+      this.emitAll(data)
+	} else if(this.events[eventName]) {
+      this.events[eventName].forEach(callback => callback(data));
+    }
+  }
+
+  // 删除事件监听器
+  unbind(eventName, callback) {
+    if (!this.events[eventName]) {
+      return;
+    }
+
+	// callback 一定要是原有引用，这里是引用比较
+    this.events[eventName] = this.events[eventName].filter(
+      c => c !== callback
+    );
+  }
+}
+```
+
+以下为 ts 类型
+
+```ts
+interface EventGenerator {
+  events: { [eventName: string]: Function[] };
+
+  // 注册事件监听器
+  on(eventName: string, callback: Function): () => void;
+
+  // 只监听一次
+  once(eventName: string, callback: Function): () => void;
+
+  // 触发全部
+  emitAll(data: any): void;
+
+  // 触发事件
+  emit(eventName: string, data: any): void;
+
+  // 删除事件监听器
+  unbind(eventName: string, callback: Function): void;
+}
+
+const eventGenerator: EventGenerator = {
+  events: {},
+
+  // 注册事件监听器
+  on(eventName: string, callback: Function): () => void {
+    this.events[eventName] = this.events[eventName] || [];
+    this.events[eventName].push(callback);
+
+    return () => {
+      this.unbind(eventName, callback);
+    };
+  },
+
+  // 只监听一次
+  once(eventName: string, callback: Function): () => void {
+    const unbind = this.on(eventName, (data) => {
+      unbind();
+      callback(data);
+    });
+    // 可用于在函数未执行前，解除绑定
+    return unbind();
+  },
+
+  // 触发全部
+  emitAll(data: any): void {
+    Object.keys(this.events).forEach((eventName) => {
+      if (this.events[eventName]) {
+        this.events[eventName].forEach((callback) => {
+          callback(data);
+        });
+      }
+    });
+  },
+
+  // 触发事件
+  emit(eventName: string, data: any): void {
+    if (eventName === "*") {
+      this.emitAll(data);
+    } else if (this.events[eventName]) {
+      this.events[eventName].forEach((callback) => callback(data));
+    }
+  },
+
+  // 删除事件监听器
+  unbind(eventName: string, callback: Function): void {
+    if (!this.events[eventName]) {
+      return;
+    }
+
+    this.events[eventName] = this.events[eventName].filter(
+      (c) => c !== callback
+    );
+  },
+};
+```
+
+## 参考
+
+- mitt: https://github.com/developit/mitt/tree/main
+- nanoevents: https://github.com/ai/nanoevents
+- eventemitter3: https://github.com/primus/eventemitter3
