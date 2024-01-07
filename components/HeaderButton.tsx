@@ -1,4 +1,5 @@
-import { ReactNode } from "react";
+import { motion } from "framer-motion";
+import { ReactNode, useState } from "react";
 
 export default function HeaderButton(props: {
   label?: string;
@@ -7,6 +8,7 @@ export default function HeaderButton(props: {
   onClick?: (event: MouseEvent) => void;
 }) {
   const { label, link, children, onClick } = props;
+  const [mouseIn, setMouseIn] = useState(false);
 
   const TagName = link ? "a" : "span";
   const TagAttr = link
@@ -20,11 +22,20 @@ export default function HeaderButton(props: {
     <TagName
       href={link}
       {...TagAttr}
-      className="rounded-lg text-slate-900 dark:text-white dark:bg-white/[0.03] dark:hover:bg-white/[0.06] font-semibold transition flex items-center text-[0.8125rem] leading-6 py-1 px-2 hover:bg-slate-700/[0.03] bg-slate-700/[0.03] md:bg-transparent cursor-pointer"
+      className="inline-flex rounded-lg text-slate-900 dark:text-white font-semibold transition text-[0.8125rem] leading-6 py-1 px-2 md:bg-transparent cursor-pointer relative overflow-hidden"
       onClick={(e: any) => onClick?.(e)}
+      onMouseEnter={() => setMouseIn(true)}
+      onMouseLeave={() => setMouseIn(false)}
     >
-      {children}
-      {label && <span className="ml-3">{label}</span>}
+      <span className="relative z-[1] inline-flex items-center">
+        {children}
+        {label && <span className="ml-3">{label}</span>}
+      </span>
+      <motion.div
+        animate={mouseIn ? { scale: 1 } : { scale: 0 }}
+        transition={{ duration: 0.2 }}
+        className="absolute inset-0 bg-slate-700/[0.03] w-full h-full dark:bg-white/[0.06]"
+      ></motion.div>
     </TagName>
   );
 }
