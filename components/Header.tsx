@@ -20,13 +20,13 @@ export default function Header() {
       </div>
       <div className="mt-5 md:mt-0 flex items-center space-x-4">
         <HeaderButton label="Github" link="https://github.com/hehehai">
-          <Github size={24} />
+          <Github className="text-xl" />
         </HeaderButton>
         <HeaderButton label="Twitter" link="https://twitter.com/riverhohai">
-          <Twitter size={20} />
+          <Twitter className="text-xl" />
         </HeaderButton>
         <HeaderButton onClick={handleToggleTheme}>
-          <Theme size={24} theme={resolvedTheme} />
+          <Theme className="text-xl" theme={resolvedTheme} />
         </HeaderButton>
       </div>
     </div>

@@ -10,7 +10,7 @@ export default function Document() {
       <Head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
       </Head>
-      <body className="min-h-screen bg-zinc-50 h-full dark:bg-gradient-to-br dark:from-slate-800 dark:to-slate-900 dark:text-slate-50">
+      <body className="min-h-screen bg-stone-50 h-full dark:bg-gradient-to-br dark:from-slate-800 dark:to-slate-900 dark:text-slate-50">
         <Main />
         <NextScript />
       </body>

@@ -1,16 +1,18 @@
-export default function ThemeToggleIcon(props: {
-  size: number;
-  theme?: string;
-}) {
-  const { size, theme } = props;
+import { SVGProps } from "react";
+
+export default function ThemeToggleIcon(
+  props: SVGProps<SVGSVGElement> & { theme?: string }
+) {
+  const { theme, ...restProps } = props;
 
   return (
     <svg
-      width={size}
-      height={size}
+      width={"1em"}
+      height={"1em"}
       className="inline-block"
       viewBox="0 0 24 24"
       fill="currentColor"
+      {...restProps}
     >
       {theme === "dark" ? (
         <path
