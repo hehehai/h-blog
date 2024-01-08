@@ -7,6 +7,9 @@ const nextConfig = {
       "user-images.githubusercontent.com", // Github
     ],
   },
+  experimental: {
+    runtime: 'experimental-edge',
+  },
 };
 
 module.exports = nextConfig;
