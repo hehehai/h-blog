@@ -3,6 +3,7 @@ import InlineCode from "./InlineCode";
 import SandpackBlock from "./SandpackBlock";
 import CustomLink from "../CustomLink";
 import PreCode from "./PreCode";
+import { DemoMenuBox } from "../_posts/css-clip-path";
 
 function Callout(props: any) {
   return (
@@ -21,6 +22,7 @@ const MDXComponents = {
   Callout,
   EmbedStackblitz,
   SandpackBlock,
+  DemoMenuBox
 };
 
 export default MDXComponents;
