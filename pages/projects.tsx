@@ -3,10 +3,6 @@ import Project from "~/components/ProjectItem";
 import ownerProjects from "../data/projects/owner.json";
 import contributionProjects from "../data/projects/contribution.json";
 
-export const config = {
-  runtime: 'experimental-edge',
-}
-
 export default function Projects() {
   return (
     <Container>

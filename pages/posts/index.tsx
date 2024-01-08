@@ -3,10 +3,6 @@ import { postMdxData } from "~/utils/mdx";
 import PostList from "~/components/PostList";
 import { Post } from "~/types/post";
 
-export const config = {
-  runtime: 'experimental-edge',
-}
-
 export default function Index({ posts }: { posts: Post[] }) {
   return (
     <Container>
