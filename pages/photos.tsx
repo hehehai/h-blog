@@ -4,6 +4,10 @@ import PhotoItem from "~/components/PhotoItem";
 import { getAtlas } from "~/utils/photo";
 import { Atlas } from "~/types/photo";
 
+export const config = {
+  runtime: 'experimental-edge',
+}
+
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   let atlas: Atlas[] = [];
 

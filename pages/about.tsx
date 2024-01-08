@@ -1,5 +1,9 @@
 import Container from "~/components/Container";
 
+export const config = {
+  runtime: 'experimental-edge',
+}
+
 export default function About() {
   return (
     <Container>

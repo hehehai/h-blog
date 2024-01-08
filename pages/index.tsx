@@ -7,6 +7,10 @@ import NextLink from "next/link";
 import { postFilePaths, postMdxData } from "~/utils/mdx";
 import { Post } from "~/types/post";
 
+export const config = {
+  runtime: 'experimental-edge',
+}
+
 const Home: NextPage<{
   posts: Post[];
   hasMore: boolean;

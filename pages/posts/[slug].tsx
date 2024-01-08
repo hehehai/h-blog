@@ -12,6 +12,10 @@ import { renderBadge } from "~/components/Badge";
 import { renderTag } from "~/components/Tag";
 import { PostMatter } from "~/types/post";
 
+export const config = {
+  runtime: 'experimental-edge',
+}
+
 // Custom components/renderers to pass to MDX.
 // Since the MDX files aren't loaded by webpack, they have no knowledge of how
 // to handle import statements. Instead, you must include components in scope
