@@ -30,11 +30,13 @@ export default function Project(props: ProjectProps) {
         )}
       </div>
       <div className="md:flex gap-5">
-        <div className="w-full aspect-[5/3] md:w-[200px] md:shrink-0">
+        <div className="w-full aspect-[5/3] md:w-[200px] md:shrink-0 drop-shadow-lg">
           <Image
             src={cover}
             alt={name}
-            className="rounded-lg drop-shadow-lg w-full h-full object-cover"
+            className="object-cover rounded-lg"
+            priority
+            layout="fill"
           />
         </div>
         <div className="mt-4 md:mt-0 grow flex flex-col">

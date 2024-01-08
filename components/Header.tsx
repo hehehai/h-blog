@@ -23,7 +23,7 @@ export default function Header() {
           <Github className="text-2xl" />
         </HeaderButton>
         <HeaderButton label="X.com" link="https://twitter.com/riverhohai">
-          <Twitter className="text-xl" />
+          <Twitter className="text-2xl" />
         </HeaderButton>
         <HeaderButton onClick={handleToggleTheme}>
           <Theme className="text-xl" theme={resolvedTheme} />
