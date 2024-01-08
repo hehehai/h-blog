@@ -7,21 +7,23 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
+    --foreground: 222.2 47.4% 11.2%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    --background: 224 71% 4%;
+    --foreground: 213 31% 91%;
   }
 }
 
 /* tailwind is configured to prefer this font */
-@font-face {
+/* @font-face {
   font-family: "MISans";
   src: url("/static/fonts/MiSans-Regular.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
-}
+} */
 
 /* @font-face {
   font-family: "GeistSans";

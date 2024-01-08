@@ -65,3 +65,7 @@ a {
 .hljs {
   background: transparent;
 }
+
+.sandpack-root pre {
+  background: transparent
+}

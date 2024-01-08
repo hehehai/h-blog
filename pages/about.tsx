@@ -3,7 +3,7 @@ import Container from "~/components/Container";
 export default function About() {
   return (
     <Container>
-      <article className="prose dark:prose-invert">
+      <article className="prose prose-slate dark:prose-invert">
         <h2 className="font-bold">@一块木头</h2>
         <p>
           我是一位专注于前端开发的工程师。我深具探索精神,热衷于使用最新的技术来带来创新用户体验。

@@ -3,7 +3,7 @@ import NextLink from "next/link";
 export default function HomeAboutMe() {
   return (
     <div className="max-w-xl">
-      <article className="prose dark:prose-invert">
+      <article className="prose prose-slate dark:prose-invert text-foreground">
         <h2 className="font-bold">@一块木头</h2>
         <p>
           我是一位专注于前端开发的工程师。我深具探索精神，热衷于使用最新的技术来带来创新用户体验。
@@ -32,7 +32,6 @@ export default function HomeAboutMe() {
           >
             Twitter
           </a>
-          。
         </p>
       </article>
       <div className="mt-3">

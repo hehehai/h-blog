@@ -59,7 +59,7 @@ export default function Post({
           </div>
         </div>
         <main>
-          <article className="w-full mt-4 prose dark:prose-invert max-w-none">
+          <article className="w-full mt-4 prose prose-slate dark:prose-invert max-w-none">
             <MDXRemote {...html} components={components} />
           </article>
         </main>
