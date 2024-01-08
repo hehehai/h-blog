@@ -1,5 +1,6 @@
 import Github from "./icons/Github";
 import Website from "./icons/Website";
+import Image from "next/image";
 
 interface ProjectLink {
   github?: string;
@@ -30,7 +31,7 @@ export default function Project(props: ProjectProps) {
       </div>
       <div className="md:flex gap-5">
         <div className="w-full aspect-[5/3] md:w-[200px] md:shrink-0">
-          <img
+          <Image
             src={cover}
             alt={name}
             className="rounded-lg drop-shadow-lg w-full h-full object-cover"
@@ -50,7 +51,7 @@ export default function Project(props: ProjectProps) {
                 className="rounded-lg text-slate-900 dark:text-white dark:bg-white/[0.03] dark:hover:bg-white/[0.06] font-semibold transition flex items-center text-sm leading-6 py-1 px-2 bg-slate-900/[0.03] hover:bg-slate-900/[0.06] cursor-pointer"
                 rel="noreferrer"
               >
-                <Github size={18} />
+                <Github className="text-xl" />
                 <span className="ml-2">Github</span>
               </a>
             )}
@@ -61,7 +62,7 @@ export default function Project(props: ProjectProps) {
                 className="rounded-lg text-slate-900 dark:text-white dark:bg-white/[0.03] dark:hover:bg-white/[0.06] font-semibold transition flex items-center text-sm leading-6 py-1 px-2 bg-slate-900/[0.03] hover:bg-slate-900/[0.06] cursor-pointer"
                 rel="noreferrer"
               >
-                <Website size={18} />
+                <Website className="text-xl" />
                 <span className="ml-2">Website</span>
               </a>
             )}

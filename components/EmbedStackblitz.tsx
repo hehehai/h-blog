@@ -25,11 +25,11 @@ export default function EmbedStackblitz(
     } catch (e) {
       console.log(`embed error: ${id}`, e);
     }
-  }, []);
+  }, [id, options, embedRef]);
 
   useEffect(() => {
     create();
-  }, []);
+  }, [create]);
 
   return (
     <div className="embed">

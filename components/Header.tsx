@@ -20,9 +20,9 @@ export default function Header() {
       </div>
       <div className="mt-5 md:mt-0 flex items-center space-x-4">
         <HeaderButton label="Github" link="https://github.com/hehehai">
-          <Github className="text-xl" />
+          <Github className="text-2xl" />
         </HeaderButton>
-        <HeaderButton label="Twitter" link="https://twitter.com/riverhohai">
+        <HeaderButton label="X.com" link="https://twitter.com/riverhohai">
           <Twitter className="text-xl" />
         </HeaderButton>
         <HeaderButton onClick={handleToggleTheme}>
