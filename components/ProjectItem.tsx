@@ -19,7 +19,7 @@ export default function Project(props: ProjectProps) {
   const { cover, name, subtitle, description, links } = props;
 
   return (
-    <div className="max-w-xl">
+    <div className="max-w-3xl">
       <div className="mb-4 md:flex items-center md:space-x-2">
         <div className="text-xl">{name}</div>
         {subtitle && (
@@ -30,7 +30,7 @@ export default function Project(props: ProjectProps) {
         )}
       </div>
       <div className="md:flex gap-5">
-        <div className="w-full aspect-[5/3] md:w-[200px] md:shrink-0 drop-shadow-lg">
+        <div className="w-full aspect-[5/3] md:w-[220px] md:shrink-0 drop-shadow-lg">
           <Image
             src={cover}
             alt={name}

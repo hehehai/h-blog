@@ -29,7 +29,7 @@ export default function HeaderButton(props: {
     >
       <span className="relative z-[1] inline-flex items-center">
         {children}
-        {label && <span className="ml-2">{label}</span>}
+        {label && <span className="ml-2 mr-[2px]">{label}</span>}
       </span>
       <motion.div
         animate={mouseIn ? { scale: 1 } : { scale: 0 }}

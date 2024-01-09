@@ -2,8 +2,10 @@ import { useTheme } from "next-themes";
 import NextLink from "next/link";
 import HeaderButton from "./HeaderButton";
 import Github from "./icons/Github";
-import Theme from "./icons/Theme";
 import Twitter from "./icons/Twitter";
+import { AnimatePresence } from "framer-motion";
+import SunIcon from "./icons/Sun";
+import MoonIcon from "./icons/Moon";
 
 export default function Header() {
   const { resolvedTheme, setTheme } = useTheme();
@@ -26,7 +28,27 @@ export default function Header() {
           <Twitter className="text-2xl" />
         </HeaderButton>
         <HeaderButton onClick={handleToggleTheme}>
-          <Theme className="text-xl" theme={resolvedTheme} />
+          <AnimatePresence mode="wait">
+            {resolvedTheme === "dark" ? (
+              <SunIcon
+                key="sun"
+                className="text-2xl"
+                initial={{ x: 10, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: -10, opacity: 0 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+              />
+            ) : (
+              <MoonIcon
+                key="moon"
+                className="text-2xl"
+                initial={{ x: 10, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: -10, opacity: 0 }}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+              />
+            )}
+          </AnimatePresence>
         </HeaderButton>
       </div>
     </div>

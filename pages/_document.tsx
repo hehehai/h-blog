@@ -12,7 +12,7 @@ export default function Document() {
           href="https://cdn.jsdelivr.net/npm/misans@4.0.0/lib/Normal/MiSans-Regular.min.css"
         />
       </Head>
-      <body className="min-h-screen bg-stone-50 h-full dark:bg-gradient-to-br dark:from-slate-800 dark:to-slate-900 dark:text-slate-50">
+      <body className="min-h-screen bg-stone-50 h-full dark:bg-gradient-to-br dark:from-slate-900 dark:to-background dark:text-slate-50">
         <Main />
         <NextScript />
       </body>
