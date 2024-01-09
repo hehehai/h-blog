@@ -32,6 +32,7 @@ export default function HeaderButton(props: {
         {label && <span className="ml-2 mr-[2px]">{label}</span>}
       </span>
       <motion.div
+        initial={false}
         animate={mouseIn ? { scale: 1 } : { scale: 0 }}
         transition={{ duration: 0.2 }}
         className="absolute inset-0 bg-slate-700/[0.03] w-full h-full dark:bg-white/[0.06]"

@@ -3,17 +3,38 @@ import NextLink from "next/link";
 import HeaderButton from "./HeaderButton";
 import Github from "./icons/Github";
 import Twitter from "./icons/Twitter";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, Variants } from "framer-motion";
 import SunIcon from "./icons/Sun";
 import MoonIcon from "./icons/Moon";
+import { useEffect, useState } from "react";
+
+const themeVariants: Variants = {
+  initial: (isMount) => ({
+    x: isMount ? 10 : 0,
+    opacity: isMount ? 0 : 1,
+  }),
+  animate: {
+    x: 0,
+    opacity: 1,
+  },
+  exit: {
+    x: -10,
+    opacity: 0,
+  },
+};
 
 export default function Header() {
   const { resolvedTheme, setTheme } = useTheme();
+  const [isMount, setIsMount] = useState(false);
 
   const handleToggleTheme = (e: MouseEvent) => {
     e.preventDefault();
     setTheme(resolvedTheme === "dark" ? "light" : "dark");
   };
+
+  useEffect(() => {
+    setIsMount(true);
+  }, []);
 
   return (
     <div className="md:flex justify-between items-center py-12">
@@ -33,19 +54,23 @@ export default function Header() {
               <SunIcon
                 key="sun"
                 className="text-2xl"
-                initial={{ x: 10, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: -10, opacity: 0 }}
-                transition={{ duration: 0.3, ease: "easeInOut" }}
+                variants={themeVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                custom={isMount}
+                transition={{ duration: 0.2, ease: "easeInOut" }}
               />
             ) : (
               <MoonIcon
                 key="moon"
                 className="text-2xl"
-                initial={{ x: 10, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: -10, opacity: 0 }}
-                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                variants={themeVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                custom={isMount}
+                transition={{ duration: 0.2, ease: "easeInOut" }}
               />
             )}
           </AnimatePresence>
