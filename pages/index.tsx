@@ -38,5 +38,5 @@ export default Home;
 export function getStaticProps() {
   const hasMore = postFilePaths.length > 5;
 
-  return { props: { posts: postMdxData(5), hasMore } };
+  return { props: { posts: postMdxData(false, 5), hasMore } };
 }

@@ -19,13 +19,13 @@ export const postFilePaths = fs
   // Only include md(x) files
   .filter((filePath) => /\.mdx?$/.test(filePath))
 
-export const postMdxData = (count = 999) : Post[] => {
+export const postMdxData = (hasContent = true, count = 999) : Post[] => {
   const posts = postFilePaths.map((filePath) => {
     const source = fs.readFileSync(path.join(POSTS_PATH, filePath));
     const { content, data } = matter(source);
 
     return {
-      content,
+      content: hasContent ? content : '',
       data,
       publicAtMs: +new Date(data.publicAt ?? 0),
       readingTime: readingTime(content).minutes,

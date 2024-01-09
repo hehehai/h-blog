@@ -15,5 +15,9 @@ export default function Index({ posts }: { posts: Post[] }) {
 }
 
 export function getStaticProps() {
-  return { props: { posts: postMdxData() } };
+  return {
+    props: {
+      posts: postMdxData(false),
+    },
+  };
 }
