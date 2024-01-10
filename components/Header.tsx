@@ -3,7 +3,7 @@ import NextLink from "next/link";
 import HeaderButton from "./HeaderButton";
 import Github from "./icons/Github";
 import Twitter from "./icons/Twitter";
-import { AnimatePresence, Variants } from "framer-motion";
+import { AnimatePresence, Variants, motion } from "framer-motion";
 import SunIcon from "./icons/Sun";
 import MoonIcon from "./icons/Moon";
 import { useEffect, useState } from "react";
@@ -51,7 +51,7 @@ export default function Header() {
         <HeaderButton onClick={handleToggleTheme}>
           <AnimatePresence mode="wait">
             {resolvedTheme === "dark" ? (
-              <SunIcon
+              <motion.div
                 key="sun"
                 className="text-2xl"
                 variants={themeVariants}
@@ -59,10 +59,12 @@ export default function Header() {
                 animate="animate"
                 exit="exit"
                 custom={isMount}
-                transition={{ duration: 0.2, ease: "easeInOut" }}
-              />
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+              >
+                <SunIcon />
+              </motion.div>
             ) : (
-              <MoonIcon
+              <motion.div
                 key="moon"
                 className="text-2xl"
                 variants={themeVariants}
@@ -70,8 +72,10 @@ export default function Header() {
                 animate="animate"
                 exit="exit"
                 custom={isMount}
-                transition={{ duration: 0.2, ease: "easeInOut" }}
-              />
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+              >
+                <MoonIcon />
+              </motion.div>
             )}
           </AnimatePresence>
         </HeaderButton>

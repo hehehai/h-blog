@@ -1,27 +1,41 @@
 import { useRouter } from "next/router";
 import NextLink from "next/link";
 import cn from "classnames";
+import { motion } from "framer-motion";
 
-interface NavItemProps {
+interface NavItemProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   href: string;
   text: string;
+  active: boolean;
 }
 
-export default function NavItem({ href, text }: NavItemProps) {
+export default function NavItem({
+  href,
+  text,
+  active,
+  ...props
+}: NavItemProps) {
   const router = useRouter();
   const isActive = router.asPath === href;
+  const underLen = text.length;
 
   return (
     <NextLink href={href}>
-      <a className={cn(["relative group"])}>
+      <a className={cn(["relative group px-5 first:pl-0 pb-2"])} {...props}>
         <span>{text}</span>
-        <span
-          className={cn(
-            isActive ? "opacity-100" : "opacity-0",
-            "group-hover:opacity-100",
-            "absolute -bottom-2 inset-x-0 h-1 rounded-full bg-zinc-700/10 dark:bg-white/20"
-          )}
-        />
+        {(active || isActive) && (
+          <motion.div
+            layoutId="underline"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className={cn(
+              "absolute bottom-0 h-1 rounded-full bg-zinc-700/10 dark:bg-white/20"
+            )}
+            style={{ width: `${underLen}em` }}
+          />
+        )}
       </a>
     </NextLink>
   );
