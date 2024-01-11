@@ -136,6 +136,9 @@ module.exports = {
           },
         };
       },
+      transitionTimingFunction: {
+        'smooth': 'cubic-bezier(1,0,0,1)'
+      }
     },
   },
   plugins: [require("@tailwindcss/typography")],
