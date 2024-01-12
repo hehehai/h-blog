@@ -6,11 +6,11 @@ export default function Document() {
     <Html lang="zh-CN" className={cn("bg-background font-sans antialiased")}>
       <Head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        {/* <link
+        <link
           rel="stylesheet"
           crossOrigin="anonymous"
           href="https://cdn.jsdelivr.net/npm/misans@4.0.0/lib/Normal/MiSans-Regular.min.css"
-        /> */}
+        />
       </Head>
       <body className="min-h-screen bg-stone-50 text-foreground h-full dark:bg-gradient-to-br dark:from-slate-900 dark:to-background">
         <Main />
