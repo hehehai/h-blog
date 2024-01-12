@@ -18,17 +18,14 @@ publicAt: "2024-01-12"
 
 ## 直接引入
 
-<div data-card="tip">
-这里的字体是使用 woff2 这是对比其他网页字体类型更优的选择。
-
+<FAQBox title="为什么使用 woff2 ？">
 1. 更高的压缩率：WOFF2 使用了更先进的压缩算法，可以显著减小字体文件的大小。相对于 WOFF1，WOFF2 通常可以将字体文件大小减小约 30%至 50%。这对于网页的加载速度和用户体验非常重要，尤其是在移动设备和低带宽网络环境下。
 2. 更好的性能：由于 WOFF2 文件更小，下载和解析的速度更快，因此可以提供更快的字体加载时间。这可以减少网页的加载时间，提高性能，并为用户提供更好的体验。
 3. 支持更多字形和特性：WOFF2 支持更多的字形和字体特性，例如更多的 OpenType 功能，包括连字、字体变体和语言特定的字形。这使得设计师和开发人员可以更自由地使用各种字体效果，从而增强网页的视觉吸引力和创意性。
 4. 向后兼容性：尽管 WOFF2 是对 WOFF 的改进，但它仍然具有向后兼容性。现代的 Web 浏览器一般都能够解析和显示 WOFF2 格式，而对于不支持 WOFF2 的旧版本浏览器，它们仍然可以使用 WOFF 格式进行字体呈现。
 
 起初因为博客使用的是 Next.js 12 ，无法使用 NextFont，我就是使用了 css [`@font-face`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/@font-face) 的方式引入了字体文件。
-
-</div>
+</FAQBox>
 
 ```css
 @font-face {
@@ -54,14 +51,14 @@ theme: {
 ...
 ```
 
-<div data-card="note">
+<Callout type="find">
 浏览器会在解析 CSS 文件时遇到 `@font-face` 规则，然后开始异步下载字体文件。在字体文件下载完成之前，浏览器会使用默认的字体进行文本的渲染和布局。一旦字体文件下载完成，浏览器会重新应用样式，并使用自定义字体进行文本渲染。
 
 因此 `@font-face` 规则不会阻塞 CSS 文件的解析和渲染。它可能会对文字的呈现产生一定的延迟，因为浏览器需要等待字体文件下载完成后才能应用自定义字体。但并不会阻塞 CSS 文件本身的渲染。
 
 请注意，上述行为可能会导致 FOUC（Flash of Unstyled Content），即页面加载时短暂出现无样式的内容，直到字体文件下载完成并应用自定义字体。为了避免 FOUC，可以使用一些技术，如使用无衬线字体作为回退字体，或者使用字体预加载和优化技术（来避免字体闪烁问题）。
 
-</div>
+</Callout>
 
 ## 字体子集
 
@@ -82,9 +79,7 @@ theme: {
 - SFNT (TrueType/OpenType), WOFF 或 WOFF2 文件读取与导出
 - 字体子集直接设置普通字符。
 
-<div data-card="note">
-SFNT (Scalable Font Format) 代表了多种字体格式，其中最常见的包括：
-
+<FAQBox title="SFNT (Scalable Font Format) 是什么字体 ？">
 1. TrueType (TTF)：TrueType 字体是由 Apple 和 Microsoft 共同开发的一种轮廓字体技术。它使用 SFNT 格式，并支持平滑的字形轮
    廓，可以在不同的显示分辨率下呈现出高质量的字形。
 2. OpenType (OTF)：OpenType 字体是由 Microsoft 和 Adobe 共同开发的一种可扩展字体技术。它也使用 SFNT 格式，具有更多的功能和
@@ -92,8 +87,7 @@ SFNT (Scalable Font Format) 代表了多种字体格式，其中最常见的包�
 3. PostScript (Type 1)：PostScript 字体是 Adobe 公司最早推出的一种字体格式。它使用基于 PostScript 语言的矢量描述字形，可以
    在 PostScript 打印机和应用程序中使用。
 4. TrueType Collection (TTC)：TrueType Collection 是一种包含多个 TrueType 字体的文件格式。它可以将多个相关字体打包在一个文件中，方便进行管理和分发。
-
-</div>
+</FAQBox>
 
 除了上述常见的字体格式，SFNT 还可以包含其他一些字体格式的变体或扩展，如 CID-keyed 字体、CFF (Compact Font Format) 等。
 
@@ -355,8 +349,9 @@ total 11200
 ```
 
 <FAQBox title="好奇它是怎么运行的？">
-- [字体分包器运行原理](https://chinese-font.netlify.app/post/cn_font_split_design/)
-- [字体分包性能优化](https://chinese-font.netlify.app/post/font_split_turbo/)
+  -
+  [字体分包器运行原理](https://chinese-font.netlify.app/post/cn_font_split_design/)
+  - [字体分包性能优化](https://chinese-font.netlify.app/post/font_split_turbo/)
 </FAQBox>
 
 这里每个 woff2 都是分包文件，且文件的大小在 `70KB` 以下。
