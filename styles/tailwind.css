@@ -16,6 +16,12 @@
   }
 }
 
+@layer utilities {
+  .children-last-plan > *:last-child {
+    margin-bottom: 0
+  }
+}
+
 @font-face {
   font-family: "GeistMono";
   src: url("/static/fonts/GeistMono-Regular.woff2") format("woff2");

@@ -19,6 +19,21 @@ module.exports = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
       },
+      animation: {
+        'shaking': 'tilt-n-move-shaking 0.4s ease-in-out infinite',
+      },
+      keyframes: {
+        'tilt-n-move-shaking': {
+          '0%': { transform: `translate(0, 0) rotate(0deg);` },
+          "25%": { transform: `translate(3px, 3px) rotate(2deg);` },
+          "50%": { transform: `translate(0, 0) rotate(0deg);` },
+          "75%": { transform: `translate(-3px, 3px) rotate(-2deg);` },
+          "100%": { transform: `translate(0, 0) rotate(0deg);` },
+        }
+      },
+      transitionTimingFunction: {
+        'smooth': 'cubic-bezier(1,0,0,1)'
+      },
 
       typography: (theme) => {
         // some fontSizes return [size, props], others just size :/
@@ -136,9 +151,6 @@ module.exports = {
           },
         };
       },
-      transitionTimingFunction: {
-        'smooth': 'cubic-bezier(1,0,0,1)'
-      }
     },
   },
   plugins: [require("@tailwindcss/typography")],

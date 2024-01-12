@@ -1,12 +1,13 @@
-export default function JumpLink(props: { size: number | string | undefined }) {
-  const { size } = props;
+import { SVGProps } from "react";
+
+export default function JumpLink(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
-      width={size}
-      height={size}
-      className="inline-block"
+      width="1em"
+      height="1m"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
+      {...props}
     >
       <path
         fillRule="evenodd"
