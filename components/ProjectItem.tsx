@@ -30,7 +30,7 @@ export default function Project(props: ProjectProps) {
         )}
       </div>
       <div className="md:flex gap-5">
-        <div className="w-full aspect-[5/3] md:w-[220px] md:shrink-0 drop-shadow-lg">
+        <div className="w-full aspect-[5/3] md:w-[220px] md:shrink-0 drop-shadow-lg relative">
           <Image
             src={cover}
             alt={name}
