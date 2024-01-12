@@ -44,9 +44,9 @@ setInterval(() => {
 
 在**所有**传入的 Promise 都被完成时完成；在**任意一个** Promise 被拒绝时拒绝。
 
-![all-resolve](/static/images/promise-task-explore/all-resolve.png)
+![all-resolve](/static/images/promise-task-explore/all-resolve.webp)
 
-![all-reject](/static/images/promise-task-explore/all-reject.png)
+![all-reject](/static/images/promise-task-explore/all-reject.webp)
 
 ```js
 const task1 = new Promise(async (resolve, reject) => {
@@ -88,7 +88,7 @@ Error: task2 error
 
 在**所有**的 Promise 都被完成时会被完成，没有拒绝的情况，如果有拒绝的任务，会在完成结果中为拒绝状态。
 
-![allSettled-resolve](/static/images/promise-task-explore/allSettled-resolve.png)
+![allSettled-resolve](/static/images/promise-task-explore/allSettled-resolve.webp)
 
 then 的返回值
 
@@ -157,9 +157,9 @@ times: 4
 
 在**任意一个** Promise 被完成时完成，仅在**所有**的 Promise 都被拒绝时才会拒绝。
 
-![any-resolve](/static/images/promise-task-explore/any-resolve.png)
+![any-resolve](/static/images/promise-task-explore/any-resolve.webp)
 
-![any-reject](/static/images/promise-task-explore/any-reject.png)
+![any-reject](/static/images/promise-task-explore/any-reject.webp)
 
 ```js
 const task1 = new Promise(async (resolve, reject) => {
@@ -199,9 +199,9 @@ time: 2
 
 在**任意一个** Promise 被完成时完成。换句话说，在**任意一个** Promise 被 resolve 时 resolve；在**任意一个**的 Promise 被 reject 时 reject。
 
-![race-resolve](/static/images/promise-task-explore/race-resolve.png)
+![race-resolve](/static/images/promise-task-explore/race-resolve.webp)
 
-![race-reject](/static/images/promise-task-explore/race-reject.png)
+![race-reject](/static/images/promise-task-explore/race-reject.webp)
 
 ```js
 const task1 = new Promise(async (resolve, reject) => {

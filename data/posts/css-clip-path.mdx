@@ -28,15 +28,15 @@ publicAt: "2024-01-08"
 
 `clip-path` 的坐标轴是二维的，也就是自由 `x` 和 `y`, 整个的坐标轴的中心点在元素的左上角。
 
-![坐标系](/static/images/css-clip-path/axios-base.png)
+![坐标系](/static/images/css-clip-path/axios-base.webp)
 
 下面的例子是 `clip-path` 圆形图形，它的坐标是 `at 0 0` 代表着圆心正好在坐标中心点 `0,0` 处，而 `100px` 是图形的值，也就是圆形的半径。
 
-![坐标系](/static/images/css-clip-path/20240107205521.png)
+![坐标系](/static/images/css-clip-path/20240107205521.webp)
 
 再调整一下圆心的坐标位置，`at 100px 100px`。
 
-![坐标系](/static/images/css-clip-path/20240107205536.png)
+![坐标系](/static/images/css-clip-path/20240107205536.webp)
 
 ## 图形类型
 
@@ -44,7 +44,7 @@ publicAt: "2024-01-08"
 
 矩形由四条边构成，而这四条边的值有四个，他们分别设置 “上”、“右”、“下” 和 “左” 这和 CSS 盒子模型的边声明是一样的，注意这个值可不是设置边的长度的，这是设置边基于元素的边向内或向外的相对距离的。
 
-![矩形](/static/images/css-clip-path/20240107212539.png)
+![矩形](/static/images/css-clip-path/20240107212539.webp)
 
 它的声明可以使用简写 `50px 50px 50px 50px` 可以写成 `50px`，`50px 20px 50px 20px` 可以写成 `50px 20px`。
 
@@ -57,7 +57,7 @@ publicAt: "2024-01-08"
 
 矩形可以使用 `round` 关键字，来声明剪切图形的圆角，而且也是支持简写的，这类似 `border-radius` 属性。
 
-![矩形](/static/images/css-clip-path/20240107212548.png)
+![矩形](/static/images/css-clip-path/20240107212548.webp)
 
 ```css
 .card {
@@ -70,7 +70,7 @@ publicAt: "2024-01-08"
 
 圆形由半径和圆心点的坐标定义。
 
-![圆形](/static/images/css-clip-path/20240107213145.png)
+![圆形](/static/images/css-clip-path/20240107213145.webp)
 
 这里定义了半径为 `100px` 坐标为 `at 50% 50%`
 
@@ -85,7 +85,7 @@ publicAt: "2024-01-08"
 
 椭圆由宽高和坐标定义。
 
-![圆形](/static/images/css-clip-path/20240107213800.png)
+![圆形](/static/images/css-clip-path/20240107213800.webp)
 
 这里定义了宽 `100px` 高 `80px` 坐标为 `at center` 这里 `center` 就是 `50% 50%` 的位置关键字
 
@@ -100,7 +100,7 @@ publicAt: "2024-01-08"
 
 多边形的构成是有多个点（最少三个点）连接，构成图形，而每个点需要由坐标定义，也就是 `x, y`。
 
-![椭圆](/static/images/css-clip-path/20240107214707.png)
+![椭圆](/static/images/css-clip-path/20240107214707.webp)
 
 这里定义了三个点 `100px 100px, 300px 220px, 100px, 220px` ，`clip-path` 会按书写的顺序连接点位，闭合（首尾点位相连）后构成图形。
 
@@ -115,7 +115,7 @@ publicAt: "2024-01-08"
 
 SVG 路径允许我们使用 SVG 来定义元素，这可方便多了
 
-![椭圆](/static/images/css-clip-path/20240107220025.png)
+![椭圆](/static/images/css-clip-path/20240107220025.webp)
 
 使用内联 SVG 来定义，它们使用 SVG 的 `id` 来关联
 
@@ -143,7 +143,7 @@ SVG 路径允许我们使用 SVG 来定义元素，这可方便多了
 }
 ```
 
-![SVG 路径](/static/images/css-clip-path/20240107221840.png)
+![SVG 路径](/static/images/css-clip-path/20240107221840.webp)
 
 ## 案例
 
@@ -359,7 +359,7 @@ clip-path: polygon(0 0, 100% 0, 100% 40%, 0 100%);
 }
 ```
 
-![背景斜切](/static/images/css-clip-path/20240108095229.png)
+![背景斜切](/static/images/css-clip-path/20240108095229.webp)
 
 ## 动效 - 卡片的背景剪切
 
