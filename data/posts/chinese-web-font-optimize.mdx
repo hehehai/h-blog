@@ -10,11 +10,11 @@ publicAt: "2024-01-12"
 
 我将它的中文字体 woff2 文件引入至网站中，它有 4.9M ，我使用 [PageSpeed Insights](https://pagespeed.web.dev/) 测速，FCP（首次绘制）达到了 3s 🤨。
 
-![性能](/static/images/chinese-web-font-optimize/2024-01-11-170308.png)
+![性能](/static/images/chinese-web-font-optimize/2024-01-11-170308.webp)
 
-![指标](/static/images/chinese-web-font-optimize/2024-01-11-170352.png)
+![指标](/static/images/chinese-web-font-optimize/2024-01-11-170352.webp)
 
-![网址](/static/images/chinese-web-font-optimize/2024-01-11-170639.png)
+![网址](/static/images/chinese-web-font-optimize/2024-01-11-170639.webp)
 
 ## 直接引入
 
@@ -240,11 +240,11 @@ run: 478.784ms
 </html>
 ```
 
-![小米字体](/static/images/chinese-web-font-optimize/misans-test.jpeg)
+![小米字体](/static/images/chinese-web-font-optimize/misans-test.webp)
 
 子集只有 `网页中文字体加载速度优化` 可以看到有区别的 😆，我们换 [优设 - 得意黑](https://uiiiuiii.com/software/573785.html) 来试试，这次的差异就很明显了。
 
-![得意黑字体](/static/images/chinese-web-font-optimize/deyisans-test.jpeg)
+![得意黑字体](/static/images/chinese-web-font-optimize/deyisans-test.webp)
 
 在线的字体提取工具：https://font-subset.disidu.com/
 
@@ -290,9 +290,9 @@ Google Fonts 团队在 2018 年发表了[一篇博文](https://developers.google
 
 ### 中文网字计划
 
-![中文网字计划](/static/images/chinese-web-font-optimize/20240112102658.png)
+![中文网字计划](/static/images/chinese-web-font-optimize/20240112102658.webp)
 
-![中文网字特点](/static/images/chinese-web-font-optimize/20240112102920.png)
+![中文网字特点](/static/images/chinese-web-font-optimize/20240112102920.webp)
 
 中文网字计划开发并开源了
 
@@ -304,16 +304,13 @@ Google Fonts 团队在 2018 年发表了[一篇博文](https://developers.google
 
 我们直接使用在线字体分包器，来处理，打开[网址](https://chinese-font.netlify.app/online-split/)
 
-![字体分包器](/static/images/chinese-web-font-optimize/20240112103423.png)
+![字体分包器](/static/images/chinese-web-font-optimize/20240112103423.webp)
 
 点击左侧选择字体文件，支持 SFNT (TrueType/OpenType), WOFF 或 WOFF2
 
 我们这里依然选择 `MISans-Regular.woff2` 文件
 
-{" "}
-
 <video
-  class="rounded-lg"
   controls
   src="/static/images/chinese-web-font-optimize/Video_24-01-12_10-44-45.mov"
 />
@@ -399,7 +396,7 @@ Hit CTRL-C to stop the server
 
 使用浏览器打开 `http://127.0.0.1:5000`，这里有字体的切片信息，我们 ⬇️ 滚动到底部，可以看到，每个切片的字符位数不同，越向顶部，字符字形越复杂。
 
-![切片](/static/images/chinese-web-font-optimize/20240112110149.png)
+![切片](/static/images/chinese-web-font-optimize/20240112110149.webp)
 
 使用编辑器查看 `result.css` 可以看到有很多的 `@font-face` 而这些 `@font-face` 都设置了 `unicode-range` 属性，值是字符 [Unicode](https://home.unicode.org/) 码点范围。
 
@@ -498,13 +495,13 @@ fontSplit({
 
 ok 做完这些，我的网站现在优化成了这样
 
-![性能](/static/images/chinese-web-font-optimize/2024-01-12-114015.png)
+![性能](/static/images/chinese-web-font-optimize/2024-01-12-114015.webp)
 
-![指标](/static/images/chinese-web-font-optimize/20240112114108.png)
+![指标](/static/images/chinese-web-font-optimize/20240112114108.webp)
 
 我使用 CDN 的方式，依然有优化空间。不过目前的效果已经非常好了 🥳
 
-![CDN 指标](/static/images/chinese-web-font-optimize/20240112114214.png)
+![CDN 指标](/static/images/chinese-web-font-optimize/20240112114214.webp)
 
 ## 参考
 
