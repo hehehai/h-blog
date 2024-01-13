@@ -76,7 +76,7 @@ a {
 }
 
 .prose video {
-  @apply rounded-lg
+  @apply rounded-xl
 }
 
 /* highlight styles */

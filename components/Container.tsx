@@ -51,11 +51,11 @@ export default function Container(props: any) {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-5 md:px-8">
+    <div className="max-w-5xl mx-auto px-5 md:px-8">
       {headers()}
       <Header />
       <Navigator />
-      <div className="my-3">{children}</div>
+      <div className="my-4">{children}</div>
       <Footer />
     </div>
   );

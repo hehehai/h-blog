@@ -34,7 +34,7 @@ export default function Project(props: ProjectProps) {
           <Image
             src={cover}
             alt={name}
-            className="object-cover rounded-lg"
+            className="object-cover rounded-xl"
             priority
             layout="fill"
           />

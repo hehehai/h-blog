@@ -72,7 +72,7 @@ const Details = ({
 
   return (
     <details
-      className="my-4 rounded-lg border border-gray-200/60 bg-neutral-100 p-2 shadow-sm first:mt-0 dark:border-gray-800 dark:bg-gray-900"
+      className="my-4 rounded-xl border border-gray-200/60 bg-neutral-100 p-3 first:mt-0 dark:border-gray-800 dark:bg-gray-900"
       {...props}
       open={delayedOpenState}
       {...(openState && { "data-expanded": true })}
@@ -88,7 +88,7 @@ const Summary = (props: ComponentProps<"summary">): ReactElement => {
   return (
     <summary
       className={cn(
-        "flex items-center cursor-pointer list-none p-1 transition-colors rounded-md hover:bg-white/60 dark:hover:bg-gray-700 text-foreground",
+        "flex items-center cursor-pointer list-none p-1.5 transition-colors rounded-lg hover:bg-white/80 dark:hover:bg-gray-700 text-foreground",
         "before:mr-1 before:inline-block before:transition-transform before:content-[''] dark:before:invert before:shrink-0 text-lg",
         "rtl:before:rotate-180 [[data-expanded]>&]:before:rotate-90"
       )}

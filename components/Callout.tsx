@@ -39,16 +39,16 @@ export function Callout({
   return (
     <div
       className={cn(
-        "overflow-x-auto flex rounded-xl border pl-4 pr-5 py-5 ltr:pr-4 rtl:pl-4",
-        "contrast-more:border-current contrast-more:dark:border-current space-x-2 shadow-sm shadow-current/20",
+        "overflow-x-auto flex rounded-xl border pl-4 pr-5 py-5",
+        "contrast-more:border-current contrast-more:dark:border-current space-x-2",
         classes[type]
       )}
     >
-      <div className="select-none mr-1 w-[1.6em] h-[1.6em] relative">
+      <div className="select-none mr-1 w-[1.7em] h-[1.6em] relative">
         <Image
           src={TypeToEmoji[type]}
-          width="360px"
-          height="360px"
+          width={80}
+          height={80}
           alt={type}
           className="w-full h-full"
           layout="fill"

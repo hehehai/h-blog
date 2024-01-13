@@ -9,7 +9,7 @@ export default function SandpackRoot(props: SandpackProps) {
         theme={CustomTheme}
         options={{
           classes: {
-            "sp-layout": "!rounded-lg shadow-lg dark:shadow-lg-dark",
+            "sp-layout": "!rounded-xl shadow-lg dark:shadow-lg-dark",
           },
           showLineNumbers: true, // default - true
           showInlineErrors: true, // default - false
