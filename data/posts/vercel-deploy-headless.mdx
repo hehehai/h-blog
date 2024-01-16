@@ -49,7 +49,7 @@ Traced Next.js server files in: 423.26ms
 
 > If your vendor does not allow large deploys (`chromium.br` is 50+ MB), you'll need to host the `chromium-v#-pack.tar` separately and use the [`@sparticuz/chromium-min` package](https://github.com/Sparticuz/chromium#-min-package).
 >
-> 如果您的供应商不允许大型部署(chromium.br为50+MB)，您将需要单独托管Chrome-v#-Pack.tar 并使用
+> 如果您的供应商不允许大型部署(chromium.br 为 50+MB)，您将需要单独托管 Chrome-v#-Pack.tar 并使用
 
 ```shell
 npm install --save @sparticuz/chromium-min@$CHROMIUM_VERSION
@@ -79,19 +79,22 @@ const browser = await puppeteer.launch({
 使用远程 Chromium 二进制包，它是一互联网文件地址，建议使用 github 的公开包地址，否则私有地址要注意流量问题。
 
 ## 搭建
+
 创建 Nextjs 项目，创建完毕后安装需要的依赖
 
 开发依赖
+
 ```shell
 npm install @sparticuz/chromium-min@119 puppeteer-core@21
 ```
 
 安装完毕后
+
 ```json
 {
   "dependencies": {
     "@sparticuz/chromium-min": "^119.0.2",
-    "puppeteer-core": "^21.6.1",
+    "puppeteer-core": "^21.6.1"
   }
 }
 ```
@@ -109,7 +112,7 @@ const localExecutablePath =
 
 // 远程执行包
 const remoteExecutablePath =
-"https://github.com/Sparticuz/chromium/releases/download/v119.0.2/chromium-v119.0.2-pack.tar";
+  "https://github.com/Sparticuz/chromium/releases/download/v119.0.2/chromium-v119.0.2-pack.tar";
 
 // 运行环境
 const isDev = process.env.NODE_ENV === "development";
@@ -127,11 +130,11 @@ const isDev = process.env.NODE_ENV === "development";
 export async function GET() {
   let browser = null;
   try {
-	// 引入依赖
+    // 引入依赖
     const chromium = require("@sparticuz/chromium-min");
     const puppeteer = require("puppeteer-core");
 
-	// 启动
+    // 启动
     browser = await puppeteer.launch({
       args: isDev ? [] : chromium.args,
       defaultViewport: { width: 1920, height: 1080 },
@@ -141,7 +144,7 @@ export async function GET() {
       headless: chromium.headless,
     });
 
-	// 打开页面
+    // 打开页面
     const page = await browser.newPage();
     // 等待页面资源加载完毕
     await page.goto("https://hehehai.cn", {
@@ -162,11 +165,11 @@ export async function GET() {
   } catch (err) {
     console.log(err);
     return NextResponse.json(
-        { error: "Internal Server Error" },
-        { status: 500 }
+      { error: "Internal Server Error" },
+      { status: 500 }
     );
   } finally {
-	// 释放资源
+    // 释放资源
     await browser.close();
   }
 }
@@ -174,12 +177,13 @@ export async function GET() {
 
 - `args: isDev ? [] : chromium.args`: “开发模式”不需要设置执行包的命令行参数
 - `executablePath`: 用来配置执行包路径
-	- “开发模式” `localExecutablePath`
-	- “非开发模式” `await chromium.executablePath(remoteExecutablePath)`
+  - “开发模式” `localExecutablePath`
+  - “非开发模式” `await chromium.executablePath(remoteExecutablePath)`
 
 这里不过多介绍 Puppeteer 的运行配置了就，更细节的优化配置可以参考官方文档
 
 启动程序
+
 ```shell
 npm run dev
 
@@ -217,18 +221,23 @@ Import trace for requested module:
 ```
 
 ### require 包引入
+
 你会发现我们使用的依赖包是使用 `require` 方式引入的，Nextjs 默认优化了一部分 [Nodejs 包](https://github.com/vercel/next.js/blob/canary/packages/next/src/lib/server-external-packages.json)，这些使用 `require` 引入是会自动处理的，好在 Nextjs 提供了配置。
 
 `next.config.js`
+
 ```js
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    serverComponentsExternalPackages: ['puppeteer-core', '@sparticuz/chromium-min']
+    serverComponentsExternalPackages: [
+      "puppeteer-core",
+      "@sparticuz/chromium-min",
+    ],
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
 ```
 
 [`serverComponentsExternalPackages`](https://nextjs.org/docs/app/api-reference/next-config-js/serverComponentsExternalPackages): 如果依赖项使用 Nodejs 特定功能，您可以选择从服务器组件捆绑中选择退出特定依赖项并使用本机 Nodejs `require` 。
@@ -303,10 +312,67 @@ export default {
 
 🫠 坏消息：还在内测中, 快来申请 [Add yourself to the waitlist](https://www.cloudflare.com/lp/workers-browser-rendering-api/)
 
+## Browserless
+
+除此外，还有种独特的方式，Puppeteer 允许通过 browserWSEndpoint 选项指定 chrome 的远程位置，就像这样
+
+```js
+const browser = await puppeteer.connect({
+  browserWSEndpoint: "ws://localhost:3000",
+});
+```
+
+我们需要一个 ws 的 chrome 远程服务来被调用。 好在它已经出现了 👏👏👏 [Browserless](https://www.browserless.io/)！
+
+![Browserless site](/static/images/vercel-deploy-headless/browerless-site.jpg)
+
+> Browserless 允许远程客户端连接并执行无头工作，所有这些都在 Docker 内部。它支持标准的、未分叉的 Puppeteer 和 Playwright 库，并为数据收集、PDF 生成等常见操作提供基于 REST 的 API。
+
+它是[开源](https://github.com/browserless/browserless)的，可以使用 Docker 部署在服务器上。
+
+```js
+// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import type { NextApiRequest, NextApiResponse } from 'next'
+import puppeteer from 'puppeteer-core'
+
+type Json = {
+  message: string
+}
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<Json | Buffer>
+) {
+  const { searchParams } = new URL(
+    req.url as string,
+    `http://${req.headers.host}`
+  )
+  const url = searchParams.get('url')
+
+  if (!url) {
+    return res
+      .status(400)
+      .json({ message: `A ?url query-parameter is required` })
+  }
+
+  const browser = await puppeteer.connect({
+    browserWSEndpoint: `wss://chrome.browserless.io?token=${process.env.BLESS_TOKEN}`,
+  })
+
+  const page = await browser.newPage()
+  await page.setViewport({ width: 1920, height: 1080 })
+  await page.goto(url)
+
+  return res.status(200).send(await page.screenshot({type: 'png'}))
+}
+```
+
 ## 参考
+
 - [Generate screenshots of your code with a serverless function](https://blog.maximeheckel.com/posts/creating-beautiful-screenshots-source-code-with-serverless-function/)
 - [How to use headless Chrome in serverless functions with a 50MB limit](https://www.stefanjudis.com/blog/how-to-use-headless-chrome-in-serverless-functions/)
 - [next-api-og-image](https://github.com/neg4n/next-api-og-image)
 - [Exceeding size limits (50mb) for Serverless Functions](https://github.com/orgs/vercel/discussions/103)
 - [Sparticuz/chromium](https://github.com/Sparticuz/chromium)
 - [Oustro/portfoliwoah](https://github.com/Oustro/portfoliwoah/blob/a0912026a898dad78d90fe0f4793e45563cce451/app/api/posts/screenshot/route.ts)
+- [browerless puppeteer](https://github.com/browserless/vercel-puppeteer)
