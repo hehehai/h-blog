@@ -1,18 +1,18 @@
 import { ImageResponse } from "@vercel/og";
 import { NextRequest } from "next/server";
 
-export const config = {
-  runtime: "experimental-edge",
-};
+// export const config = {
+//   runtime: "experimental-edge",
+// };
 
 export default async function handler(request: NextRequest) {
   const { searchParams } = request.nextUrl;
   const ogTemplateImg = await fetch(
     new URL("../../../assets/og-template.jpg", import.meta.url)
   ).then((res) => res.arrayBuffer());
-  // const fontData = await fetch(
-  //   new URL("../../assets/MiSans-Regular.ttf", import.meta.url)
-  // ).then((res) => res.arrayBuffer());
+  const fontData = await fetch(
+    new URL("../../assets/MiSans-Regular.ttf", import.meta.url)
+  ).then((res) => res.arrayBuffer());
 
   const title = searchParams.get("title") ?? "";
   const tags: string[] = (searchParams.get("tags") ?? "").replace('%2', ',').split(",") ?? [];
@@ -54,7 +54,7 @@ export default async function handler(request: NextRequest) {
             padding: "20px 146px 140px 146px",
           }}
         >
-          <div style={{ fontSize: 46 }}>{title}</div>
+          <div style={{ fontSize: 46, fontFamily: "'MiSans'" }}>{title}</div>
           <div style={{ fontSize: 20, display: "flex", marginTop: 30 }}>
             {tags.map((tag) => (
               <div
@@ -77,13 +77,13 @@ export default async function handler(request: NextRequest) {
     {
       width: 1200,
       height: 630,
-      // fonts: [
-      //   {
-      //     name: "MiSans",
-      //     data: fontData,
-      //     style: "normal",
-      //   },
-      // ],
+      fonts: [
+        {
+          name: "MiSans",
+          data: fontData,
+          style: "normal",
+        },
+      ],
     }
   );
 }
