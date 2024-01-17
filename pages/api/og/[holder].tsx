@@ -11,7 +11,7 @@ export default async function handler(request: NextRequest) {
     new URL("../../../assets/og-template.jpg", import.meta.url)
   ).then((res) => res.arrayBuffer());
   const fontData = await fetch(
-    new URL("../../assets/MiSans-Regular.ttf", import.meta.url)
+    new URL("../../../assets/MiSans-Regular.ttf", import.meta.url)
   ).then((res) => res.arrayBuffer());
 
   const title = searchParams.get("title") ?? "";
