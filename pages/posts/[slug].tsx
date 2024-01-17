@@ -3,11 +3,10 @@ import path from "node:path";
 import matter from "gray-matter";
 import { MDXRemote } from "next-mdx-remote";
 import Head from "next/head";
-// import Giscus from "@giscus/react";
 import mdxComponents from "~/components/MDX/MDXComponents";
 import { mdxToHtml, postFilePaths, POSTS_PATH } from "~/utils/mdx";
 
-import Container from "~/components/Container";
+import Container, { ContainerProps } from "~/components/Container";
 import { renderBadge } from "~/components/Badge";
 import { renderTag } from "~/components/Tag";
 import { PostMatter } from "~/types/post";
@@ -36,11 +35,18 @@ export default function Post({
 }) {
   let readingTimeNum = Number.parseInt(readingTime);
 
-  const seoMeta = {
+  const seoMeta: ContainerProps = {
     title: frontMatter.title,
     description: frontMatter.description,
     date: frontMatter.publicAt,
   };
+
+  if (frontMatter.title) {
+    const ogTags = (frontMatter.tags || "").toString();
+    seoMeta.og = `/api/og?title=${encodeURIComponent(
+      frontMatter.title
+    )}&tags=${encodeURIComponent(ogTags)}`;
+  }
 
   return (
     <Container {...seoMeta}>
@@ -63,23 +69,6 @@ export default function Post({
             <MDXRemote {...html} components={components} />
           </article>
         </main>
-        {/* <div className="mt-12">
-          <Giscus
-            id="comments"
-            repo="hehehai/h-blog"
-            repoId="R_kgDOH7HVQQ"
-            category="Announcements"
-            categoryId="DIC_kwDOH7HVQc4CRL4m"
-            mapping="pathname"
-            term="Welcome to @giscus/react component!"
-            reactionsEnabled="1"
-            emitMetadata="0"
-            inputPosition="top"
-            theme="light"
-            lang="zh-CN"
-            loading="lazy"
-          />
-        </div> */}
       </div>
     </Container>
   );

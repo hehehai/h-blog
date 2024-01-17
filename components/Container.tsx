@@ -4,15 +4,26 @@ import Navigator from "./Navigator";
 import Header from "./Header";
 import Footer from "./Footer";
 
-export default function Container(props: any) {
+export interface ContainerProps {
+  children?: React.ReactNode;
+  title?: string;
+  description?: string;
+  og?: string;
+  type?: string;
+  date?: string;
+}
+
+export default function Container(props: ContainerProps) {
   const { children, ...customMeta } = props;
   const router = useRouter();
+
+  const baseHost = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://hehehai.cn';
 
   const meta = {
     title: "Hehehai @一块木头 - 全栈开发，专注于前端应用程序和用户界面设计.",
     description: `我是一位全栈开发，专注于前端应用程序和用户界面设计。我的首选技术栈是 TypeScript、React、Vue 和 NodeJS。`,
     image: "/favicon.svg",
-    og: '/og.png',
+    og: '/og.jpg',
     type: "website",
     ...customMeta,
   };
@@ -28,21 +39,21 @@ export default function Container(props: any) {
 
         <meta
           property="og:url"
-          content={`https://hehehai.cn${router.asPath}`}
+          content={`${baseHost}${router.asPath}`}
         />
-        <link rel="canonical" href={`https://hehehai.cn${router.asPath}`} />
+        <link rel="canonical" href={`${baseHost}${router.asPath}`} />
         <meta property="og:type" content={meta.type} />
         <meta property="og:site_name" content="Hehehai @一块木头" />
         <meta property="og:description" content={meta.description} />
         <meta property="og:title" content={meta.title} />
-        <meta property="og:image" content={meta.og} />
+        <meta property="og:image" content={baseHost + meta.og} />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:url" content="https://hehehai.cn" />
+        <meta name="twitter:url" content={baseHost} />
         <meta name="twitter:site" content="@riverhohai" />
         <meta name="twitter:title" content={meta.title} />
         <meta name="twitter:description" content={meta.description} />
-        <meta name="twitter:image" content={meta.og} />
+        <meta name="twitter:image" content={baseHost + meta.og} />
         {meta.date && (
           <meta property="article:published_time" content={meta.date} />
         )}
