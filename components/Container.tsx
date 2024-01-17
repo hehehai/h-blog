@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Navigator from "./Navigator";
 import Header from "./Header";
 import Footer from "./Footer";
+import { baseHost } from "lib/utils";
 
 export interface ContainerProps {
   children?: React.ReactNode;
@@ -16,8 +17,6 @@ export interface ContainerProps {
 export default function Container(props: ContainerProps) {
   const { children, ...customMeta } = props;
   const router = useRouter();
-
-  const baseHost = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://hehehai.cn';
 
   const meta = {
     title: "Hehehai @一块木头 - 全栈开发，专注于前端应用程序和用户界面设计.",
