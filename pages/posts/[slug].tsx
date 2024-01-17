@@ -47,7 +47,7 @@ export default function Post({
       title: frontMatter.title,
       tags: ogTags,
     });
-    seoMeta.og = `/api/og?${searchParams}`;
+    seoMeta.og = `/api/og/blog.jpg?${searchParams}`;
   }
 
   return (

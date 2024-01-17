@@ -47,6 +47,7 @@ export default function Container(props: ContainerProps) {
         <meta property="og:description" content={meta.description} />
         <meta property="og:title" content={meta.title} />
         <meta property="og:image" content={baseHost + meta.og} />
+        <meta property="og:image：alt" content={meta.title} />
 
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:url" content={baseHost} />

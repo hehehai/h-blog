@@ -8,7 +8,7 @@ export const config = {
 export default async function handler(request: NextRequest) {
   const { searchParams } = request.nextUrl;
   const ogTemplateImg = await fetch(
-    new URL("../../assets/og-template.jpg", import.meta.url)
+    new URL("../../../assets/og-template.jpg", import.meta.url)
   ).then((res) => res.arrayBuffer());
   // const fontData = await fetch(
   //   new URL("../../assets/MiSans-Regular.ttf", import.meta.url)
