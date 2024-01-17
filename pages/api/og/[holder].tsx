@@ -51,10 +51,10 @@ export default async function handler(request: NextRequest) {
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            padding: "20px 146px 110px 146px",
+            padding: "20px 146px 140px 146px",
           }}
         >
-          <div style={{ fontSize: 44 }}>{title}</div>
+          <div style={{ fontSize: 46 }}>{title}</div>
           <div style={{ fontSize: 20, display: "flex", marginTop: 30 }}>
             {tags.map((tag) => (
               <div
