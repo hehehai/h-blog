@@ -15,7 +15,7 @@ export default async function handler(request: NextRequest) {
   // ).then((res) => res.arrayBuffer());
 
   const title = searchParams.get("title") ?? "";
-  const tags: string[] = (searchParams.get("tags") ?? "").split(",") ?? [];
+  const tags: string[] = (searchParams.get("tags") ?? "").replace('%2', ',').split(",") ?? [];
 
   return new ImageResponse(
     (

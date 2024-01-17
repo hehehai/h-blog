@@ -43,9 +43,11 @@ export default function Post({
 
   if (frontMatter.title) {
     const ogTags = (frontMatter.tags || "").toString();
-    seoMeta.og = `/api/og?title=${encodeURIComponent(
-      frontMatter.title
-    )}&tags=${encodeURIComponent(ogTags)}`;
+    const searchParams = new URLSearchParams({
+      title: frontMatter.title,
+      tags: ogTags,
+    });
+    seoMeta.og = `/api/og?${searchParams}`;
   }
 
   return (
