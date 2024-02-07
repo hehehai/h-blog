@@ -12,7 +12,7 @@ export default function Document() {
           crossOrigin="anonymous"
           href="https://cdn.jsdelivr.net/npm/misans@4.0.0/lib/Normal/MiSans-Regular.min.css"
         />
-        <Script id="ms_clarity" strategy="lazyOnload">
+        <Script id="ms_clarity" strategy="afterInteractive">
           {`(function(c,l,a,r,i,t,y){
               c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
               t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
