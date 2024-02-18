@@ -40,6 +40,8 @@ if (res.ok) {
 
 `ProxyAgent` 是 `undici` 库中的一个模块，用于设置代理。通过 `ProxyAgent`， 可以将 HTTP 或 HTTPS 请求路由到指定的代理服务器。这在需要通过代理访问外部资源的场景中非常有用。以下是一个示例代码，演示了如何在 `undici` 中使用 `ProxyAgent`：
 
+这里我们需要安装 `undici`, 在项目终端执行 `pnpm install undici`
+
 ```js
 import { ProxyAgent, setGlobalDispatcher } from "undici";
 
@@ -102,10 +104,12 @@ export async function queryPost(context) {
 
 如果要全局代理，可以在主入口文件 App Route `layout.tsx` 里设置
 
+`LOCAL_FETCH_PROXY` 环境变量是我本地的 `.env` 文件的设置，实际根据运行环境的代理来设置即可
+
 ```js
 import { ProxyAgent, setGlobalDispatcher } from "undici";
 
-if (prcoess.env.LOCAL_FETCH_PROXY) {
+if (process.env.LOCAL_FETCH_PROXY) {
   setGlobalDispatcher(new ProxyAgent(env.LOCAL_FETCH_PROXY));
 }
 ```
