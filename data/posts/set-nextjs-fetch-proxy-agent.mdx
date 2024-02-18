@@ -12,13 +12,13 @@ publicAt: "2024-02-18"
 
 ## Fetch VS XHR
 
-Fetch API 和 XMLHttpRequest（XHR）是用于在 Web 应用程序中发起网络请求的两种不同的技术。它们之间的区别包括以下几点：
+`Fetch API` 和 `XMLHttpRequest`（XHR）是用于在 Web 应用程序中发起网络请求的两种不同的技术。它们之间的区别包括以下几点：
 
-1. **使用方式**：Fetch API 基于 Promise，使用起来更加简洁和友好，而 XMLHttpRequest 则基于事件机制实现请求成功与失败的回调，使用起来相对繁琐和混乱。
-2. **API 设计**：Fetch API 采用了模块化设计，API 分散在多个对象上（如 Response 对象、Request 对象、Headers 对象），相比之下，XMLHttpRequest 的 API 设计并不是很好，输入、输出、状态都在同一个接口管理。
-3. **功能特性**：Fetch API 通过数据流（Stream 对象）处理数据，可以分块读取，有利于提高网站性能表现，减少内存占用，对于请求大文件或网速慢的场景相当有用。而 XMLHttpRequest 对象不支持数据流，所有的数据必须放在缓存里，不支持分块读取。
+1. **使用方式**：`Fetch API` 基于 `Promise`，使用起来更加简洁和友好，而 `XMLHttpRequest` 则基于事件机制实现请求成功与失败的回调，使用起来相对繁琐和混乱。
+2. **API 设计**：`Fetch API` 采用了模块化设计，API 分散在多个对象上（如 `Response` 对象、`Request` 对象、`Headers` 对象），相比之下，`XMLHttpRequest` 的 API 设计并不是很好，输入、输出、状态都在同一个接口管理。
+3. **功能特性**：`Fetch API` 通过数据流（`Stream` 对象）处理数据，可以分块读取，有利于提高网站性能表现，减少内存占用，对于请求大文件或网速慢的场景相当有用。而 `XMLHttpRequest` 对象不支持数据流，所有的数据必须放在缓存里，不支持分块读取。
 
-总的来说，Fetch API 相对于 XMLHttpRequest 具有更加现代化的特性，使用起来更加简洁和灵活，是当前 Web 应用程序中推荐的网络请求技术之一。
+总的来说，`Fetch API` 相对于 `XMLHttpRequest` 具有更加现代化的特性，使用起来更加简洁和灵活，是当前 Web 应用程序中推荐的网络请求技术之一。
 
 ![Suport Web Fetch API](/static/images/set-nextjs-fetch-proxy-agent/support-web-fetch-api.png)
 
