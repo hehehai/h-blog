@@ -1,0 +1,119 @@
+---
+title: 为 Nextjs fetch 设置请求代理
+description: 国内开发者，在某些业务场景下（如服务在国内，需要发送 GPT 请求，或在本地开发时），我们需要为 Fetch 设置代理。
+tags: NextJS,NodeJS,Fetch,Proxy
+badges: 实践
+publicAt: "2024-02-18"
+---
+
+[Nextjs 13](https://nextjs.org/docs/app/api-reference/functions/fetch) 版本后为整个服务扩展了 [Web Fetch API](https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API)，在之前，我们无法直接在服务端使用 Fetch 来发送请求，只能借助一些第三方库实现类型的功能，如 [axios](https://github.com/axios/axios)，[node-fetch](https://github.com/node-fetch/node-fetch), [got](https://github.com/sindresorhus/got)。
+
+国内开发者，在某些业务场景下（如服务在国内，需要发送 GPT 请求，或在本地开发时），我们需要为 Fetch 设置代理。
+
+## Fetch VS XHR
+
+Fetch API 和 XMLHttpRequest（XHR）是用于在 Web 应用程序中发起网络请求的两种不同的技术。它们之间的区别包括以下几点：
+
+1. **使用方式**：Fetch API 基于 Promise，使用起来更加简洁和友好，而 XMLHttpRequest 则基于事件机制实现请求成功与失败的回调，使用起来相对繁琐和混乱。
+2. **API 设计**：Fetch API 采用了模块化设计，API 分散在多个对象上（如 Response 对象、Request 对象、Headers 对象），相比之下，XMLHttpRequest 的 API 设计并不是很好，输入、输出、状态都在同一个接口管理。
+3. **功能特性**：Fetch API 通过数据流（Stream 对象）处理数据，可以分块读取，有利于提高网站性能表现，减少内存占用，对于请求大文件或网速慢的场景相当有用。而 XMLHttpRequest 对象不支持数据流，所有的数据必须放在缓存里，不支持分块读取。
+
+总的来说，Fetch API 相对于 XMLHttpRequest 具有更加现代化的特性，使用起来更加简洁和灵活，是当前 Web 应用程序中推荐的网络请求技术之一。
+
+![Suport Web Fetch API](/static/images/set-nextjs-fetch-proxy-agent/support-web-fetch-api.png)
+
+## Nodejs Fetch 的代理设置
+
+Fetch Api 在 `17.5.0` 被实现（但依然处于 🧪 实验模式）， [Nodejs 18](https://nodejs.org/en/blog/announcements/v18-release-announce#new-globally-available-browser-compatible-apis) 版本可直接使用。
+
+`Fetch` 的实现来自 `undici`，并受到最初基于 `undici-fetch` 的 `node-fetch` 的启发。 Repo Pull Request [#41811](https://github.com/nodejs/node/pull/41811)
+
+```js
+const res = await fetch("https://nodejs.org/api/documentation.json");
+if (res.ok) {
+  const data = await res.json();
+  console.log(data);
+}
+```
+
+### ProxyAgent
+
+`ProxyAgent` 是 `undici` 库中的一个模块，用于设置代理。通过 `ProxyAgent`， 可以将 HTTP 或 HTTPS 请求路由到指定的代理服务器。这在需要通过代理访问外部资源的场景中非常有用。以下是一个示例代码，演示了如何在 `undici` 中使用 `ProxyAgent`：
+
+```js
+import { ProxyAgent, setGlobalDispatcher } from "undici";
+
+const proxy = "http://username:password@ip:port";
+const proxyAgent = new ProxyAgent(proxy);
+setGlobalDispatcher(proxyAgent);
+```
+
+现在，所有通过 `undici` 发起的请求都会经过指定的代理服务器。
+
+我们首先引入了 `ProxyAgent` 和 `setGlobalDispatcher` 模块， 然后创建了一个代理对象 `proxyAgent`，并通过 `setGlobalDispatcher` 将其设置为全局的调度器。 所有通过 `undici` 发起的请求都会经过指定的代理服务器。
+
+<FAQBox title="setGlobalDispatcher 是什么？">
+在 `undici` 中，`setGlobalDispatcher` 是用来设置全局分发器的。全局分发器是 `undici` 的一个重要概念，它用于控制请求的调度和处理。通过 `setGlobalDispatcher`，你可以自定义全局分发器的行为，以满足特定的需求。
+
+设置全局分发器可以让你对请求的调度和处理进行更精细的控制，例如自定义连接池、请求重试机制、超时处理等。这样可以根据项目的特定需求来定制化请求的处理流程，提高系统的灵活性和性能。
+
+总之，`setGlobalDispatcher` 是 `undici` 中用来设置全局分发器的方法，可以帮助你对请求的调度和处理进行定制化配置。
+
+如果只需要为某个请求设置代理，可以为 fetch 设置 `dispatcher`
+
+</FAQBox>
+
+```js
+import { ProxyAgent, fetch } from "undici";
+
+const proxy = "http://username:password@ip:port";
+const proxyAgent = new ProxyAgent(proxy);
+
+const response = await fetch("https://example.com", {
+  dispatcher: proxyAgent,
+});
+```
+
+在 `undici` 中，`ProxyAgent` 的全部属性包括：
+
+- `uri`：代理的 URL
+- `token`：用于身份验证的凭据
+- `timeout`：代理请求的超时时间
+- `keepAlive`：是否保持与代理服务器的长连接
+- `maxSockets`：与代理服务器建立的最大连接数
+- `maxFreeSockets`：保持空闲状态的最大连接数
+- `maxCachedSessions`：最大缓存的会话数
+
+## Nextjs 的代理设置
+
+Nextjs 的 `Fetch` 是基于 `undici` 做的实现，那么实现起来就很简单了
+
+```js
+import { ProxyAgent } from "undici";
+
+export async function queryPost(context) {
+  const proxyUrl = "http://username:password@ip:port"; // 代理的URL
+  const response = await fetch("https://example.com", {
+    agent: new ProxyAgent(proxyUrl), // 使用代理的URL
+  });
+  return response.json();
+}
+```
+
+如果要全局代理，可以在主入口文件 App Route `layout.tsx` 里设置
+
+```js
+import { ProxyAgent, setGlobalDispatcher } from "undici";
+
+if (prcoess.env.LOCAL_FETCH_PROXY) {
+  setGlobalDispatcher(new ProxyAgent(env.LOCAL_FETCH_PROXY));
+}
+```
+
+## 参考
+
+- [Nextjs Fetch](https://nextjs.org/docs/app/api-reference/functions/fetch)
+- [Web Fetch API](https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API)
+- [node-fetch](https://github.com/node-fetch/node-fetch)
+- [undici](https://github.com/nodejs/undici)
+- [Nodejs Fetch](https://nodejs.org/dist/latest-v18.x/docs/api/globals.html)
