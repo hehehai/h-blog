@@ -88,7 +88,7 @@ const response = await fetch("https://example.com", {
 
 ## Nextjs 的代理设置
 
-Nextjs 的 `Fetch` 是基于 `undici` 做的实现，那么实现起来就很简单了
+Nextjs 的 `Fetch` 是基于 `undici` 做的实现，那么实现起来就很简单了。
 
 ```js
 import { ProxyAgent } from "undici";
@@ -114,6 +114,59 @@ if (process.env.LOCAL_FETCH_PROXY) {
 }
 ```
 
+## 为 AI 设置代理
+
+### OpenAI
+
+这里无法使用 `undici` 的 `ProxyAgent` 了， 因为它并不是有效的 `Agent` 实例， 我们这里安装 `pnpm i https-proxy-agent`。
+
+[`https-proxy-agent`](https://github.com/TooTallNate/proxy-agents) 由 `http.Agent` 实现。
+
+```js
+import http from "http";
+import HttpsProxyAgent from "https-proxy-agent";
+
+// Configure the default for all requests:
+const openai = new OpenAI({
+  httpAgent: new HttpsProxyAgent(env.LOCAL_FETCH_PROXY),
+});
+
+// Override per-request:
+await openai.models.list({
+  baseURL: "http://localhost:8080/test-api",
+  httpAgent: new http.Agent({ keepAlive: false }),
+});
+```
+
+### GoogleGemini
+
+🫥 官方的 [`@google/generative-ai`](https://ai.google.dev/tutorials/node_quickstart?hl=zh-cn) 目前不支持设置代理， 我们只能使用 (`REST API`](https://ai.google.dev/tutorials/rest_quickstart) 了, 这里使用 `fetch` 发送，它会走 `undici` 的全局代理。
+
+```js
+const API_KEY = "Gemini_Token";
+
+fetch(
+  `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`,
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      contents: [
+        {
+          parts: [
+            {
+              text: "Write a story about a magic backpack.",
+            },
+          ],
+        },
+      ],
+    }),
+  }
+);
+```
+
 ## 参考
 
 - [Nextjs Fetch](https://nextjs.org/docs/app/api-reference/functions/fetch)
@@ -121,3 +174,5 @@ if (process.env.LOCAL_FETCH_PROXY) {
 - [node-fetch](https://github.com/node-fetch/node-fetch)
 - [undici](https://github.com/nodejs/undici)
 - [Nodejs Fetch](https://nodejs.org/dist/latest-v18.x/docs/api/globals.html)
+- [Configuring an HTTP(S) Agent (e.g., for proxies)](https://github.com/openai/openai-node#configuring-an-https-agent-eg-for-proxies)
+- [Quickstart: Get started with Gemini using the REST API](https://ai.google.dev/tutorials/rest_quickstart)
