@@ -140,7 +140,7 @@ await openai.models.list({
 
 ### GoogleGemini
 
-🫥 官方的 [`@google/generative-ai`](https://ai.google.dev/tutorials/node_quickstart?hl=zh-cn) 目前不支持设置代理， 我们只能使用 (`REST API`](https://ai.google.dev/tutorials/rest_quickstart) 了, 这里使用 `fetch` 发送，它会走 `undici` 的全局代理。
+🫥 官方的 [`@google/generative-ai`](https://ai.google.dev/tutorials/node_quickstart?hl=zh-cn) 目前不支持设置代理， 我们只能使用 [`REST API`](https://ai.google.dev/tutorials/rest_quickstart) 了, 这里使用 `fetch` 发送，它会走 `undici` 的全局代理。
 
 ```js
 const API_KEY = "Gemini_Token";
