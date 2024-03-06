@@ -1,0 +1,344 @@
+---
+title: Next Auth 实现邮件 OTP 认证
+description: 如何基于 Next Auth 实现邮件 OTP 认证？
+tags: Next,NextAuth,OTP
+badges: 实践
+publicAt: "2024-03-06"
+---
+
+## OTP 是什么
+
+OTP 认证是一种基于一次性密码（One-Time Password）的身份验证方法。通常，在传统的用户名和密码登录方式中，用户只需提供用户名和密码即可进行身份验证。然而，由于密码可能会被泄露或猜测，这种方式存在一定的安全风险。
+
+为了增强身份验证的安全性，OTP 认证引入了一次性密码的概念。在 OTP 认证中，用户除了提供用户名和密码外，还需要提供由特定算法生成的一次性密码。这个一次性密码通常是基于时间的，每隔一段时间就会生成一个新的密码。
+
+![20240306183855](/static/images/next-auth-email-otp/20240306183855.jpg)
+
+🤔 这不就是 Magic Link 吗？
+是的，如果我们的发送介质是邮件的话，那它们是没有什么区别的，不同的是验证的方式
+
+![20240306184443](/static/images/next-auth-email-otp/20240306184443.jpg)
+
+- OTP：用户收到邮件，查看 “验证码”（通常是一串数字），返回网页，输入验证码，认证完成。
+- Magic Link：用户收到邮件，点击邮件内验证连接（一个网址），打开新的网页，认证完成。
+
+可以看到这里两个交互区别
+
+1. 复制或记忆一串数字 或 点击一个网址
+2. 在网页输入数字 或 在新的网页继续操作（原网页依然在）
+
+如何共用：使用 OTP 的数字作为 Magic Link 的 token，邮件显示 Token，也显示可以点击的 Magic Link。
+
+<div className="max-w-xl mx-auto">
+  ![20240306184254](/static/images/next-auth-email-otp/20240306184254.jpg)
+</div>
+
+## 思路
+
+我们这里使用 Next Auth 的邮件认证做改造，它是使用 Magic Link 的方式认证，我们改造的思路是
+
+- token 使用 6 位随机整数生成
+- 登录/注册 邮件发送成功后，显示 OTP 输入
+- 校验 OTP 是否有效，认证完成
+
+## 实现
+
+为了更方便搭建基础，我们使用 [t3 - full-stack typesafe Next.js](https://create.t3.gg/) 来快速创建 [App Router](https://nextjs.org/docs)，[Next Auth](https://next-auth.js.org/)，[Prisma](https://www.prisma.io/) 的项目
+
+我们打开终端，执行
+
+```shell
+pnpm create t3-app@latest
+```
+
+![20240306190147](/static/images/next-auth-email-otp/20240306190147.jpg)
+
+![20240306190245](/static/images/next-auth-email-otp/20240306190245.jpg)
+
+![20240306190356](/static/images/next-auth-email-otp/20240306190356.jpg)
+
+注意，我们这里使用 SQLite 作为数据库，为了快速演示。
+
+安装完毕后，使用编辑器打开项目，T3 默认设置了 Discord 第三方验证，我们关闭它，不然 env 的校验会报错，无法启动服务。
+
+- `.env`: 删除 `DISCORD_CLIENT_ID` 和 `DISCORD_CLIENT_SECRET`
+- `src/env.js`: 删除 server 和 runtimeEnv 里的 `DISCORD_CLIENT_ID` 和 `DISCORD_CLIENT_SECRET`
+- `src/server/auth.ts`: 删除 `DiscordProvider` 的设置
+
+我们不需要修改 Prisma Schema 的任何东西，只需要应用 Schema 到数据库
+
+```shell
+npx prisma db push
+```
+
+接下来，我们设置 [Email Provider](https://next-auth.js.org/providers/email) 这里我们需要使用自定义邮件发送，邮件发送的服务我们使用 [Resend](https://resend.com/docs/send-with-nextjs)
+
+### 申请服务 key
+
+注册账户，我们这里使用 Github 快速登录
+
+![20240306191708](/static/images/next-auth-email-otp/20240306191708.jpg)
+
+输入用户名称，会跳转到欢迎 👏 页面
+
+![20240306191821](/static/images/next-auth-email-otp/20240306191821.jpg)
+
+点击 “Add API Key” 按钮，申请密钥
+
+![20240306191914](/static/images/next-auth-email-otp/20240306191914.jpg)
+
+先不要关网页，等一会会用到这个密钥，Resend 每次申请的密钥只会看到一次，不然只能申请新的密钥（不限数量）
+
+安装依赖
+
+```shell
+pnpm install resend
+```
+
+打开 `src/server/auth.ts` 文件
+
+```ts
+...
+
+import EmailProvider from "next-auth/providers/email";
+import crypto from "node:crypto";
+import { Resend } from "resend";
+
+...
+
+// Resend 服务的 Api Key
+const resend = new Resend("re_jkp1CHXF_9VwdjEjziwkf9fkLNRcPpXC6");
+
+export const authOptions: NextAuthOptions = {
+  ...
+  providers: [
+    EmailProvider({
+      from: "onboarding@resend.dev",
+      // 自定义验证码生成
+      generateVerificationToken: () => {
+        // 生成 6 未随机整数作为验证码 (OTP)
+        return crypto.randomInt(100000, 999999).toString();
+      },
+      // 发送验证请求
+      sendVerificationRequest: async ({ identifier, url, token }) => {
+        const user = await db.user.findUnique({
+          where: {
+            email: identifier,
+          },
+          select: {
+            emailVerified: true,
+          },
+        });
+
+        const sendTitle = user ? "Sign in" : "Sign up";
+
+        await resend.emails.send({
+          from: "onboarding@resend.dev",
+          to: identifier,
+          subject: `Next Auth OTP - ${sendTitle}`,
+          html: `<p>This is your ${sendTitle} code: <strong>${token}</strong> magic link: <a href="${url}">${url}</a></p>`,
+        });
+      },
+    }),
+  ],
+};
+
+...
+```
+
+- 将我们刚刚申请的 `Api Key` 填入 `new Resend(Api Key)`
+- 设置 `EmailProvider`，这里 `from` 我们使用 Resend 的测试邮箱作为发送方，实际生产这里是自定义域名（Resend 免费版本支持一个自定义域名，每月 3000 发送额度）
+- [`generateVerificationToken`](https://next-auth.js.org/providers/email#customizing-the-verification-token)：自定义验证码生成
+- [`sendVerificationRequest`](sendVerificationRequest): 自定义邮件发送
+- `resend.emails.send`: 邮件发送，这里即发送了 `token`，也发送了 `url`
+
+接下来我们启动服务，到登录页面，测试邮件的发送。
+
+```shell
+npm run dev
+```
+
+打开 [http://localhost:3000/api/auth/signin](http://localhost:3000/api/auth/signin)
+
+![20240306195548](/static/images/next-auth-email-otp/20240306195548.jpg)
+
+输入你的邮箱，点击发送邮件。
+
+![20240306195959](/static/images/next-auth-email-otp/20240306195959.jpg)
+
+邮件发送成功，
+
+![20240306210549](/static/images/next-auth-email-otp/20240306210549.jpg)
+
+可以看到，我们收到了邮件，点击 Magic Link 链接，这个时候，页面会跳转到 `/loign` 我们不用管，在页面打开 [http://localhost:3000/api/auth/session](http://localhost:3000/api/auth/session)
+
+```json
+{
+  "user": {
+    "name": null,
+    "email": "123123123@qq.com",
+    "image": null,
+    "id": "cltftbif60000ickr42mf2954"
+  },
+  "expires": "2024-04-05T13:06:12.367Z"
+}
+```
+
+我们可以看到，已经成功登录，Session 信息已存在。为了方便之后的测试，先退出登录 [http://localhost:3000/api/auth/signout](http://localhost:3000/api/auth/signout) 点击 `Sign out` 按钮
+
+![20240306211050](/static/images/next-auth-email-otp/20240306211050.jpg)
+
+### OTP 输入
+
+我们来自定义一下 `/login` 页面，在邮件发送完成后，显示 otp 输入
+
+创建文件 `src/app/login/page.tsx`
+
+```tsx
+"use client";
+
+import { useState } from "react";
+import { signIn } from "next-auth/react";
+
+export default function LoginPage() {
+  const [email, setEmail] = useState("");
+
+  const handleLogin = async () => {
+    const login = await signIn("email", {
+      email,
+      redirect: false,
+    });
+    if (login?.error) {
+      return alert(login.error);
+    }
+    alert("Check your email");
+  };
+
+  return (
+    <div className="p-4">
+      <div className="space-x-2">
+        <input
+          className="h-10 rounded-lg border border-slate-600 p-2"
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <button
+          onClick={handleLogin}
+          className="h-10 rounded-lg bg-slate-800 px-4 py-2 text-white"
+        >
+          Send Email
+        </button>
+      </div>
+    </div>
+  );
+}
+```
+
+![20240306211921](/static/images/next-auth-email-otp/20240306211921.jpg)
+
+界面比较简单，接着我们实现，邮件发送成功后，显示 OTP 输入，输入完成后做验证。
+
+**这里如何做验证？**
+
+我们需要使用 Magic Link 的思路来处理，Magic Link 实际是一个 get 接口 [`http://localhost:3000/api/auth/callback/email`](http://localhost:3000/api/auth/callback/email)，主要的查询参数是 `email` 和 `token`, 而我们就是要拼接一个 “Magic Link” 来发送请求，而根据请求返回的状态值，来判断是否有效。
+
+注意：这里使用状态值的原因是该接口内部实现的是重定向，所以返回的是 html 内容,无法作为判断。
+
+```tsx
+"use client";
+
+import { useState } from "react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+
+export default function LoginPage() {
+  const [email, setEmail] = useState("");
+  const [showOTP, setShowOTP] = useState(false);
+  const [otp, setOTP] = useState("");
+  const router = useRouter();
+
+  const handleLogin = async () => {
+    const login = await signIn("email", {
+      email,
+      redirect: false,
+    });
+    if (login?.error) {
+      return alert(login.error);
+    }
+    alert("Check your email");
+    setShowOTP(true);
+  };
+
+  const handleVerifyOTP = async () => {
+    const url = new URL("/api/auth/callback/email", window.location.href);
+    url.searchParams.append("token", otp);
+    url.searchParams.append("email", email);
+    const res = await fetch(url);
+    // 不成功
+    if (res.status !== 200) {
+      return alert("Invalid OTP");
+    }
+    alert("Login Successful");
+    setShowOTP(false);
+    // 跳转
+    router.replace("/api/auth/session");
+  };
+
+  return (
+    <div className="space-y-4 p-4">
+      <div className="space-x-2">
+        <input
+          className="h-10 rounded-lg border border-slate-600 p-2"
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <button
+          onClick={handleLogin}
+          className="h-10 rounded-lg bg-slate-800 px-4 py-2 text-white"
+        >
+          Send Email
+        </button>
+      </div>
+      {showOTP && (
+        <div className="space-x-2">
+          <input
+            className="h-10 rounded-lg border border-slate-600 p-2"
+            type="otp"
+            placeholder="OTP"
+            value={otp}
+            onChange={(e) => setOTP(e.target.value)}
+          />
+          <button
+            onClick={handleVerifyOTP}
+            className="h-10 rounded-lg bg-slate-800 px-4 py-2 text-white"
+          >
+            Verify OTP
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+发送邮件
+
+![20240306213132](/static/images/next-auth-email-otp/20240306213132.jpg)
+
+收到邮件后，copy 验证码。
+
+![20240306213225](/static/images/next-auth-email-otp/20240306213225.jpg)
+
+成功后，将跳转至 [http://localhost:3000/api/auth/session](http://localhost:3000/api/auth/session)
+
+代码仓库： [next-auth-otp](https://github.com/hehehai/next-auth-otp)
+
+## 参考
+
+- [Next Auth](https://next-auth.js.org/)
+- [Resend](https://resend.com/)
+- [React Input OTP](https://github.com/guilhermerodz/input-otp)
