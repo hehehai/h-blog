@@ -22,7 +22,7 @@ export default function Container(props: ContainerProps) {
     title: "Hehehai @一块木头 - 全栈开发，专注于前端应用程序和用户界面设计.",
     description: `我是一位全栈开发，专注于前端应用程序和用户界面设计。我的首选技术栈是 TypeScript、React、Vue 和 NodeJS。`,
     image: "/favicon.svg",
-    og: '/og.jpg',
+    og: "/og.jpg",
     type: "website",
     ...customMeta,
   };
@@ -36,10 +36,7 @@ export default function Container(props: ContainerProps) {
         <link rel="manifest" href="/site.webmanifest" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
-        <meta
-          property="og:url"
-          content={`${baseHost}${router.asPath}`}
-        />
+        <meta property="og:url" content={`${baseHost}${router.asPath}`} />
         <link rel="canonical" href={`${baseHost}${router.asPath}`} />
         <meta property="og:type" content={meta.type} />
         <meta property="og:site_name" content="Hehehai @一块木头" />
@@ -47,6 +44,8 @@ export default function Container(props: ContainerProps) {
         <meta property="og:title" content={meta.title} />
         <meta property="og:image" content={baseHost + meta.og} />
         <meta property="og:image：alt" content={meta.title} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
 
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:url" content={baseHost} />
@@ -54,6 +53,8 @@ export default function Container(props: ContainerProps) {
         <meta name="twitter:title" content={meta.title} />
         <meta name="twitter:description" content={meta.description} />
         <meta name="twitter:image" content={baseHost + meta.og} />
+        <meta name="twitter:image:width" content="1200" />
+        <meta name="twitter:image:height" content="630" />
         {meta.date && (
           <meta property="article:published_time" content={meta.date} />
         )}
