@@ -12,7 +12,8 @@ export default async function handler(request: NextRequest) {
   ).then((res) => res.arrayBuffer());
 
   const title = searchParams.get("title") ?? "";
-  const tags: string[] = (searchParams.get("tags") ?? "").replace('%2', ',').split(",") ?? [];
+  const tags: string[] =
+    (searchParams.get("tags") ?? "").replace("%2", ",").split(",") ?? [];
 
   return new ImageResponse(
     (
@@ -74,6 +75,11 @@ export default async function handler(request: NextRequest) {
     {
       width: 1200,
       height: 630,
+      headers: {
+        "Cache-Control": "public, max-age=31536000, immutable",
+        "Content-Type": "image/jpeg",
+        "Content-Disposition": "inline",
+      },
     }
   );
 }
