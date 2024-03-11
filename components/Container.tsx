@@ -12,6 +12,7 @@ export interface ContainerProps {
   og?: string;
   type?: string;
   date?: string;
+  tag?: string;
 }
 
 export default function Container(props: ContainerProps) {
@@ -24,6 +25,7 @@ export default function Container(props: ContainerProps) {
     image: "/favicon.svg",
     og: "/og.jpg",
     type: "website",
+    tag: "",
     ...customMeta,
   };
 
@@ -42,22 +44,19 @@ export default function Container(props: ContainerProps) {
         <meta property="og:site_name" content="Hehehai @一块木头" />
         <meta property="og:description" content={meta.description} />
         <meta property="og:title" content={meta.title} />
+        <meta property="article:author" content={baseHost} />
         <meta property="og:image" content={baseHost + meta.og} />
         <meta property="og:image：alt" content={meta.title} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:url" content={baseHost} />
         <meta name="twitter:site" content="@riverhohai" />
-        <meta name="twitter:title" content={meta.title} />
-        <meta name="twitter:description" content={meta.description} />
-        <meta name="twitter:image" content={baseHost + meta.og} />
-        <meta name="twitter:image:width" content="1200" />
-        <meta name="twitter:image:height" content="630" />
+        <meta name="twitter:creator" content="@riverhohai" />
         {meta.date && (
           <meta property="article:published_time" content={meta.date} />
         )}
+        {meta.tag && <meta property="article:tag" content={meta.tag} />}
       </Head>
     );
   };

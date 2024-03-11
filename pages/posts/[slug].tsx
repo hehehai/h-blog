@@ -34,16 +34,19 @@ export default function Post({
   readingTime: string;
 }) {
   let readingTimeNum = Number.parseInt(readingTime);
+  const ogTags = (frontMatter.tags || "").toString();
 
   const seoMeta: ContainerProps = {
     title: frontMatter.title,
     description: frontMatter.description,
     date: frontMatter.publicAt,
+    type: "article",
+    tag: ogTags,
   };
 
   if (frontMatter.title) {
-    const ogTags = (frontMatter.tags || "").toString();
     const searchParams = new URLSearchParams({
+      ogTags,
       title: frontMatter.title,
       tags: ogTags,
     });
