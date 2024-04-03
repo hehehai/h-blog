@@ -2,7 +2,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <div className="py-8 mt-20 flex items-center">
+    <div className="py-8 mt-20 flex items-center text-sm">
       <span>© 2019 - {currentYear}, Hehehai </span>
       <a
         href="http://beian.miit.gov.cn/"

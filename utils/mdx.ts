@@ -43,6 +43,7 @@ export const postMdxData = (hasContent = true, count = 999) : Post[] => {
 export async function mdxToHtml(content: string) {
   const mdxSource = await serialize(content, {
     mdxOptions: {
+      development: process.env.NODE_ENV === 'development',
       remarkPlugins: [remarkGfm],
       rehypePlugins: [
         rehypeSlug,
