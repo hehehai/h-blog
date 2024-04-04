@@ -17,13 +17,13 @@ export default function CustomLink(props: any) {
 
   return (
     <a
-      className="underline-offset-4 inline-flex items-center space-x-1 group"
+      className="underline-offset-4 inline items-center space-x-1 group break-all"
       target="_blank"
       rel="noopener noreferrer"
       {...props}
     >
       <span>{props.children}</span>
-      <JumpLink className="group-hover:animate-shaking" />
+      <JumpLink className="group-hover:animate-shaking inline" />
     </a>
   );
 }

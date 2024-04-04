@@ -55,6 +55,9 @@ module.exports = {
                   marginTop: 0,
                   marginBottom: theme("spacing.6"),
                   fontSize: fontSize("lg"),
+                  wordBreak: "break-all",
+                  wordWrap: "break-word",
+                  overflowWrap: "break-word",
                 },
                 "> div": {
                   marginTop: 0,

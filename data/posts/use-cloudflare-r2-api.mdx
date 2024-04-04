@@ -1,0 +1,388 @@
+---
+title: 使用 Cloudflare R2 构建可扩展且经济实惠的图像存储服务
+description: 我们最近将图像托管从 Cloudinary 迁移到 Cloudflare R2。这篇文章详细介绍了切换背后的原因、Cloudflare R2 的优缺点以及我们如何在代码库中实现它。
+tags: Storage,Cloudflare R2
+badges: 转发
+publicAt: "2024-04-03"
+---
+
+![i1](/static/images/use-cloudflare-r2-api/image-hosting-r2.png)
+
+> 本文转发并翻译至: [Building a Scalable & Affordable Image Hosting Pipeline with Cloudflare R2](https://dub.co/blog/image-hosting-r2 "{rel='nofollow'}")
+
+[Dub.co](https://dub.co/)作为[链接管理](https://dub.co/help/article/what-is-dub)平台，存储了各种用户生成的图像资产：
+
+- 我们的[自定义社交媒体卡](https://dub.co/help/article/custom-social-media-cards)功能的图像
+- 每个 [Dub 工作区](https://dub.co/help/article/what-is-a-workspace)的徽标
+- 用户头像
+
+随着规模的扩大，我们意识到我们现有的图像托管解决方案并未针对成本和开源精神进行优化。我们使用的是 Cloudinary，这是一项很棒的服务，但随着我们的扩展，它变得越来越昂贵。它也不是开源的，这使得它不是[自托管](https://dub.co/docs/self-hosting)的最佳选择。
+
+这就是我们最近将图像托管从 Cloudinary 迁移到 Cloudflare R2 的原因。在这篇文章中，我们将分享我们的旅程、Cloudflare R2 的优缺点，以及我们如何在代码库中设置它。
+
+## 什么是 Cloudflare R2？
+
+[Cloudflare R2](https://www.cloudflare.com/developer-platform/r2/) 是一种具有可扩展性和经济性的存储解决方案。它的设计与 S3 兼容，对于那些希望从传统 AWS 服务切换的人来说是一个有吸引力的选择。它还允许我们使用 Cloudflare 服务，但为那些想要自行托管并坚持使用 AWS 生态系统的人提供 AWS 支持。
+
+![i1](/static/images/use-cloudflare-r2-api/cloudflare-r2-egress.png)
+
+## Cloudflare R2 的优点
+
+- **易于设置**：R2 入门非常简单，特别是如果您已经在使用 Cloudflare 服务。就像创建一个存储桶一样简单，仅此而已。它就像 S3 + Cloudfront 并且自动配置。
+- **S3 兼容性**：这使得从 AWS 的迁移变得更加简单，并允许使用现有的 S3 工具和库。您所需要做的就是更新您的 S3 URL、访问密钥和秘密令牌。
+- **定价**：Cloudflare R2 提供有竞争力的定价，特别是在出口费用方面，这对于其他服务来说可能是一笔巨大的成本。
+
+## Cloudflare R2 的缺点
+
+- **域要求**：如果您想将 R2 与自定义域（甚至是子域）一起使用，您的顶级域需要由 Cloudflare 名称服务器管理。在我们的例子中，由于我们的主域 `dub.co` 不在 Cloudflare 上，因此我们无法使用像 `assets.dub.co` 这样的子域，而必须使用 `dubassets.com` 代替。
+- **CORS 问题**：有报道称 CORS 相关的挑战，这可能是 Web 应用程序的一个痛点——我们自己也遇到过[这个问题](https://dub.co/blog/image-hosting-r2#potential-gotcha-cors)。
+- **单区域**：与其他一些 Cloudflare 服务不同，R2 存储是单区域且不分布在边缘，这可能会影响延迟。不管怎样，它仍然非常快！
+
+<Callout type="find">
+有趣的是，无法使用子域 ( assets.dub.co ) 并不得不使用 dubassets.com 却因祸得福，因为通常最好将用户生成的资产托管在子域上。出于安全原因单独的域。
+
+这与 GitHub 使用 githubusercontent.com 作为用户生成内容的原因相同。这条 Reddit 评论很好地解释了这一点。
+
+</Callout>
+
+## 执行
+
+这是我们进行更改的 PR： [从 Cloudinary 迁移到存储桶解决方案](https://github.com/dubinc/dub/pull/688)
+
+总而言之，以下是我们实施 Cloudflare R2 所采取的步骤：
+
+- [设置新的 R2 存储桶](https://dub.co/blog/image-hosting-r2#step-1-set-up-a-new-r2-bucket)
+- [创建 `storage` 客户端用于上传和删除图片](https://dub.co/blog/image-hosting-r2#step-2-create-storage-client-for-uploading-and-deleting-images)
+- [处理上传时调整图像大小](https://dub.co/blog/image-hosting-r2#step-3-handle-image-resizing-on-upload)
+- [替换 `storage` 客户端的 Cloudinary 代码](https://dub.co/blog/image-hosting-r2#step-4-swap-out-cloudinary-code-for-storage-client)
+
+### 步骤 1：设置新的 R2 存储桶
+
+首先，我们按照以下步骤设置一个新的 R2 存储桶。
+
+1. Create R2 bucket 创建 R2 存储桶
+
+如果您尚未订阅 R2 服务，则需要订阅。
+
+在您的 [Cloudflare 帐户](https://dash.cloudflare.com/)中，创建一个新的 R2 存储桶。我们建议为您的存储桶指定一个描述性名称（例如 `dubassets` ）并保留其余设置不变。
+
+![i1](/static/images/use-cloudflare-r2-api/cloudflare-r2-create-bucket.png)
+
+在您的存储桶设置中，复制 **S3 API** 值 - 您将在第 3 步中需要它。
+
+2. 设置对 R2 的访问
+
+在 R2 主页中，单击右侧栏中的**管理 R2 API 令牌**。
+
+![i1](/static/images/use-cloudflare-r2-api/cloudflare-r2-manage-api-tokens.png)
+
+然后，单击**创建 API 令牌**。
+
+![i1](/static/images/use-cloudflare-r2-api/cloudflare-r2-create-api-token.png)
+
+确保将您的 API 令牌命名为与将使用该令牌的服务相关的名称。
+
+授予其“对象读写”权限，我们建议仅将 ito 应用于单个存储桶。
+
+您可以保留其余设置（TTL、客户端 IP 地址过滤）不变，然后单击**创建 API 令牌**。
+
+创建令牌后，复制 `Access Key ID` 和 `Secret Access Key` 值 - 您将在下一步中需要它们。
+
+3. 设置 R2 环境变量
+
+获得凭据后，将其设置在 `.env` 文件中：
+
+```txt
+STORAGE_ACCESS_KEY_ID= // this is the Access Key ID value from Step 2
+STORAGE_SECRET_ACCESS_KEY= // this is the Secret Access Key value from Step 2
+STORAGE_ENDPOINT= // this is the S3 API value from Step 1
+```
+
+4. Set up R2 domain 设置 R2 域
+
+为了使您的图像可以在 R2 中公开访问，您需要设置一个域。您可以使用自己的域或 R2.dev 子域。
+
+要使用您自己的域，您需要在 DNS 设置中创建指向 R2 存储桶的 CNAME 记录。
+
+如果您计划使用 R2.dev 子域，请确保“允许访问”。
+
+然后将 `.env` 文件中的 `STORAGE_BASE_URL` 设置为您选择的域。
+
+```txt
+STORAGE_BASE_URL={URL your assets as available at} # https://static.example.com
+```
+
+![i1](/static/images/use-cloudflare-r2-api/cloudflare-r2-public-domain.png)
+
+我们将 R2 存储桶命名为 `dubassets` 并在 `Eastern North America (ENAM)` 区域中创建它。我们还[设置了一个自定义域](https://developers.cloudflare.com/r2/buckets/public-buckets/#custom-domains) `dubassets.com` 来指向 R2 存储桶，以利用 [Cloudflare Cache](https://developers.cloudflare.com/cache/) 加速对 R2 存储桶的访问。
+
+![i1](/static/images/use-cloudflare-r2-api/cloudflare-r2-bucket.png)
+
+### 步骤 2：创建 `storage` 客户端用于上传和删除图片
+
+然后，创建一个 `storage` 客户端，允许我们上传和删除图像：
+
+```ts
+import { AwsClient } from "aws4fetch";
+
+interface imageOptions {
+  contentType?: string;
+  width?: number;
+  height?: number;
+}
+
+class StorageClient {
+  private client: AwsClient;
+
+  constructor() {
+    this.client = new AwsClient({
+      accessKeyId: process.env.STORAGE_ACCESS_KEY_ID || "",
+      secretAccessKey: process.env.STORAGE_SECRET_ACCESS_KEY || "",
+      service: "s3",
+      region: "auto",
+    });
+  }
+
+  async upload(key: string, body: Blob | Buffer | string, opts?: imageOptions) {
+    // ... helper functions to format the body
+
+    const headers = {
+      "Content-Length": uploadBody.size.toString(),
+    };
+    if (opts?.contentType) headers["Content-Type"] = opts.contentType;
+
+    try {
+      await this.client.fetch(`${process.env.STORAGE_ENDPOINT}/${key}`, {
+        method: "PUT",
+        headers,
+        body: uploadBody,
+      });
+
+      return {
+        url: `${process.env.STORAGE_BASE_URL}/${key}`,
+      };
+    } catch (error) {
+      throw new Error(`Failed to upload file: ${error.message}`);
+    }
+  }
+
+  async delete(key: string) {
+    await this.client.fetch(`${process.env.STORAGE_ENDPOINT}/${key}`, {
+      method: "DELETE",
+    });
+
+    return { success: true };
+  }
+}
+
+export const storage = new StorageClient();
+```
+
+<Callout typ="find">
+  注意：我们所有的图像上传都是在服务器端处理的，因此我们不必担心[预先签名的 URL
+  上传](https://docs.aws.amazon.com/AmazonS3/latest/userguide/PresignedUrlUploadObject.html)。
+</Callout>
+
+您会注意到我们使用的是 `aws4fetch` 而不是 `aws-sdk/client-s3` SDK。原因有两个：
+
+- **边缘兼容**：AWS S3 SDK 与[边缘运行时](https://vercel.fyi/edge)不边缘兼容，而 `aws4fetch` 则兼容。这是因为 AWS 开发工具包使用边缘运行时中不可用的 Node.js API。
+- **简单的接口**： `aws4fetch` 提供了一个用于发出请求的简单接口，这就是我们的用例所需要的。
+
+您可以在我们的[代码库](https://github.com/dubinc/dub/blob/main/apps/web/lib/storage.ts)中查看此代码。
+
+### 第 3 步：处理上传时调整图像大小的问题
+
+我们还需要在上传时处理图像大小调整，以避免在 R2 中存储不必要的大图像。鉴于大多数开放图谱 (OG) 图像都是 `1200` x `630` ，我们决定将所有图像的大小调整为该大小。
+
+为此，我们在将图像上传到服务器之前在客户端调整了图像的大小。这是使用 `canvas` API 完成的。
+
+```ts
+export const resizeImage = (
+  file: File,
+  opts: {
+    width: number;
+    height: number;
+    quality: number;
+  } = {
+    width: 1200, // Desired output width
+    height: 630, // Desired output height
+    quality: 1.0, // Set quality to maximum
+  }
+): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e: ProgressEvent<FileReader>) => {
+      const img = new Image();
+      img.src = e.target?.result as string;
+      img.onload = () => {
+        const targetWidth = opts.width;
+        const targetHeight = opts.height;
+        const canvas = document.createElement("canvas");
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+
+        const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+        ctx.imageSmoothingQuality = "high"; // Set image smoothing quality to high
+
+        // Calculating the aspect ratio
+        const sourceWidth = img.width;
+        const sourceHeight = img.height;
+        const sourceAspectRatio = sourceWidth / sourceHeight;
+        const targetAspectRatio = targetWidth / targetHeight;
+
+        let drawWidth: number;
+        let drawHeight: number;
+        let offsetX = 0;
+        let offsetY = 0;
+
+        // Adjust drawing sizes based on the aspect ratio
+        if (sourceAspectRatio > targetAspectRatio) {
+          // Source is wider
+          drawHeight = sourceHeight;
+          drawWidth = sourceHeight * targetAspectRatio;
+          offsetX = (sourceWidth - drawWidth) / 2;
+        } else {
+          // Source is taller or has the same aspect ratio
+          drawWidth = sourceWidth;
+          drawHeight = sourceWidth / targetAspectRatio;
+          offsetY = (sourceHeight - drawHeight) / 2;
+        }
+
+        // Draw the image onto the canvas
+        ctx.drawImage(
+          img,
+          offsetX,
+          offsetY,
+          drawWidth,
+          drawHeight,
+          0,
+          0,
+          targetWidth,
+          targetHeight
+        );
+
+        // Convert the canvas to a base64 string
+        const base64Image = canvas.toDataURL("image/jpeg", opts.quality);
+        resolve(base64Image);
+      };
+      img.onerror = (error) =>
+        reject(new Error("Image loading error: " + error));
+    };
+    reader.onerror = (error) => reject(new Error("FileReader error: " + error));
+    reader.readAsDataURL(file);
+  });
+};
+```
+
+### 第 4 步：将 Cloudinary 代码替换为 `storage` 客户端
+
+一旦所有这些都就位，我们只需为新的 storage 客户端切换 Cloudinary 代码即可。
+
+而不是以下内容：
+
+```ts
+cloudinary.v2.uploader.upload(image, {
+  public_id: linkId,
+  overwrite: true,
+  invalidate: true,
+});
+```
+
+我们现在有一句话：
+
+```ts
+storage.upload(linkId, image);
+```
+
+## 迁移过程
+
+在我们将代码更改推送到生产环境后，是时候运行迁移以将所有现有映像从 Cloudinary 移动到 R2 了。
+
+这是我们使用的迁移脚本：
+
+```ts
+import prisma from "@/lib/prisma";
+import { storage } from "@/lib/storage";
+import "dotenv-flow/config";
+
+async function main() {
+  const imagesToMigrate = await prisma.link.findMany({
+    where: {
+      proxy: true,
+      image: {
+        startsWith: "https://res.cloudinary.com",
+      },
+    },
+    select: {
+      id: true,
+      image: true,
+    },
+    take: 30,
+  });
+
+  await Promise.allSettled(
+    imagesToMigrate.map(async (link) => {
+      const { url } = await storage.upload(`images/${link.id}`, link.image, {
+        width: 1200,
+        height: 630,
+      });
+
+      await prisma.link.update({
+        where: {
+          id: link.id,
+        },
+        data: {
+          image: url,
+        },
+      });
+    })
+  );
+}
+
+main();
+```
+
+我们一次批量处理 30 张图像，以避免达到速率限制。在迁移过程中，我们还将图像大小调整为 `1200` x `630` 。
+
+## CORS 潜在问题：CORS
+
+> CORS：[每个 Web 开发人员存在的祸根](https://victorbjorklund.com/cors-error-phoenix-elixir-cors-plug)。
+
+迁移后，我们注意到，虽然图像在直接请求时可以工作，但在嵌入到我们的[二维码](https://dub.co/help/article/custom-qr-codes)中时却无法加载。
+
+经过一番调试，我们意识到问题是由于 CORS 造成的。由于我们使用自定义域，因此必须在 R2 存储桶中设置 CORS 规则以允许来自我们域的请求。
+
+为此，我们必须遵循[本指南](https://developers.cloudflare.com/r2/buckets/cors/)并设置以下 CORS 配置：
+
+```json
+[
+  {
+    "AllowedOrigins": ["*"],
+    "AllowedMethods": ["GET", "HEAD"],
+    "AllowedHeaders": ["*"],
+    "ExposeHeaders": []
+  }
+]
+```
+
+<Callout type="thinking">
+  如果这仍然不起作用，您可能需要在 Cloudflare 中设置自定义转换规则，以将
+  `Access-Control-Allow-Origin` 标头添加到响应中（按照 [Cloudflare
+  论坛](https://community.cloudflare.com/t/problem-with-settings-cors-policies-on-r2/432339/18)上的此答案）。
+</Callout>
+
+## 使用 Cloudflare R2 进行可扩展且开源友好的图像托管
+
+我们对迁移到 Cloudflare R2 为 Dub 带来的新功能感到非常兴奋。从长远来看，它不仅可以为我们节省资金，而且还符合我们的开源精神，让用户可以更轻松地自行托管 Dub。
+
+我们的代码库是完全开源的，因此请随时查看并了解有关我们如何实施 Cloudflare R2 的更多信息： https://github.com/dubinc/dub
+
+如果您正在寻找经济实惠且可扩展的图像托管解决方案，我们强烈建议您尝试一下 Cloudflare R2。
+
+## 参考
+
+- [Building a Scalable & Affordable Image Hosting Pipeline with Cloudflare R2](https://dub.co/blog/image-hosting-r2 "{rel='nofollow'}")
+- [Dub 自托管-设置 Cloudflare R2](https://dub.co/docs/self-hosting#step-6-set-up-cloudflare-r2)
+- [Cloudflare R2](https://www.cloudflare.com/zh-cn/developer-platform/r2/)
+- [Cloudflare R2 S3 API](https://developers.cloudflare.com/r2/api/s3/)
+- [Move from Cloudinary to a storage bucket solution](https://github.com/dubinc/dub/pull/688)
