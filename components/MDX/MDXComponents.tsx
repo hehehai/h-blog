@@ -17,6 +17,7 @@ import { DetailsProvider, useDetails } from "contexts/details";
 import { Collapse } from "../Collapse";
 import { cn } from "lib/utils";
 import { Callout } from "../Callout";
+import { CarouselMDX } from "./Carousel";
 
 const findSummary = (children: ReactNode) => {
   let summary: ReactNode = null;
@@ -130,6 +131,7 @@ const MDXComponents = {
   EmbedStackblitz,
   SandpackBlock,
   DemoMenuBox,
+  CarouselMDX
 };
 
 export default MDXComponents;

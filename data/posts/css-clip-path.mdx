@@ -1,5 +1,5 @@
 ---
-title: CSS 中的剪切路径
+title: 全面了解 CSS 中的剪切路径
 description: 如何使用 CSS 让网页元素形状多样化？独特的图形动效如何实现？
 tags: CSS,Effect
 badges: 笔记
@@ -401,39 +401,39 @@ clip-path: polygon(0 0, 100% 0, 100% 40%, 0 100%);
 }
 
 .card-bg {
-  padding: 16px 20px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: #8820ff;
-  color: white;
-  clip-path: circle(0 at -10% 50%);
-  transition: all ease-in 0.4s;
+padding: 16px 20px;
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background: #8820ff;
+color: white;
+clip-path: circle(0 at -10% 50%);
+transition: all ease-in 0.4s;
 }
 
 .card:hover {
-  .card-bg {
-    clip-path: circle(150% at 0 0);
-  }
+.card-bg {
+clip-path: circle(150% at 0 0);
+}
 }
 
 .card-inner {
-  padding: 16px 20px;
+padding: 16px 20px;
 }
 
 .label {
-  font-size: 20px;
-  margin-bottom: 10px;
+font-size: 20px;
+margin-bottom: 10px;
 }
 
 .value {
-  font-size: 36px;
-  font-weight: 500;
+font-size: 36px;
+font-weight: 500;
 }`
-    }
-  }}
+}
+}}
 />
 
 💡 请将鼠标移入卡片。 动画的过渡是支持 `clip-path` 的， 这里需要设置为 `all`

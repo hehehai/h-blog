@@ -1,0 +1,335 @@
+---
+title: 如何在 Product Hunt 中获得第一名 - 分步指南
+description: 3 月 21 日，我们在 Product Hunt 上推出了 Dub.co，并赢得了本月排名第一的产品。这是我们如何做到这一点的分步剧本。
+tags: SASS,Product
+badges: 转发
+publicAt: "2024-04-04"
+---
+
+![i1](/static/images/product-hunt/product-hunt.jpg)
+
+经过一年多的建设，我们于 2024 年 3 月 21 日通过 Product Hunt 向全世界推出了 Dub.co。
+
+结果：
+
+- 🥇 每日排名第一的产品
+- 🥇 本周排名第一的产品
+- 🥇 本月排名第一的产品
+
+这是我们如何做到这一点的分步手册。
+
+## 为什么推出 Product Hunt？
+
+作为科技领域新产品发布的首选平台，[Product Hunt](https://producthunt.com/) 是发布产品的绝佳场所，主要原因有两个：
+
+- **曝光度**：每月访问量超过 [450 万次](https://www.semrush.com/website/producthunt.com/overview/)，成功的 Product Hunt 发布可以让您的产品展示在数千名技术爱好者和潜在客户面前。
+- **SEO 提升**：Product Hunt 的[域名评级为 91](https://ahrefs.com/website-authority-checker/?input=producthunt.com)，是网络上最权威的网站之一。来自 Product Hunt 的反向链接可以为您的网站带来良好的 SEO 提升。
+
+每天，Product Hunt 上都会推出数百种（如果不是数千种）新产品。为了脱颖而出，您需要制定深思熟虑的发布策略。
+
+那么，如何策划一次成功的 Product Hunt 发布呢？
+
+## 第 0 步：拥有出色的产品
+
+这似乎是显而易见的，但值得一提的是：要成功推出 Product Hunt，您需要构建人们真正想要的东西。
+
+我的好朋友 Peer Richelsen 的这条推文很好地总结了这一点： [How to win at Product Hunt](https://docs.google.com/document/d/1MOFqCbTvpOTPQYIKIyU9sdgUHGkcRT04tAWt6PG96Wo/edit?pli=1#heading=h.z6ne0og04bp5)
+
+## 第 1 步：围绕您的产品建立强大的社区
+
+这可能是该过程中最困难但也是最重要的一步。
+
+在推出 Product Hunt 之前的几个月甚至[几年](https://twitter.com/steventey/status/1768321266455544216)，您需要建立一个由对您的产品感到兴奋的早期采用者组成的社区。这可以有多种形式：
+
+### 选项 1：建立候补名单
+
+为您的产品创建一个杀手级预告片，并设置一个抢先体验的等候名单。这是建立预期并使人们对您的发布感到兴奋的好方法。
+
+一种更简单的方法是利用 Product Hunt 的[预告页面](https://help.producthunt.com/en/articles/6684724-how-do-i-create-a-teaser-for-my-launch)功能直接在 Product Hunt 上构建您的候补名单。这对我们来说[非常有效](https://dub.co/blog/product-hunt#step-4-launch-your-teaser-page)。
+
+### 选项 2：启动/获取/赞助新闻通讯
+
+如果您正在特定的利基市场构建产品，请考虑围绕该利基市场启动新闻通讯。这可能是建立对您的产品感兴趣的潜在用户受众的好方法。
+
+或者，您可以购买或赞助在您的目标市场中已有受众的时事通讯。 Loops [收购 Workspaces](https://loops.so/updates/workspaces-joins-loops) 就是一个很好的例子，Workspaces 拥有超过 12,000 名订阅者，他们在[发布之日](https://loops.so/guides/product-hunt-launch)就能够接触到这些订阅者。
+
+### 选项 3：建立开源社区
+
+如果您正在构建开源产品，那么您在这里拥有独特的优势：利用您的开源社区（无论是在 GitHub 还是 Discord 上）在发布初期就产生吸引力。
+
+这是最适合我们的选择——作为一个在 GitHub 上拥有超过 15,000 颗星的开源产品，我们能够围绕 Dub.co 建立一个开发者社区，他们对我们的发布感到兴奋。
+
+> [dub repo](https://github.com/dubinc/dub)
+
+最终，建立强大社区的关键是为用户提供价值。无论是通过候补名单、时事通讯还是开源社区，目标都是创建一群对您的产品感到兴奋并愿意在发布当天为您提供支持的人。
+
+## 第 2 步：准备恒星发射资产
+
+第一印象很重要。
+
+当有人登陆您的“产品搜寻”页面时，您希望确保他们被您的产品所震撼。为此，您的产品轮播需要世界一流的图像。
+
+这是我们制作的：
+
+<CarouselMDX
+  items={[
+    <img src="/static/images/product-hunt/product-hunt-thumbnail.jpg" />,
+    <img src="/static/images/product-hunt/product-hunt-sdk.jpg" />,
+    <img src="/static/images/product-hunt/product-hunt-analytics.jpg" />,
+    <img src="/static/images/product-hunt/product-hunt-advanced.jpg" />,
+    <img src="/static/images/product-hunt/product-hunt-qr.jpg" />,
+  ]}
+/>
+
+<FAQBox title="我的 Product Hunt 发布需要发布视频吗？">
+  与流行的观点相反，您可能不需要产品搜索发布的发布视频。大多数时候，Product Hunt
+  视频的点击率/观看率出奇的低。相反，专注于创建展示您产品的高质量图像。
+</FAQBox>
+
+## 第 3 步：选择发布日期
+
+在选择发布日期之前，您需要确定一周中的哪一天最适合发布。
+
+根据经验，**周二**、**周三**和**周四**通常被认为是在 Product Hunt 上发布的最佳日子。这是平台上最活跃的人的时候。
+
+另一方面，这些也是发布竞争最激烈的日子，这就是您的社区发挥作用的地方。如果您围绕您的产品[建立了强大的社区](https://dub.co/blog/product-hunt#step-1-build-a-strong-community-around-your-product)，那么您可以在一周中的任何一天发布产品，并且仍然名列前茅排行榜的。
+
+就我们而言，我们选择 2024 年 3 月 21 日（星期四）作为我们的发布日期。
+
+<FAQBox title="我应该使用 Hunter 在 Product Hunt 上发布我的产品吗？">
+虽然过去让受欢迎的猎人“狩猎”您的产品可以让您在产品狩猎方面获得显着优势，但我们注意到情况已不再如此。事实上，近年来一些最成功的 Product Hunt 发布都是由创始人本人提交的 - 例如：[Cal.com](https://www.producthunt.com/posts/cal-com) 于 2021 年传奇性的发布就是由创始人本人提交的。
+
+话虽这么说，如果您仍然想使用猎人来发布您的产品，您可以通过 [Upvote Bell](https://upvote-bell.com/leaderboard) 在 Product Hunt 上找到顶级猎人的列表。
+
+</FAQBox>
+
+## 第 4 步：启动预告页面
+
+在实际发布前一周，在 Product Hunt 上创建[预告页面](https://help.producthunt.com/en/articles/6684724-how-do-i-create-a-teaser-for-my-launch)。这是向世界表达的好方法 – “嘿，我们将在 1 周后推出我们的产品 – 标记您的日历！”
+
+我们于 3 月 14 日推出了我们的预告页面，距离 3 月 21 日实际推出正好 1 周。
+
+<img
+  src="/static/images/product-hunt/steven-tey-teaser.jpg"
+  className="max-w-md"
+/>
+
+我们还安排将此公告与 3 月份产品更新电子邮件一起发送给我们现有的 25,000 多名用户的电子邮件列表，让他们了解我们即将推出的产品。
+
+电子邮件+社交的结合对我们来说非常有效，当我们开始在预告片页面上获得关注时，它的排名迅速上升，并成为 Product Hunt 的[“即将推出”](https://www.producthunt.com/coming-soon)页面上排名第一的热门产品。
+
+<img src="/static/images/product-hunt/product-hunt-coming-soon.png" />
+
+## 第 5 步：为您的 Product Hunt URL 使用短链接
+
+当您启动 Product Hunt 时，您将获得以下 URL：
+
+- **产品中心/预告页面**： https://www.producthunt.com/products/dub
+- **启动页面**： https://www.producthunt.com/posts/dub
+
+这两个 URL 都很长，因此很难手动输入它们或在社交媒体上分享它们。这是短链接可以派上用场的地方。
+
+在我们的例子中，我们对自己的平台进行了测试，并为我们的 Product Hunt 发布创建了一个超短链接 → d.to/ph
+
+<img src="/static/images/product-hunt/ph-short-link.jpg" className="max-w-lg" />
+
+这个短链接不仅易于记忆，还允许我们在预告片发布帖子和实际发布帖子中重复使用相同的链接 - 我们所需要做的就是在时机成熟时更新 Dub 内的目标 URL。
+
+换句话说，Dub 为我们所有的推文和电子邮件提供了一个[后门编辑按钮](https://twitter.com/steventey/status/1770862071086805392) - 除了该平台附带的[世界级分析](https://dub.co/features/analytics)功能之外。
+
+人们喜欢它：
+
+<img src="/static/images/product-hunt/people-likes.jpg" />
+
+<Callout type="find">
+[Dub](https://dub.co/help/article/what-is-dub) 是一个开源链接管理平台，供现代营销团队创建营销活动、[链接共享功能](https://dub.co/customers/raycast)和推荐计划。
+
+详细了解如何免费将[自定义域添加到 Dub](https://dub.co/help/article/how-to-add-custom-domain) 并使用它来[创建杀手级短链接](https://dub.co/help/article/how-to-create-link)，例如 **d.to/ph**。
+
+</Callout>
+
+## 第 6 步：太平洋标准时间中午 12:01 启动
+
+在 Product Hunt 上发布的最佳时间是太平洋标准时间上午 12:01。这是产品搜寻算法重置的时候，您最有可能登上排行榜榜首。
+
+当天早些时候登上排行榜榜首的产品往往会在当天剩余的时间里保持在该位置，因此在发布的最初几个小时内获得尽可能多的点赞至关重要。
+
+以下是我们为发布提前准备的一些可交付成果：
+
+1. [发布帖子](https://dub.co/blog/product-hunt#deliverable-1-launch-post)
+2. [第一条评论](https://dub.co/blog/product-hunt#deliverable-15-first-comment)
+3. [公告邮件](https://dub.co/blog/product-hunt#deliverable-2-announcement-email)
+4. [社交媒体帖子](https://dub.co/blog/product-hunt#deliverable-3-social-media-posts)
+
+让我们更详细地深入研究每个可交付成果。
+
+## 可交付成果 1：发布帖子
+
+我们的[发布帖子](https://d.to/ph)简洁明了——很大程度上改编自我们的预告片页面，并结合了我们之前准备的设计资源。
+
+> Dub.co 是现代营销团队的链接管理基础设施。将我们视为开源 Bitly 的继承者 - 更好的功能、慷慨的限制和令人愉快的用户体验。深受 Framer、Raycast、Perplexity 等世界一流团队的喜爱。
+
+我们还有机会对 Product Hunt 的新 [Shoutouts](https://www.producthunt.com/stories/introducing-shoutouts) 功能进行 Beta 测试，该功能可让您提及 3 种产品，如果没有该功能，您就无法构建您的产品。
+
+我们的首选：
+
+- [Vercel](https://vercel.com/) 部署
+- [Tinybird](https://tinybird.co/) 时间序列分析
+- [Upstash](https://upstash.com/) redis、cron/后台作业
+
+![i1](/static/images/product-hunt/product-hunt-shoutouts.png)
+
+## 可交付成果 1.5：第一条评论
+
+您可以在 Product Hunt 发布之前安排您的第一次评论，这可以在发布当天为您节省一些时间。
+
+你的第一条评论应该是深思熟虑但简洁的。最好还分享一个关于您决定构建此产品的令人信服的个人原因。这是我们的：
+
+![i1](/static/images/product-hunt/product-hunt-first-comment.png)
+
+有趣的是，这条评论最终成为我们发布帖子中获得最多支持的评论。
+
+## 可交付成果 2：公告电子邮件
+
+我们计划在太平洋标准时间中午 12:01 发出公告电子邮件，这正是我们推出 Product Hunt 的时间。
+
+<img src="/static/images/product-hunt/post-email.jpg" className="max-w-lg" />
+
+> [在浏览器中查看邮件](https://view.flodesk.com/emails/65fb4b70708082f815badcb5)
+
+我们使用 [Flodesk](https://flodesk.com/) 来设计和发送我们的公告电子邮件。 Flodesk 为多达 100,000 名订阅者提供固定价格 38 美元/月（如果按年付费则为 35 美元/月），这对我们来说是完美的，因为我们的订阅者名单超过 25,000 名。最重要的是：他们的用户体验/设计是一流的。
+
+<Callout type="find">
+  使用
+  Flodesk，您不仅可以安排电子邮件，还可以选择发送电子邮件的最佳时间以获得最大程度的参与度。
+</Callout>
+
+## 可交付成果 3：社交媒体帖子
+
+我们精心设计了一条深思熟虑的个人线索来宣布我们在 X 和 LinkedIn 上的发布。在帖子中，我们分享了我们[如何创办 Dub.co](https://dub.co/blog/introducing-dub) 的故事、迄今为止我们所获得的关注以及未来的道路。
+
+<img
+  src="/static/images/product-hunt/how-create-dub-post.jpg"
+  className="max-w-md"
+/>
+
+我们强烈建议使用 [Typeically](https://typefully.com/) 来安排您的发布帖子 - 您不仅可以提前安排您的帖子，还可以做一些很酷的事情，例如在线程末尾[引用第一条推文](https://typefully.com/changelog/quote-the-first-tweet-of-your-thread-49)。
+
+<FAQBox title="我应该在帖子中直接链接到我的产品搜寻页面吗？">
+  是的你应该。我们听说有传言称直接链接到您的 Product Hunt
+  页面对算法不利，但我们向 [Product Hunt
+  首席执行官](https://twitter.com/rajivayyangar)本人证实这些只是神话。因此，请继续直接链接到帖子中的“产品搜寻”页面。
+</FAQBox>
+
+## 第 7 步：使用 Hunted Space 跟踪您的发射
+
+发布后的前几个小时至关重要——此时您需要获得尽可能多的支持才能登上排行榜榜首。
+
+然而，Product Hunt [隐藏了前 4 小时内的点赞数](https://www.producthunt.com/stories/let-s-talk-about-spam)，以便为所有产品提供更分散的曝光机会。
+
+这就是 Hunted Space 这样的工具派上用场的地方。 Hunted Space 是 Product Hunt 的实时排行榜，可向您显示每个产品在一段时间内的点赞数。
+
+![i1](/static/images/product-hunt/product-hunt-hunted-space.png)
+
+就我们而言，我们很幸运在第一个小时内就获得了 [150 个点赞和 50 条评论](https://twitter.com/steventey/status/1770730106782114194)。这足以让我们登上排行榜的榜首，并在当天剩下的时间里一直保持在这个位置。
+
+## 第 8 步：回复每条评论
+
+在 Product Hunt 中提升排名的最佳方法之一是通过回复发布帖子上的每条评论来与受众互动。
+
+![i1](/static/images/product-hunt/product-hunt-comment-reply.jpg)
+
+这也是寻求反馈、回答问题和分享有关您产品的更多信息的绝佳机会。
+
+## 第 9 步：保持势头
+
+一整天，我们安排了几次更新以保持势头：
+
+1. **应用内和网站弹出窗口**：我们创建了一个微妙的、可忽略的弹出窗口，向所有在发布当天使用我们的应用程序或访问我们网站的用户显示。
+
+<img src="/static/images/product-hunt/search-pop.jpg" className="max-w-sm" />
+
+2. **发布横幅**：我们在 [X 个人资料](https://x.com/dubdotco)和 [GitHub README](https://d.to/github) 上创建了横幅来庆祝 Product Hunt 的发布。
+
+<CarouselMDX
+  items={[
+    <img src="/static/images/product-hunt/product-hunt-github-banner.jpg" />,
+    <img src="/static/images/product-hunt/product-hunt-x-banner.png" />,
+  ]}
+/>
+
+3. **发布更新**：我们全天在 X 和 LinkedIn 上分享了有关发布进度的更新。
+
+<CarouselMDX
+  items={[
+    <img
+      src="/static/images/product-hunt/update-post-1.jpg"
+      className="max-w-md"
+    />,
+    <img
+      src="/static/images/product-hunt/update-post-2.jpg"
+      className="max-w-md"
+    />,
+    <img
+      src="/static/images/product-hunt/update-post-3.jpg"
+      className="max-w-md"
+    />,
+    <img
+      src="/static/images/product-hunt/update-post-4.jpg"
+      className="max-w-md"
+    />,
+    <img
+      src="/static/images/product-hunt/update-post-5.jpg"
+      className="max-w-md"
+    />,
+    <img
+      src="/static/images/product-hunt/update-post-6.jpg"
+      className="max-w-md"
+    />,
+  ]}
+/>
+
+4. **使用短链接更新 Slack 名称**：我们更新了 Slack 名称以包含我们的短链接 - **d.to/ph** - 巧妙地推动我们的合作伙伴和朋友查看我们的 Product Hunt 发布。
+
+![i1](/static/images/product-hunt/product-hunt-slack-name.png)
+
+5. **在 X 上分享我们的 Shoutouts**：我们在 X 上分享了我们的 Shoutouts，以表彰帮助我们建立 Dub.co 的产品。
+
+<img src="/static/images/product-hunt/shoutouts.jpg" className="max-w-md" />
+
+这导致我们赞扬的所有产品以及官方 [Product Hunt X](https://twitter.com/ProductHunt) 帐户都得到了转发，这给了我们一整天的额外动力。
+
+## 结果
+
+到一天结束时，我们得到了：
+
+- 🗳️ 1,085 票赞成
+- 💬 210 条评论
+- 🥇 每日排名第一的产品
+- 🥇 本周排名第一的产品
+- 🥇 本月排名第一的产品
+
+<img src="/static/images/product-hunt/product-hunt-standings.png" />
+
+我们还看到网站流量大幅增长，发布当天就有超过 2,000 名独立访客。
+
+<img src="/static/images/product-hunt/product-hunt-traffic.jpg" />
+
+发布当天，我们还看到了 663 名新注册用户，比每日平均人数增加了 8 倍。
+
+如果您正在考虑启动 Product Hunt，我希望这本手册能够为您提供一些有关如何成功启动产品的想法。
+
+如果您需要一个链接管理平台来帮助您启动，我们希望您尝试一下 [Dub](https://dub.co/) - 免费开始！
+
+## 更新（2024 年 4 月 1 日）：本月产品
+
+我们很高兴地宣布，Dub.co 被选为 2024 年 3 月排名第一的产品！
+
+<img src="/static/images/product-hunt/month-top-1.jpg" className="max-w-md" />
+
+我们非常感谢所有支持我们走到这一步，我们很高兴能继续与大家一起构建链接管理的未来。
+
+## 参考
+
+- [How to get #1 on Product Hunt – a step-by-step playbook](https://dub.co/blog/product-hunt)
+- [Dub Product hunt](https://d.to/ph)
