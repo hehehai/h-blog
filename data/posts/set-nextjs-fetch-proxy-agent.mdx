@@ -153,58 +153,12 @@ fetch(
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      contents: [{parts: [{text: "Write a story about a magic backpack."}]}],
+      contents: [
+        { parts: [{ text: "Write a story about a magic backpack." }] },
+      ],
     }),
   }
 );
-```
-
-🤩 [`@google/generative-ai@0.2.1`](https://github.com/google/generative-ai-js/commit/c64fca126afff14a69bdb5d6d110869ecd0e7fd6) 版本支持传递 `requestOptions` 来设置请求参数, 虽然这次更新主要为了支持 `timeout` ，但是依然可以传递其他参数。
-
-```ts
-import { GoogleGenerativeAI } from '@google/generative-ai'
-import { ProxyAgent } from 'undici'
-
-const genAI = new GoogleGenerativeAI(ENV.GEMINI_AI_API_KEY || '')
-const geminiStream = await genAI
-      .getGenerativeModel({ model: 'gemini-pro' }, {
-        agent:
-          ENV.LOCAL_FETCH_PROXY
-            ? new ProxyAgent(ENV.LOCAL_FETCH_PROXY)
-            : undefined,
-      } as any)
-      .generateContentStream(...)
-```
-
-在源码内，可以看到 `requestOptions` 是直接被传递进去的, 只是 `timeout` 做了单独的判断。
-
-```js
-/**
- * Generates the request options to be passed to the fetch API.
- * @param requestOptions - The user-defined request options.
- * @returns The generated request options.
- */
-function buildFetchOptions(requestOptions?: RequestOptions): RequestInit {
-  const fetchOptions = {} as RequestInit;
-  if (requestOptions?.timeout >= 0) {
-    const abortController = new AbortController();
-    const signal = abortController.signal;
-    setTimeout(() => abortController.abort(), requestOptions.timeout);
-    fetchOptions.signal = signal;
-  }
-  return fetchOptions;
-}
-
-response = await fetch(url.toString(), {
-  ...buildFetchOptions(requestOptions),
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    "x-goog-api-client": getClientHeaders(),
-    "x-goog-api-key": url.apiKey,
-  },
-  body,
-});
 ```
 
 ## 参考

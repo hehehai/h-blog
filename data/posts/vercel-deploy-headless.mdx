@@ -127,6 +127,9 @@ const isDev = process.env.NODE_ENV === "development";
 ![remote headless chromium core](/static/images/vercel-deploy-headless/20240116112613.png)
 
 ```js
+export const maxDuration = 10; // This function can run for a maximum of 5 seconds
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   let browser = null;
   try {
@@ -272,7 +275,7 @@ Fork [headless-try repo](https://github.com/hehehai/headless-try)
 
 ![vercel project dashboard](/static/images/vercel-deploy-headless/20240116121503.png)
 
-部署成功后，访问 **Domains** 点击 **Blog screenshot** 链接，🤩 网页截图再次生成，可以看到，非常快！
+部署成功后，访问 **Domains** 点击 **Blog screenshot** 链接， 部署在 vercel 的免费网页，截图的运行时间是 10s， 所以如果在 10 内，没有返回结果，那么是超时了！可以重试几次，有缓存后就快一点了，测试一般在 5s。
 
 ![hehehai vercel blog](/static/images/vercel-deploy-headless/20240116121721.png)
 
