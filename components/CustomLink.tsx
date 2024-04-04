@@ -19,7 +19,7 @@ export default function CustomLink(props: any) {
     <a
       className="underline-offset-4 inline items-center space-x-1 group break-all"
       target="_blank"
-      rel="noopener noreferrer"
+      rel="noopener noreferrer nofollow"
       {...props}
     >
       <span>{props.children}</span>
