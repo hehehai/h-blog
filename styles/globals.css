@@ -1,17 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@tailwind screens;
 
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 224 71.4% 4.1%;
+    --foreground: 222.2 47.4% 11.2%;
 
     --card: 0 0% 100%;
-    --card-foreground: 224 71.4% 4.1%;
+    --card-foreground: 222.2 47.4% 11.2%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 224 71.4% 4.1%;
+    --popover-foreground: 222.2 47.4% 11.2%;
 
     --primary: 220.9 39.3% 11%;
     --primary-foreground: 210 20% 98%;
@@ -30,35 +31,35 @@
 
     --border: 220 13% 91%;
     --input: 220 13% 91%;
-    --ring: 224 71.4% 4.1%;
+    --ring: 222.2 47.4% 11.2%;
 
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 224 71.4% 4.1%;
-    --foreground: 210 20% 98%;
+    --background: 224 71% 4%;
+    --foreground: 213 31% 91%;
 
-    --card: 224 71.4% 4.1%;
-    --card-foreground: 210 20% 98%;
+    --card: 224 71% 4%;
+    --card-foreground: 213 31% 91%;
 
-    --popover: 224 71.4% 4.1%;
-    --popover-foreground: 210 20% 98%;
+    --popover: 224 71% 4%;
+    --popover-foreground: 213 31% 91%;
 
-    --primary: 210 20% 98%;
+    --primary: 213 31% 91%;
     --primary-foreground: 220.9 39.3% 11%;
 
     --secondary: 215 27.9% 16.9%;
-    --secondary-foreground: 210 20% 98%;
+    --secondary-foreground: 213 31% 91%;
 
     --muted: 215 27.9% 16.9%;
     --muted-foreground: 217.9 10.6% 64.9%;
 
     --accent: 215 27.9% 16.9%;
-    --accent-foreground: 210 20% 98%;
+    --accent-foreground: 213 31% 91%;
 
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 20% 98%;
+    --destructive-foreground: 213 31% 91%;
 
     --border: 215 27.9% 16.9%;
     --input: 215 27.9% 16.9%;
@@ -72,6 +73,12 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .children-last-plan > *:last-child {
+    margin-bottom: 0;
   }
 }
 
@@ -125,7 +132,8 @@ a {
   @apply mt-3;
 }
 
-.prose img + p, .prose img + div {
+.prose img + p,
+.prose img + div {
   /* Don't apply styles to next/image */
   @apply mt-3;
 }
