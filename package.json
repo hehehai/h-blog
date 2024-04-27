@@ -11,6 +11,7 @@
   "dependencies": {
     "@codesandbox/sandpack-react": "^2.11.0",
     "@giscus/react": "^2.2.0",
+    "@openpanel/nextjs": "0.0.8-beta",
     "@radix-ui/react-slot": "^1.0.2",
     "@stackblitz/sdk": "^1.8.0",
     "@tailwindcss/typography": "^0.5.4",
