@@ -1,0 +1,497 @@
+---
+title: 使用 Framer Motion 创建激发快乐的动画的指南
+description: 网页的动效交互一直是个复杂且的问题，这篇文章解释如何使用 FramerMotion 来让动效编码变得简单有效。
+tags: Animation,Framer-Motion,Effect
+badges: 转发
+publicAt: "2024-04-28"
+---
+
+> 本文转发并翻译至: [Guide to creating animations that spark joy with Framer Motion](https://blog.maximeheckel.com/posts/guide-animations-spark-joy-framer-motion/)
+
+在过去的几个月里， [Framer Motion](https://www.framer.com/motion/introduction/) 从我玩的一个有趣的工具变成了我前端项目的核心元素，为我的 UI 添加一层交互。我从对动画和转场几乎一无所知，到能够[编排涉及大量元素的更复杂的动画](https://twitter.com/MaximeHeckel/status/1327647479521701889?s=20)。
+
+我已经在[Twitter](https://twitter.com/MaximeHeckel)上分享了我在博客中散布的很多动画作品，你们中的很多人都要求我分享更多的代码片段。因此，我觉得是时候写点东西了！
+
+在这篇文章中，您将找到一份简明的指南，其中包含我在 Framer Motion 方面学到的所有内容、动画的关键概念，以及如何使用此库创建动画，通过一些交互式示例和小部件激发快乐。
+
+<Callout type="find">
+为了说明我们将在这篇博文中看到的概念，这些概念非常直观，我提供了一系列可编辑的代码片段/游乐场和小部件，以便您在文章本身中尝试 Framer Motion 的一些核心功能！目的是通过应用概念、调整一些代码、可视化示例来帮助读者理解这些概念。
+
+关于交互式代码片段：您可以随意编辑代码以调整动画，并在左侧窗格中查看生成的动画（如果您使用的是移动设备，则在顶部）。
+
+让我知道你对这些例子的看法，以及你是否通过实践更快地学会了这些 Framer Motion 概念！
+
+</Callout>
+
+## 动画剖析
+
+首先，让我们看一下定义动画的主要元素。在制作一个元素时，无论是移动元素、改变其形状还是颜色，我总是尝试回答以下 3 个问题：
+
+1. “我的元素在开始时在哪里/如何？” 即初始状态
+2. “它需要去哪里，或者它最后需要采取哪种形状？” 即目标状态
+3. “它将如何从初始状态过渡到最终状态？” 即过渡状态
+
+在 Framer 运动的情况下，该库为我们提供了一个 `motion` 组件，该组件具有 3 个属性（道具），让我们定义上述 3 个问题的答案：
+
+`initial` ：元素在挂载时的状态。
+
+```tsx
+<motion.div
+  ...
+  initial={{
+    x: 0,
+    rotate: 45,
+  }}
+  ...
+/>
+```
+
+`animate` ：我们的元素在动画结束时所处的状态。
+
+```tsx
+<motion.div
+  ...
+  animate={{
+    x: 50,
+    rotate: 270,
+  }}
+  ...
+/>
+```
+
+`transition` ：我们的元素如何从初始状态变为目标状态。在这里，我们可以定义要定义的转换类型、延迟或同一转换的重复。
+
+```tsx
+<motion.div
+  ...
+  transition={{
+    ease: "easeIn",
+    duration: 0.7,
+  }}
+  ...
+/>
+```
+
+Framer Motion 中有许多类型的过渡可用，因此我在下面添加了这个小的比较可视化，以便您查看一些主要类型之间的细微差别并调整它们各自的选项：
+
+<AnimationTypes />
+
+您可以在文档的[这一部分](https://www.framer.com/api/motion/types/#tween)中找到完整的类型列表及其所有相应的选项。
+
+<Callout type="thinking">
+您需要知道：
+
+👉 您可以将 `animate` prop 替换为更具体的[手势 props](https://www.framer.com/api/motion/gestures/) 之一，例如 `whileHover` 或 `whileTap` 。他们可以采用我们刚刚看到的相同的“动画对象”。
+
+👉 只需一个 `animate` 或任何一个手势道具即可定义动画 Framer Motion 组件。
+
+👉 该库为 `initial` 未定义的智能默认值提供 `transition` 智能默认值。它甚至可以根据您在 `animate` 道具中设置的属性来调整过渡类型（弹簧、补间、缓动）！
+
+</Callout>
+
+现在我们了解了基础知识，让我们来看看我们的第一个例子！您将在下面找到一系列动画组件，您可以随意编辑和调整这些组件。至于要调整的内容，以下列表包含一些有趣的点，您可以查看：
+
+- **从第一个组件中删除 ** `transition` prop （Example1）。请注意，此翻译动画从一种 `ease` 类型转到另一种 `spring` 类型。这来自我们刚才提到的“智能默认值”。
+
+- 组合示例 2 中的动画：将第二个动画从简单旋转更改为旋转和平移。
+
+我在代码的注释中添加了提示来指导您。😄
+
+<GuideToFramerMotionSandpack snippet="snippet1" />
+
+> 想在进入下一部分之前走得更远吗？以下是相关文档的链接： 如何在 Framer Motion 中制作动画。
+
+## 使用变体
+
+现在我们已经看到并调整了我们的第一个基于 Framer Motion 的组件，您可能会注意到，在复杂动画的情况下，事情很快就会变得混乱。以内联方式定义所有内容可能会导致您的运动组件相当难以阅读，但也有点重复。
+
+这就是为什么我最喜欢的 Framer Motion 功能之一是能够通过变体以声明方式定义动画。
+
+变体是具有预定义动画对象的集合，这是我们在上面示例中在 `animation` 道具中传递的对象类型。
+
+下面是一个示例，演示了如何利用变体。请注意我们如何在 `buttonVariants` 对象中声明一组变体，以及如何在运动组件中引用这些变体的相应键：
+
+将变体与运动组件一起使用
+
+```tsx
+import { motion } from "framer-motion";
+
+const AnimatedButton = () => {
+  const buttonVariants = {
+    hover: {
+      scale: 1.5,
+    },
+    pressed: {
+      scale: 0.5,
+    },
+    rest: {
+      scale: 1,
+    },
+  };
+
+  return (
+    <motion.button
+      initial="rest"
+      whileHover="hover"
+      whileTap="pressed"
+      variants={buttonVariants}
+    >
+      Click me!
+    </motion.button>
+  );
+};
+```
+
+像我一样第一次看到这些变体后，你可能会想“等等，如果一切都是预定义的，我怎么能根据一些动态属性制作我的动画？
+
+好吧，你别担心！ Framer Motion 还允许您将变体定义为函数。每个变体作为一个函数可以接受一个参数并返回和动画对象。该参数必须在运动组件的 `custom` 道具中传递。下面的示例展示了 variant as function 的示例，无论是否单击按钮，悬停变体都将返回不同的对象。按钮 `isClicked` 的状态在运动组件的 `custom` 道具中传递。
+
+将变体和自定义道具与运动组件一起使用
+
+```tsx
+import { motion } from "framer-motion";
+
+const AnimatedButton = () => {
+  const buttonVariants = {
+    // any variant declared as a function will inherit the `custom prop` as argument
+    hover: (clicked) => ({
+      // once clicked the button will not scale on hover anymore
+      scale: clicked ? 1 : 1.5,
+    }),
+    pressed: {
+      scale: 0.5,
+    },
+    rest: {
+      scale: 1,
+    },
+  };
+
+  const [clicked, setClicked] = React.useState(false);
+
+  return (
+    <motion.button
+      initial="rest"
+      whileHover="hover"
+      whileTap="pressed"
+      variants={buttonVariants}
+      custom={clicked}
+      onClick={() => setClicked(true)}
+    >
+      Click me!
+    </motion.button>
+  );
+};
+```
+
+现在我们知道了什么是变体，让我们尝试在下面的 Playground 中使用它们。让我们尝试：
+
+- 在悬停时使第一个按钮缩放（目前，它只旋转）。
+- 如果单击按钮，则使按钮不缩小到其原始大小。提示：您可以使用我们上面 💡 提到的 `custom` 道具。
+
+和第一部分一样，我在代码中注释来指导你！
+
+<GuideToFramerMotionSandpack snippet="snippet2" />
+
+## 使用运动值的高级动画
+
+至此，我们知道如何使用 Framer Motion 的关键功能来开始构建我们自己的动画：
+
+- 我们知道定义动画 ✅ 的主要元素
+- 我们知道如何使用变体以声明方式 ✅ 定义动画
+
+有了这些新获得的技能，我们现在可以研究更多的概念，这将使我们能够构建更高级的动画：**运动值**。在这一部分中，我们将学习什么是**运动值**以及如何使用它们，并查看一个**实际示例**来说明这个概念：我自己的“复制到剪贴板”按钮！
+
+## 运动值
+
+MotionValue 是 Framer Motion 库的内部值，用于**“跟踪动画值的状态和速度”**。对于更复杂的动画，我们可能希望创建自己的 MotionValue（引用自[文档](https://www.framer.com/api/motion/motionvalue/#usemotionvalue)），然后将它们作为内联样式添加到给定组件中。要定义 MotionValue，我们需要使用 `useMotionValue` 钩子。
+
+当您希望一个动画依赖于另一个动画时，MotionValue 可能很实用。例如，我们可能希望将组件的比例和不透明度联系在一起，这样，一旦组件达到其目标比例的一半，不透明度应等于 100%。
+
+为了处理这种用例，Framer Motion 为我们提供了第二个钩子： `useTransform` 通过函数将输入 MotionValue 转换为另一个 MotionValue。下面的示例展示了如何同时使用这两个钩子：
+
+<GuideToFramerMotionSandpack snippet="snippet3" />
+
+## 剖析“复制到剪贴板”动画
+
+您可能已经注意到，我在整个博客 ✨ 中为我的按钮撒了一些动画 SVG 图标。我最喜欢的一个是代码片段上的“复制到剪贴板”按钮，所以我认为这是一个很好的案例研究，可以一起看一下，以说明运动值的一些用例。它同时 `useMotionValue` 使用和 `useTransform` 来确保我们的复选标记图标 `opacity` 的级别是其 `pathLength` .
+
+我在下面添加了此组件的“剖析”版本，以便您充分了解单击图标时发生的情况以及运动值在整个过渡过程中如何变化。您可以使用滑块调整持续时间，还可以可视化 `MotionValue` 复选标记 SVG 的不透明度和 pathLength。
+
+<ClipboardAnimationDetails />
+
+单击该按钮时，您可以看到 pathLength 增加得越多，复选标记的不透明度就越高，并且遵循以下函数：
+
+```txt
+f: y -> x * 2
+
+// Where x is the pathLength of our SVG y is the opacity
+```
+
+这相当于以下使用 Framer Motion 钩子的代码：
+
+```ts
+const pathLength = useMotionValue(0);
+const opacity = useTransform(pathLength, [0, 0.5], [0, 1]);
+```
+
+<Callout type="find">
+  当 pathLength 达到其目标值的一半时，不透明度为 100%，因此，当 pathLength
+  继续增长时，图标在过渡的其余部分完全可见。
+</Callout>
+
+下面是此组件的完整实现的代码：
+
+完全实现“复制到剪贴板”按钮动画
+
+```tsx
+import React from "react";
+import { motion, useMotionValue, useTransform } from "framer-motion";
+
+const CopyToClipboardButton = () => {
+  const duration = 0.4;
+
+  const clipboardIconVariants = {
+    clicked: { opacity: 0 },
+    unclicked: { opacity: 1 },
+  };
+
+  const checkmarkIconVariants = {
+    clicked: { pathLength: 1 },
+    unclicked: { pathLength: 0 },
+  };
+
+  const [isClicked, setIsClicked] = React.useState(false);
+
+  const pathLength = useMotionValue(0);
+  const opacity = useTransform(pathLength, [0, 0.5], [0, 1]);
+
+  return (
+    <button
+      css={{
+        background: "transparent",
+        border: "none",
+        cursor: isClicked ? "default" : "pointer",
+        outline: "none",
+        marginBottom: "20px",
+      }}
+      aria-label="Copy to clipboard"
+      title="Copy to clipboard"
+      disabled={isClicked}
+      onClick={() => {
+        setIsClicked(true);
+      }}
+    >
+      <svg
+        width="100"
+        height="100"
+        viewBox="0 0 25 25"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <motion.path
+          d="M20.8511 9.46338H11.8511C10.7465 9.46338 9.85107 10.3588 9.85107 11.4634V20.4634C9.85107 21.5679 10.7465 22.4634 11.8511 22.4634H20.8511C21.9556 22.4634 22.8511 21.5679 22.8511 20.4634V11.4634C22.8511 10.3588 21.9556 9.46338 20.8511 9.46338Z"
+          stroke="#949699"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          initial={false}
+          animate={isClicked ? "clicked" : "unclicked"}
+          variants={clipboardIconVariants}
+          transition={{ duration }}
+        />
+        <motion.path
+          d="M5.85107 15.4634H4.85107C4.32064 15.4634 3.81193 15.2527 3.43686 14.8776C3.06179 14.5025 2.85107 13.9938 2.85107 13.4634V4.46338C2.85107 3.93295 3.06179 3.42424 3.43686 3.04917C3.81193 2.67409 4.32064 2.46338 4.85107 2.46338H13.8511C14.3815 2.46338 14.8902 2.67409 15.2653 3.04917C15.6404 3.42424 15.8511 3.93295 15.8511 4.46338V5.46338"
+          stroke="#949699"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          initial={false}
+          animate={isClicked ? "clicked" : "unclicked"}
+          variants={clipboardIconVariants}
+          transition={{ duration }}
+        />
+        <motion.path
+          d="M20 6L9 17L4 12"
+          stroke="#5184f9"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          initial={false}
+          animate={isClicked ? "clicked" : "unclicked"}
+          variants={checkmarkIconVariants}
+          style={{ pathLength, opacity }}
+          transition={{ duration }}
+        />
+      </svg>
+    </button>
+  );
+};
+```
+
+乍一看，它可能看起来很密集，但您会注意到它由我们在前面的部分和示例中单独看到的元素组成：
+
+- 剪贴板 SVG 和复选标记 SVG 的变体
+
+```tsx
+const clipboardIconVariants = {
+  clicked: { opacity: 0 },
+  unclicked: { opacity: 1 },
+};
+
+const checkmarkIconVariants = {
+  clicked: { pathLength: 1 },
+  unclicked: { pathLength: 0 },
+};
+```
+
+`useMotionValue` 并将 `useTransform` opacity 和 pathLength 值交织在一起
+
+```ts
+const pathLength = useMotionValue(0);
+const opacity = useTransform(pathLength, [0, 0.5], [0, 1]);
+```
+
+## 配器
+
+在最后一部分中，我们将重点介绍如何编排动画，尤其是我在构建动画时最常用的两种编排类型：
+
+- 延迟和重复：“移动到 A 点，然后 2 秒后移动到 B 点，然后重复”
+- 父子项：“父项首先出现，然后子项以 1 秒的间隔一个接一个地出现”
+
+## 延误和重复
+
+这可能是您在开始尝试更复杂的动画时自然会想到的第一种编排类型。Framer Motion 不仅可以延迟动画的开始时间，还可以根据需要延迟同一动画的任何重复。
+
+我使用延迟和重复来编排一些微动画，你可以在我的[前端开发人员 CI/CD 指南](https://blog.maximeheckel.com/posts/guide-to-cicd-for-frontend-developers/)中看到，这是我实现的第一个相当复杂的动画组件。
+
+出于必要，在前面的一些示例中已经演示了一些编排模式，但这里有一个更详细的示例供您使用：
+
+- 您可以尝试将重复类型从 `mirror` 更改为 并 `loop` 观察重复类型的细微变化。
+- 使动画无限期重复，而不仅仅是 3 次。
+- 使初始延迟 2 秒，每次重复延迟 1 秒，您应该观察到动画在每次重复之间暂停。
+
+<GuideToFramerMotionSandpack snippet="snippet4" />
+
+## 父子关系
+
+我最近发现的一种更高级的编排模式是我称之为“父子编排”的模式。当您想要延迟某些子组件的动画相对于动画父组件时，它非常有用。
+
+Framer Motion 为我们提供了过渡对象执行此 `delayChildren` 操作的选项：
+
+在过渡中使用 delayChildren
+
+```tsx
+const boxVariants = {
+  out: {
+    y: 600,
+  },
+  in: {
+    y: 0,
+    transition: {
+      duration: 0.6,
+      // Both children will appear 1.2s AFTER the parent has appeared
+      delayChildren: 1.2,
+    },
+  },
+};
+
+const iconVariants = {
+  out: {
+    x: -600,
+  },
+  in: {
+    x: 0,
+  },
+};
+
+return (
+  <motion.div variants={boxVariants} initial="out" animate="in">
+    <motion.span
+      role="img"
+      aria-labelledby="magic wand"
+      variants={iconVariants}
+    >
+      🪄
+    </motion.span>
+    <motion.span role="img" aria-labelledby="sparkles" variants={iconVariants}>
+      ✨
+    </motion.span>
+  </motion.div>
+);
+```
+
+最重要的是，如果我们不仅要延迟孩子作为一个群体，还要根据每个孩子的兄弟姐妹延迟，例如，让他们在前一个兄弟姐妹出现后出现 1 秒，该怎么办？好吧，我们很幸运，因为有一种简单的方法可以做到这一点 `staggerChildren`.
+
+在过渡中使用 delayChildren 和 staggerChildren
+
+```tsx
+const boxVariants = {
+  out: {
+    y: 600,
+  },
+  in: {
+    y: 0,
+    transition: {
+      duration: 0.6,
+      // The first child will appear AFTER the parrent has appeared on the screen
+      delayChildren: 1.2,
+      // The next sibling will appear 0.5s after the previous one
+      staggerChildren: 0.5,
+    },
+  },
+};
+
+const iconVariants = {
+  out: {
+    x: -600,
+  },
+  in: {
+    x: 0,
+  },
+};
+
+return (
+  <motion.div variants={boxVariants} initial="out" animate="in">
+    <motion.span
+      role="img"
+      aria-labelledby="magic wand"
+      variants={iconVariants}
+    >
+      🚀
+    </motion.span>
+    <motion.span role="img" aria-labelledby="sparkles" variants={iconVariants}>
+      ✨
+    </motion.span>
+  </motion.div>
+);
+```
+
+这两个选项的确切作用乍一看似乎令人困惑。我希望我有一些视觉示例，以便在我开始时真正掌握它们是如何工作的。我希望下面的可视化能做到这一点！
+
+在下面的小部件中，您可以调整 和 `staggeredChildren` 的 `beforeChildren` 值，并查看生成的转换方式。
+
+<Orchestration />
+
+我使用这种类型的编排来支持分享或喜欢我的文章的人列表，您可以在每篇博客文章的末尾看到这些列表。这是一个很多人都喜欢的组件，所以我想我可以把它作为一个小例子，让你互动并享受乐趣：
+
+<GuideToFramerMotionSandpack snippet="snippet5" />
+
+## 结论
+
+哇，我们刚刚学到了很多关于 Framer Motion 的知识！我们从构建非常基本的动画（如翻译）到编排涉及多个组件的更复杂的动画，并使用 `useMotionValue` 和 `useTransform` 将多个过渡连接在一起。你现在已经了解了我所知道的关于 Framer Motion 的几乎所有知识，并且可以开始在你自己的前端工作中加入一些惊人的动画。
+
+这是我第一次尝试这种涉及交互式小部件和游乐场的格式来说明我所学到的东西，让我知道你的想法！你想看到更多这样的文章吗？您将如何改进小部件和示例？我一直在寻求推动这个博客向前发展，并希望得到一些反馈。
+
+## 在阅读本指南后，您是否想出了一些很酷的动画？
+
+不要犹豫，给我发一条消息，展示你的作品！
+
+## 想看更多？
+
+以下是我想出的其他一些与 Framer Motion 相关的文章或示例：
+
+- [弹簧动画背后的物理原理](https://blog.maximeheckel.com/posts/the-physics-behind-spring-animations/)
+- [如何将 Framer Motion 与 Emotion 样式组件一起使用](https://blog.maximeheckel.com/posts/framer-motion-emotion/)
+- [使用取景器运动的挥手动画](https://blog.maximeheckel.com/snippets/2020-7-3-waving-hand-animation-framer-motion/)
+- [明/暗模式切换器](https://github.com/MaximeHeckel/gatsby-theme-maximeheckel/blob/main/src/components/Button/LightDarkSwitcher.tsx)
+- [“命令中心”按钮](https://github.com/MaximeHeckel/gatsby-theme-maximeheckel/blob/main/src/components/Button/CommandCenterButton.tsx)

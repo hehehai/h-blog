@@ -47,12 +47,10 @@ export function Callout({
       <div className="select-none mr-1 w-[1.7em] h-[1.6em] relative">
         <Image
           src={TypeToEmoji[type]}
-          width={80}
-          height={80}
           alt={type}
           className="w-full h-full"
           layout="fill"
-        ></Image>
+        />
       </div>
       <div className="w-full min-w-0 leading-7 children-last-plan">
         {children}

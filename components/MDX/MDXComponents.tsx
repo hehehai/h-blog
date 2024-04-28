@@ -18,6 +18,8 @@ import { Collapse } from "../Collapse";
 import { cn } from "lib/utils";
 import { Callout } from "../Callout";
 import { CarouselMDX } from "./Carousel";
+import dynamic from "next/dynamic";
+import GuideToFramerMotionSandpack from "./Widgets/GuideToFramerMotion/Sandpack";
 
 const findSummary = (children: ReactNode) => {
   let summary: ReactNode = null;
@@ -119,6 +121,17 @@ export function FAQBox({
   );
 }
 
+const AnimationTypes = dynamic(
+  () => import('./Widgets/GuideToFramerMotion/AnimationTypes')
+);
+const ClipboardAnimationDetails = dynamic(
+  () => import('./Widgets/GuideToFramerMotion/ClipboardAnimationDetails')
+);
+
+const Orchestration = dynamic(
+  () => import('./Widgets/GuideToFramerMotion/Orchestration')
+);
+
 const MDXComponents = {
   a: CustomLink,
   // img: RoundedImage,
@@ -131,7 +144,13 @@ const MDXComponents = {
   EmbedStackblitz,
   SandpackBlock,
   DemoMenuBox,
-  CarouselMDX
+  CarouselMDX,
+
+  // Widgets
+  AnimationTypes,
+  GuideToFramerMotionSandpack,
+  ClipboardAnimationDetails,
+  Orchestration
 };
 
 export default MDXComponents;
