@@ -2,8 +2,8 @@
   {
     "name": "Arco Design Vue",
     "subtitle": "基于 Arco Design 的 Vue UI 组件库。",
-    "description": "60多个开箱即用的高质量组件, 可以覆盖绝大部份的业务场景。\n- 参与社区运营以及组件维护。\n- 组件功能实现及文档编写。",
-    "cover": "/static/images/projects/arco-cover.png",
+    "description": "- 60多个开箱即用的高质量组件。\n- 参与社区运营以及组件维护。\n- 组件功能实现及文档编写。",
+    "cover": "/static/projects/arco-design.jpg",
     "links": {
       "github": "https://github.com/arco-design/arco-design-vue",
       "site": "https://arco.design/vue/docs/start"
@@ -13,9 +13,18 @@
     "name": "MemoMe",
     "subtitle": "📝 备份新浪微博到本地。",
     "description": "- 基于 Electron 实现。\n- 身份状态缓存、数据获取。\n- 本地数据持久化、文件生成与导出。",
-    "cover": "/static/images/projects/memome-cover.jpg",
+    "cover": "/static/projects/memome.jpg",
     "links": {
       "site": "https://speechless.fun/"
+    }
+  },
+  {
+    "name": "BonFrench",
+    "subtitle": "🧙‍♀️ 小而美的法语辅助学习工具",
+    "description": "- NextAuth 登录与验证。\n- 角色身份验证封装。\n- 订阅付费功能与接口。",
+    "cover": "/static/projects/bon-french.jpg",
+    "links": {
+      "site": "https://bon-french.com"
     }
   }
 ]

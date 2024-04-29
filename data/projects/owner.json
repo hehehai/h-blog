@@ -1,29 +1,38 @@
 [
   {
-    "name": "x-hiring",
-    "subtitle": "🥳 每日最新招聘信息，使用 Google AI 提取摘要!",
-    "description": "- Google Gemini 分析职位摘要。\n- 动态数据搜索，路由跳转。\n- 瀑布流数据加载。",
-    "cover": "/static/images/projects/x-hiring.jpg",
+    "name": "refto",
+    "subtitle": "🤯 最新设计感网站收集，释放无限灵感!",
+    "description": "- Next + tRPC + Prisma。\n- 瀑布流数据懒加载。\n- 图片数据持久化存储。",
+    "cover": "/static/projects/refto.jpg",
     "links": {
-      "github": "https://github.com/hehehai/weibo-worth",
-      "site": "https://weibo.hehehai.cn/"
+      "site": "https://refto.one/"
     }
   },
   {
-    "name": "微博价值分析",
-    "subtitle": "🤑 工具微博账户数据分析账户价值!",
-    "description": "- 微博账户数据抓取。\n- 抓取数据缓存，路由缓存。\n- 图片生成及下载",
-    "cover": "/static/images/projects/weibo-worth.jpg",
+    "name": "x-hiring",
+    "subtitle": "🥳 每日最新招聘信息，使用 Google AI 提取摘要!",
+    "description": "- Google Gemini 分析职位摘要。\n- 动态数据搜索，路由跳转。\n- 瀑布流数据加载。",
+    "cover": "/static/projects/x-hiring.jpg",
     "links": {
       "github": "https://github.com/hehehai/x-hiring",
       "site": "https://x-hiring.hehehai.cn/"
     }
   },
   {
+    "name": "微博价值分析",
+    "subtitle": "🤑 工具微博账户数据分析账户价值!",
+    "description": "- 微博账户数据抓取。\n- 抓取数据缓存，路由缓存。\n- 图片生成及下载",
+    "cover": "/static/projects/weibo-worth.jpg",
+    "links": {
+      "github": "https://github.com/hehehai/weibo-worth",
+      "site": "https://weibo.hehehai.cn/"
+    }
+  },
+  {
     "name": "Coolos",
     "subtitle": "🌈 快速轻松地发现颜色：您的快速和简单的颜色伴侣!",
     "description": "- Next.js / Clerk / Prisma / Shadcn UI。\n- 颜色选择、色板生成、热门颜色查询。\n- 数据管理、身份认证、信息统计。",
-    "cover": "/static/images/projects/coolos-cover.png",
+    "cover": "/static/projects/coolos.jpg",
     "links": {
       "github": "https://github.com/hehehai/coolos",
       "site": "https://coolos.hehehai.cn/"
@@ -41,17 +50,17 @@
   {
     "name": "Arco Vue Playground",
     "subtitle": "网页在线编辑器",
-    "description": "vue 文件在线编辑预览，内置的 Arco Vue UI 库。\n- 库版本切换。\n- Prettier 代码格式调整。",
+    "description": "- vue 文件在线编辑预览。\n- 内置的 Arco Vue UI 库。\n- 库版本切换。\n- Prettier 代码格式调整。",
     "cover": "/static/images/projects/arco-vue-playground-cover.png",
     "links": {
       "github": "https://github.com/hehehai/arco-vue-playground",
-      "site": "https://arco-vue-playground.netlify.app/"
+      "site": "https://arco-vue-playground-alpha.vercel.app"
     }
   },
   {
     "name": "终端 2048",
     "subtitle": "NodeJS 实现终端 2048 玩游戏",
-    "description": "使用终端表格渲染布局，监听键盘事件操作。\n- 游戏分数展示。\n- 操作流畅。",
+    "description": "- 使用终端表格渲染布局。\n- 监听键盘事件操作。\n- 游戏分数展示。\n- 操作流畅。",
     "cover": "/static/images/projects/2048.gif",
     "links": {
       "github": "https://github.com/hehehai/2048",

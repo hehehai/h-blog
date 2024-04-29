@@ -30,7 +30,7 @@ export default function Project(props: ProjectProps) {
         )}
       </div>
       <div className="md:flex gap-5">
-        <div className="w-full aspect-[5/3] md:w-[220px] md:shrink-0 drop-shadow-lg relative">
+        <div className="w-full aspect-[5/3] md:w-[420px] md:shrink-0 drop-shadow-lg relative">
           <Image
             src={cover}
             alt={name}
@@ -40,7 +40,7 @@ export default function Project(props: ProjectProps) {
           />
         </div>
         <div className="mt-4 md:mt-0 grow flex flex-col">
-          <div className="text-md md:text-sm space-y-1 mb-2">
+          <div className="text-md md:text-sm space-y-2.5 mb-2">
             {description.split("\n").map((line: string, idx: number) => (
               <p key={idx}>{line}</p>
             ))}
