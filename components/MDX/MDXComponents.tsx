@@ -122,14 +122,33 @@ export function FAQBox({
 }
 
 const AnimationTypes = dynamic(
-  () => import('./Widgets/GuideToFramerMotion/AnimationTypes')
+  () => import("./Widgets/GuideToFramerMotion/AnimationTypes")
 );
 const ClipboardAnimationDetails = dynamic(
-  () => import('./Widgets/GuideToFramerMotion/ClipboardAnimationDetails')
+  () => import("./Widgets/GuideToFramerMotion/ClipboardAnimationDetails")
 );
 
 const Orchestration = dynamic(
-  () => import('./Widgets/GuideToFramerMotion/Orchestration')
+  () => import("./Widgets/GuideToFramerMotion/Orchestration")
+);
+
+const FramerMotionPropagation = dynamic(
+  () => import("./Widgets/AdvancedFramerMotion/FramerMotionPropagation")
+);
+
+const AdvancedFramerMotionSandpack = dynamic(
+  () => import("./Widgets/AdvancedFramerMotion/Sandpack"),
+  {
+    ssr: false,
+  }
+);
+
+const FramerMotionAnimatePresence = dynamic(
+  () => import("./Widgets/AdvancedFramerMotion/FramerMotionAnimatePresence")
+);
+
+const FramerMotionAnimationLayout = dynamic(
+  () => import("./Widgets/AdvancedFramerMotion/FramerMotionAnimationLayout")
 );
 
 const MDXComponents = {
@@ -150,7 +169,11 @@ const MDXComponents = {
   AnimationTypes,
   GuideToFramerMotionSandpack,
   ClipboardAnimationDetails,
-  Orchestration
+  Orchestration,
+  FramerMotionPropagation,
+  AdvancedFramerMotionSandpack,
+  FramerMotionAnimatePresence,
+  FramerMotionAnimationLayout,
 };
 
 export default MDXComponents;

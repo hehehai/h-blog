@@ -1,0 +1,325 @@
+---
+title: Framer Motion 高级动画模式
+description: 通过精选的示例和交互式示例，深入探讨 Framer Motion 的传播、退出过渡和布局动画模式。
+tags: Animation,Framer-Motion,Effect,Layout
+badges: 转发
+publicAt: "2024-04-29"
+---
+
+> 本文转发并翻译至: [Advanced animation patterns with Framer Motion](https://blog.maximeheckel.com/posts/advanced-animation-patterns-with-framer-motion/)
+
+我从[我的指南](https://blog.maximeheckel.com/posts/guide-animations-spark-joy-framer-motion/)【[中文](https://www.hehehai.cn/posts/framer-motion-guide)】中得到 ✨ 了很多 ✨ 积极的反馈，这些动画用 Framer Motion 来创造激发人们的快乐，不可否认的是，这个库激起了许多开发人员对基于 Web 的动画世界的兴趣。
+
+虽然我在上一篇文章中介绍了构成动画的许多基础部分，以及如何使用 Framer Motion 轻松编排多个过渡，但我没有涉及该库提供的许多更高级的功能。
+
+有没有想过如何在多个组件中传播动画或编排复杂的布局过渡？ 好吧，本文将向您介绍这些高级模式的所有信息，并向您展示使用 Framer Motion 可以完成的一些伟大事情！
+
+<Callout type="thinking">
+与[之前博客文章](https://blog.maximeheckel.com/posts/guide-animations-spark-joy-framer-motion/)一样，本文包含一系列交互式小部件和 Playground 以及预设示例，让您无需进行任何设置即可应用我们将要看到的 Framer Motion 概念！
+
+让我知道你对这些例子的看法，以及它们是否有帮助。您的反馈非常重要，将帮助我在未来的博客文章中 😄 做得更好！
+
+</Callout>
+
+## 传播
+
+当我尝试在我的项目中使用 Framer Motion 添加一些微交互时，第一个遇到的高级模式之一是传播。我很快学到，可以将父级动画组件的变化传播到任何子级动画组件中。然而，一开始这让我感到困惑，因为它打破了我对定义动画的原有心理模型。
+
+还记得在我[之前的博客文章](https://blog.maximeheckel.com/posts/guide-animations-spark-joy-framer-motion/)中，我们了解到每个 Framer Motion Animation 都需要 3 个属性（props） `initial`、 `animate`、`transition` 来定义过渡/动画吗？ 好吧，对于这种模式，这并不完全正确。
+
+Framer Motion 允许变体“向动”通过每个运动子组件，只要这些运动组件没有定义 `animate` props。在这种情况下，只有父运动组件定义 `animate` props。子项本身只定义他们打算为这些变体提供的行为。
+
+我在这个博客上使用传播的一个很好的例子是这个博客主页上的“精选”部分。当您将鼠标悬停在它时，每张卡片都会“发光”，这种效果可以通过这种模式实现。为了解释引擎盖下到底发生了什么，我在下面构建了这个小部件，在那里我再现了这种效果：
+
+<FramerMotionPropagation />
+
+您可以看到，将鼠标悬停（如果您使用的是移动设备，则点击）卡片甚至其上方的标签都会触发发光效果。这是什么巫术？！通过单击“透视”按钮，您可以看到引擎盖下发生的事情：
+
+1. 有一个“看不见的”运动层覆盖在卡片和标签上。该层包含将变体设置为“悬停”的 `whileHover` props。
+2. “发光”本身也是一个运动组件，但是，它唯一定义的是它自己的 `variants` 带有 `hover` 键的对象。
+
+因此，当悬停这个不可见的层时，我们切换“悬停”变体，任何在其 `variants` props 中定义了此变体的子运动组件都将检测到此更改并切换相应的行为。
+
+使用成帧器运动的传播模式示例
+
+```tsx
+const CardWithGlow = () => {
+  const glowVariants = {
+    initial: {
+      opacity: 0
+    },
+    hover: {
+      opacity: 1
+    }
+  }
+
+  return (
+    // 父级设置初始和 whileHover 变体键
+    <motion.div initial="initial" whileHover="hover">
+      {/* 子级动画组件设置与父级设置的键匹配的变量，以相应地进行动画。 */}
+      <motion.div variants={glowVariants} className="glow"/>
+      <Card>
+        <div>Some text on the card/div>
+      </Card>
+    </motion.div>
+  )
+}
+```
+
+<Callout type="find">
+  您可以通过导航到悬停时具有[发光效果的卡片代码](https://blog.maximeheckel.com/snippets/2020-12-26-cardwithgloweffectonhover/)段页面来查看类似示例的完整代码。
+</Callout>
+
+现在让我们应用我们学到的关于 Framer Motion 的传播机制的知识！在下面的操场上，你会发现一个带有“悬停”动画的运动组件。将鼠标悬停在该组件的右端时，一个小图标将显示在该组件的右侧。您可以尝试：
+
+- 修改用于包装按钮的运动组件中使用的变体键，并看到现在它偏离了父组件设置的内容，动画不会触发，并且按钮在悬停时不可见。
+- 在包裹按钮的运动组件上设置一个 `animate` props，并看到它现在会自行制作动画，并且不会使用父级在悬停时设置的变体。
+
+<AdvancedFramerMotionSandpack snippet="snippet1" />
+
+## 在卸载组件时对组件进行动画处理
+
+到目前为止，我们只看到了在挂载时或在某些特定事件（如悬停或点击）之后触发动画的例子。但是，在组件卸载之前触发动画呢？某种“退出”过渡？
+
+好吧，在第二部分中，我们将看看解决此用例的 Framer Motion 功能，也是给我留下最深刻印象的功能： `AnimatePresence` ！
+
+在学习之前，我尝试实现某种退出动画 `AnimatePresence` ，但它很笨拙，并且总是需要额外的代码来设置适当的“过渡”状态（如 `isClosing` ， `isOpening` ）并切换该状态的相应动画。可以想象，它非常容易出错。
+
+一种非常笨拙的方法来实现没有 `AnimatePresence` 的现有动画
+
+```tsx
+// 这大多是伪代码，不要这样做！这不是好的做法
+
+const MagicComponent = () => {
+  const [hidden, setHidden] = React.useState(false);
+  const [hidding, setHidding] = React.useState(false);
+
+  const variants = {
+    animate: (hidding) => ({
+      opacity: hidding ? 0 : 1,
+    })
+    initial: {
+      opacity: 1
+    },
+  }
+
+  const hideButton = () => {
+    setHidding(true);
+    setTimeout(() => setHidden(true), 1500);
+  }
+
+  return (
+    <motion.button
+      initial="initial"
+      animate="animate"
+      variants={variants}
+      onClick={hideButton}
+      custom={hidding}
+    >
+      Click to hide
+    </motion.button>
+  )
+}
+```
+
+另一方面， `AnimatePresence` 它经过深思熟虑且易于使用。只需将任何运动组件包装在一个 `AnimatePresence` 组件中，您就可以设置 `exit` props！
+
+`AnimatePresence` 用例示例
+
+```tsx
+const MagicComponent = () => {
+  const [hidden, setHidden] = React.useState(false);
+
+  return (
+    <AnimatePresence>
+      {!hidden && (
+        <motion.button
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={() => setHidden(true)}
+        >
+          Click to hide
+        </motion.button>
+      )}
+    </AnimatePresence>
+  );
+};
+```
+
+在下面的交互式小部件中，我展示了同一组件的 2 个版本：
+
+- 左边的那个没有包裹 `AnimatePresence`
+- 然而，第二个是包装的
+
+这是代码方面的唯一区别。但正如你所看到的，差异是相当惊人的！
+
+<FramerMotionAnimatePresence />
+
+<Callout type="sick">
+
+👉 我在写这篇文章时发现了一些东西
+
+为了根据用户按下的按钮设置正确的过渡方向（左或右），我在用户悬停在按钮上时设置了一个状态，该状态将相应地改变过渡的方向（虽然这不是最好的实现方式，但它有效 😄）。尽管右侧的示例（使用 `AnimatePresence`）完美运行，但你可能已经注意到左侧的示例中，只需将鼠标悬停在其中一个按钮上，过渡就会开始。
+
+它似乎 `AnimatePresence` 可以跟踪在给定时间和整个状态更改中渲染的运动组件。
+
+为此，我仍然需要研究 Framer Motion 的内部工作原理，但是，尽管这让我感到惊讶，但考虑到用例，这种行为是有道理的。
+
+</Callout>
+
+我们现在有一个很棒的新工具，可以用来让我们的过渡变得更好！是时候在下面的操场上尝试一下了：
+
+- 尝试删除 `AnimatePresence` 组件。请注意，这会使 Framer Motion 跳过 `exit` props 中指定的动画。
+- 尝试修改 `exit` 道具中定义的动画。例如，您可以使整个组件在退出时从 1 缩放到 0。（我已经在下面 😄 的代码中添加了注释的正确动画对象）
+
+<AdvancedFramerMotionSandpack snippet="snippet2" />
+
+## 布局动画
+
+我们现在知道如何：
+
+- 在一组运动组件中传播动画
+- 向组件添加 `exit` 过渡，以便它可以正常卸载
+
+这些高级模式应该使我们能够制作一些非常流畅的过渡，对吧？好吧，等到您听到更多关于 Framer Motion 如何处理布局动画的信息！
+
+<Callout type="thinking">
+毫不夸张地说，布局动画是一个非常广泛的主题！在撰写和更新这一部分后，我决定撰写一篇专门的博客文章，讨论关于 Framer Motion 布局动画的一切：[《Framer Motion布局动画完全指南》](https://blog.maximeheckel.com/posts/framer-motion-layout-animations/)，其中包含大量示例。
+
+如果您想对这个主题进行简单的介绍，以下部分仍然相关，但不要忘记将完整指南添加为书签以备后用 🙂！
+
+</Callout>
+
+### 什么是“布局动画”？
+
+布局动画是任何涉及布局相关属性的动画，例如：
+
+- `position` 属性
+- `flex` 或 `grid` 属性
+- `width` 或 `height`
+- 对元素进行排序
+
+但为了让你对我在这里谈论的内容有更多的了解，让我们试着看一下下面的 playground，它展示了同一组件的 2 个版本：
+
+- 第一个示例通过仅使用我们目前了解的模式，在动画属性中设置 `justify-content` 属性来在 `flex-start` 和 `flex-end` 之间实现动画效果。
+- 第二个示例使用一个新的属性：`layout`。 将其设置为 `true` 告诉 Framer Motion，一个与布局相关的属性（以及组件的布局）将在重新渲染时发生变化。这些属性本身只是按照开发者通常在不使用 Framer Motion 时的方式，在 CSS 中定义。
+
+<AdvancedFramerMotionSandpack snippet="snippet3" />
+
+我们可以在这里观察到很多事情：
+
+- 第一个示例不起作用，看起来 Framer Motion 无法像优雅地将不透明度从 0 过渡到 1 那样，平滑地在 `justify-content` 属性之间进行过渡。
+- 但是，第二个组件按预期在 `flex-start` 和 `flex-end` 属性之间转换。通过在运动组件中设置为 `layout` `true`，Framer Motion 可以平滑地转换组件 `justify-content` 的属性。
+- 第二个组件的另一个优点是：它不像第一个组件那样对 Framer Motion 有那么多的“硬依赖性”。我们可以简单地用一个简单的 `div` 替换它 `motion.div` ，组件本身仍然可以工作。
+
+<Callout type="thinking">
+  我计划重新访问此博客上实现的一些动画，并可能将它们转换为适当的 `layout`
+  动画以简化代码。我很确定我的 `Header` 和 `Search`
+  组件可以从中受益，因为它们的动画以布局/高度变化为中心。
+</Callout>
+
+## 共享布局动画
+
+我们现在知道什么是布局动画，以及如何在一些特定用例中利用它们。但是，如果我们开始拥有跨越多个组件的布局动画，会发生什么？
+
+<Callout type="exploding">
+更新时间： 2021 年 11 月
+
+在 Framer Motion `v5.0` 发布后，本节已完全重写，包括示例。
+
+`AnimatedSharedLayout` 已弃用，取而代之的是一种新的、性能更高的方法来处理共享布局动画。
+
+您可以在 `v5.0` 迁移文档中阅读有关此更新的更多[详细信息](https://www.framer.com/docs/guide-upgrade/#50)。
+
+</Callout>
+
+在最新版本的 Framer Motion 中，构建共享布局动画得到了极大的改进：我们唯一需要做的就是为共享布局动画中的组件设置一个公共 `layoutId` props。
+
+下面，您将找到一个小组件，其中展示了共享布局动画的示例。
+
+<FramerMotionAnimationLayout />
+
+单击上面示例中的一个表情符号时，您会注意到：
+
+- 启用公共 `layoutId` 时，边框将正常移动到新选定的元素
+- 当公共 `layoutId` 元素被禁用时，边框将突然出现在新选择的元素周围（即未定义或不同）
+
+为了获得这个看似复杂的动画，我们需要做的就是添加一个道具，就是这样！✨ 特别是在这个例子中，我添加的只是对蓝色圆圈组件的每个实例的共同 `layoutId` 调用 `border` 。
+
+使用`layoutId` prop 的共享动画布局示例
+
+```tsx
+const MagicWidgetComponent = () => {
+  const [selectedID, setSelectedID] = React.useState('1');
+
+  return (
+    <ul>
+      {items.map((item) => (
+        <li
+          style={{
+            position: 'relative'
+          }}
+          key={item.id}
+          onClick={() => setSelectedID(item.id)}
+        >
+          <Circle>{item.photo}</Circle>
+          {selectedID === item.id && (
+            <motion.div
+              layoutId="border"
+              style={{
+                position: 'absolute',
+                borderRadius: '50%',
+                width: '48px',
+                height: '48px',
+                border: '4px solid blue';
+              }}
+            />
+          )}
+        </li>
+      ))}
+    </Grid>
+  );
+};
+```
+
+<Callout type="find">
+  在以前版本的 Framer Motion 中，以前 `v5.0` ，这种用例需要现在已弃用 `AnimatedSharedLayout` 的组件。
+
+除了处理共享布局动画之外，此组件还有助于处理相互影响的布局动画。今天，如果您最终遇到涉及大量单个布局动画的情况，则需要将它们与 `LayoutGroup` 组件“分组”。
+
+请参阅下面 playground 中的示例来尝试一下！
+
+</Callout>
+
+现在是时候尝试一下我们刚刚学到的东西了！最后一个示例将前面的所有 playground 编译在一起以创建此列表组件。此实现包括：
+
+- 使用 `ListItem` 组件上的 `layout` 道具对列表重新排序进行动画处理
+- 使用列表本身上的 `layout` prop，在单击时展开项目时优雅地调整大小
+- 用于防止布局动画期间出现故障的 `layout` prop 的其他实例（尤其是涉及更改列表项高度的实例）
+
+您可以尝试：
+
+- 注释掉或删除 上的 `layout` `ListItem` prop，然后看到现在，重新排序突然发生，👉 不再过渡！
+- 注释掉或删除 `LayoutGroup` 并注意这如何影响所有布局动画
+- 尝试在 `<Title/>` 组件上添加 `layout` prop，并看到它在物品高度变化时优雅地调整
+
+<AdvancedFramerMotionSandpack snippet="snippet4" />
+
+## 结论
+
+恭喜您，您现在是 Framer Motion 专家 🎉！从传播动画到编排复杂的布局动画，我们只是介绍了该库提供的一些最先进的模式。我们看到所提供的一些工具设计得多么好，以及由于这些工具实现复杂的转换是多么容易，这些转换通常需要更多的代码，或者最终会产生更多不良的副作用。
+
+我真的希望这篇博文中提供的例子有助于说明那些原本很难用文字描述的概念，最重要的是，这些概念对你来说很有趣。像往常一样，不要犹豫，向我发送有关我的写作、代码或示例的反馈，我一直在努力改进这个博客！
+
+## 在阅读本指南后，您是否想出了一些很酷的动画？
+
+不要犹豫，给我发一条消息，展示你的作品！
+
+## 想看更多例子吗？
+
+[Framer Motion 文档](https://www.framer.com/docs/examples/)中有大量可以在 Codepen 上使用的文档。
+
+如果您想更深入地了解，以下是查看本文中介绍的小部件实现的链接列表：
+
+- [“动画状态”小组件](https://github.com/MaximeHeckel/blog.maximeheckel.com/blob/3c8291d96bd9069d22bdcf26436abc75b7386a04/core/components/MDX/custom/Widgets/FramerMotionAnimatePresence.tsx)
+- [共享动画布局](https://github.com/MaximeHeckel/blog.maximeheckel.com/blob/b5429b983bdc3cedd24a021f6f2fb932df57514e/core/components/MDX/custom/Widgets/FramerMotionAnimationLayout.tsx)
