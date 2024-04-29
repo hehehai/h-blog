@@ -87,13 +87,12 @@ const Switch2 = () => {
 const Example = () => (
   <div className="p-3">
     <p className="mb-2">
-      Switch 1: Attempt at animating justify-content in a Framer Motion animation
-      object.
+      Switch 1: 尝试在 Framer Motion 动画对象中对 justify-content 进行动画处理。
     </p>
     <Switch1 />
     <br />
     <p className="mb-2">
-      Switch 2: Animating justify-content using layout animation and the layout prop.
+      Switch 2: 使用布局动画和 layout 属性来对 justify-content 进行动画处理。
     </p>
     <Switch2 />
   </div>

@@ -151,6 +151,86 @@ const FramerMotionAnimationLayout = dynamic(
   () => import("./Widgets/AdvancedFramerMotion/FramerMotionAnimationLayout")
 );
 
+const FramerMotionLayoutAnimationsBasic = dynamic(
+  () => import("./Widgets/FramerMotionLayoutAnimations/Basic"),
+  {
+    ssr: false,
+  }
+);
+
+const FramerMotionToastNotificationSandpack = dynamic(
+  () => import("./Widgets/FramerMotionLayoutAnimations/SandpackNotification"),
+  {
+    ssr: false,
+  }
+);
+
+const FramerMotionDistortions = dynamic(
+  () => import("./Widgets/FramerMotionLayoutAnimations/Distortions"),
+  {
+    ssr: false,
+  }
+);
+
+const FramerMotionLayoutAnimationsLayoutProp = dynamic(
+  () => import("./Widgets/FramerMotionLayoutAnimations/LayoutProp"),
+  {
+    ssr: false,
+  }
+);
+
+const FramerMotionLayoutAnimationsLayoutPosition = dynamic(
+  () => import("./Widgets/FramerMotionLayoutAnimations/LayoutPosition"),
+  {
+    ssr: false,
+  }
+);
+
+const FramerMotionArrowListSandpack = dynamic(
+  () => import("./Widgets/FramerMotionLayoutAnimations/SandpackArrowList"),
+  {
+    ssr: false,
+  }
+);
+
+const FramerMotionLayoutAnimationsSharedLayoutAnimationDetails = dynamic(
+  () =>
+    import(
+      "./Widgets/FramerMotionLayoutAnimations/SharedLayoutAnimationDetails"
+    ),
+  {
+    ssr: false,
+  }
+);
+
+const FramerMotionTabsSandpack = dynamic(
+  () => import("./Widgets/FramerMotionLayoutAnimations/SandpackTabs"),
+  {
+    ssr: false,
+  }
+);
+
+const FramerMotionLayoutAnimationsTabsLayoutGroup = dynamic(
+  () => import("./Widgets/FramerMotionLayoutAnimations/TabsLayoutGroup"),
+  {
+    ssr: false,
+  }
+);
+
+const FramerMotionLayoutAnimationListLayoutGroup = dynamic(
+  () => import("./Widgets/FramerMotionLayoutAnimations/ListLayoutGroup"),
+  {
+    ssr: false,
+  }
+);
+
+const FramerMotionAdvanceReorderExample = dynamic(
+  () => import("./Widgets/FramerMotionLayoutAnimations/AdvanceReorderExample"),
+  {
+    ssr: false,
+  }
+);
+
 const MDXComponents = {
   a: CustomLink,
   // img: RoundedImage,
@@ -174,6 +254,17 @@ const MDXComponents = {
   AdvancedFramerMotionSandpack,
   FramerMotionAnimatePresence,
   FramerMotionAnimationLayout,
+  FramerMotionLayoutAnimationsBasic,
+  FramerMotionToastNotificationSandpack,
+  FramerMotionDistortions,
+  FramerMotionLayoutAnimationsLayoutProp,
+  FramerMotionLayoutAnimationsLayoutPosition,
+  FramerMotionArrowListSandpack,
+  FramerMotionLayoutAnimationsSharedLayoutAnimationDetails,
+  FramerMotionTabsSandpack,
+  FramerMotionLayoutAnimationsTabsLayoutGroup,
+  FramerMotionLayoutAnimationListLayoutGroup,
+  FramerMotionAdvanceReorderExample,
 };
 
 export default MDXComponents;
