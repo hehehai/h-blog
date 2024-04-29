@@ -1,6 +1,5 @@
 const AppCode = `import { motion } from 'framer-motion';
 import React from 'react';
-import './scene.css';
 
 const Example = () => {
   const [isClicked, setIsClicked] = React.useState(false);
@@ -15,12 +14,9 @@ const Example = () => {
   const buttonVariants = {
     hover: {
       /**
-       * Combining different animation in variants works the same way it works
-       * for inline animation objects
-       *
-       * For the first example, to make the button scale, you simply have to
-       * uncomment the following. Once done, hover the button and notice how
-       * it now double in size!
+       * 在变体中组合不同的动画与内联动画对象的方式相同。
+       * 对于第一个示例，要使按钮缩放，您只需取消下面的注释。
+       * 完成后，将鼠标悬停在按钮上，注意它现在会变为原来的两倍大小！
        */
       // scale: 2,
       rotate: 360,
@@ -37,13 +33,11 @@ const Example = () => {
   };
 
   /**
-   * Comment the buttonvariants object above and
-   * uncomment the one below to try out the second
-   * example:
+   * 请将上面的buttonVariants对象注释掉，并取消下面的注释以尝试第二个示例：
    *
-   * - the button will not scale back to its basic size once clicked
-   * - once clicked, the hover animation will not happen. It will use
-   * the "isClicked" custom prop passed to the button component below
+   * - 单击按钮后，按钮不会缩放回其基本大小。
+   * - 单击后，悬停动画将不会发生。
+   * - 它将使用下面传递给按钮组件的“isClicked”自定义属性。
    */
 
   /* 
@@ -65,7 +59,7 @@ const Example = () => {
   */
 
   return (
-    <div className="p-3">
+    <div className="py-16 flex items-center justify-center">
       <motion.button
         style={{
           background: 'linear-gradient(90deg,#ffa0ae 0%,#aacaef 75%)',
@@ -84,16 +78,13 @@ const Example = () => {
           setIsClicked(true);
         }}
         /**
-         * Here we pass the buttonVariants object as variants. It contains 4
-         * different target objects
-         * - hover: which is used for the whileHover prop
-         * - pressed: which is used for the whileTap prop
-         * - clicked and notClicked which are respecively used for animate prop
-         * when the button is clicked and not clicked (based on the state of the
-         * button)
+         * 在这里，我们将 buttonVariants 对象作为变体传递。
+         * 它包含4个不同的目标对象：
          *
-         * Reference to these animation objects are passed as strings to their
-         * props
+         * hover： 用于 whileHover 属性
+         * pressed： 用于 whileTap 属性
+         * clicked 和 notClicked： 分别用于按钮在点击和未点击时的 animate 属性（根据按钮的状态）
+         * 对这些动画对象的引用以字符串形式传递给它们的属性。
          *
          * e.g. whileHover="hover"
          */
@@ -102,10 +93,9 @@ const Example = () => {
         whileHover="hover"
         whileTap="pressed"
         /**
-         * Uncomment the following to allow our buttonVariants objects to know
-         * about the status of the button.
-         *
-         * This lets us redefine variants based on the status button
+         * 取消下面的注释，让我们的 buttonVariants 对象了解按钮的状态。
+         * 
+         * 这使我们能够根据按钮的状态重新定义变体。
          */
         // custom={isClicked}
         transition={{

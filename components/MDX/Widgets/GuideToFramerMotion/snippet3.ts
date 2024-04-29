@@ -1,5 +1,4 @@
 const AppCode = `import { motion, useMotionValue, useTransform } from 'framer-motion';
-import './scene.css';
 
 const Example = () => {
   const blockVariants = {
@@ -13,21 +12,16 @@ const Example = () => {
 
   const rotate = useMotionValue(0);
   /**
-   * Here we tie together the value of "scale" to the value
-   * of "rotate"
-   * The scale will increase along the rotation, from 0
-   * until the rotation reaches 270 degrees ([0, 270])
-   * where the scale property will be equal to 1 ([0, 1]).
-   * The scale will stop increasing while the rotation
-   * finishes its transition
-   *
-   * You can try to modify the values below, and see how it
-   * impacts the resulting transition.
+   * 在这里，我们将 "scale" 的值与 "rotate" 的值关联起来。
+   * 缩放将随着旋转增加，从 0 到旋转达到 270 度（[0, 270]），此时缩放属性将等于 1（[0, 1]）。
+   * 在旋转完成过渡时，缩放将停止增加。
+   * 
+   * 您可以尝试修改下面的值，看看它对最终的过渡有什么影响。
    */
   const scale = useTransform(rotate, [0, 270], [0, 1]);
 
   return (
-    <div className="p-3">
+    <div className="py-16 flex items-center justify-center">
       <motion.div
         style={{
           background: 'linear-gradient(90deg,#ffa0ae 0%,#aacaef 75%)',

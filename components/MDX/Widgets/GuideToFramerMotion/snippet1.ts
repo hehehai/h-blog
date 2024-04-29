@@ -1,5 +1,4 @@
 const AppCode = `import { motion } from 'framer-motion';
-import './scene.css';
 
 const Example1 = () => {
   return (
@@ -13,9 +12,8 @@ const Example1 = () => {
           borderRadius: '10px',
         }}
         /**
-          Below, the initial and animation field are set to declare a translation
-          animation along the horizontal axis "x"
-          Hence why we're setting an "x" field in both objects.
+         下面，初始化和动画字段被设置为进行沿水平轴“x”的平移动画。
+         因此我们在两个对象中都设置了一个“x”字段。
         **/
         initial={{
           x: -100,
@@ -24,13 +22,10 @@ const Example1 = () => {
           x: 100,
         }}
         /**
-          The code below specifies the transition type for our element.
-          You can comment the whole transition prop below, and Framer 
-          Motion will fallback to "smart defaults".
+         以下代码指定了元素的过渡类型。
+         您可以将下面的整个过渡属性注释掉， Framer Motion 将回退到“智能默认值”。
 
-          In this case, since we have a translation, the default transition type is
-          spring, so you should see the element moving from left to right and "bounce"
-          a when reaching its target state, like a spring!
+         在这种情况下，由于我们有一个平移动画，所以默认的过渡类型是弹簧(spring)，所以您应该会看到元素从左到右移动，并在达到目标状态时出现"弹跳"，就像弹簧一样！
         **/
         transition={{
           type: 'tween',
@@ -57,18 +52,13 @@ const Example2 = () => {
           borderRadius: '10px',
         }}
         /**
-          Combining animations in Framer Motion is very easy!
-          You can simply add extra fields to your initial and target object.
-          Here for example, our element rotates between 0 and 180 degrees, if
-          we want to have it translate horizontally at the same time, we can
-          simply add an "x" field, like in the example above.
-
-          I added these fields below, commented. If you uncomment them,
-          you should see our element both rotate and translate at the same
-          time.
-
-          You can try changing the translation from horizontal to vertitcal, by
-          replacing the "x" field with an "y" field.
+         在 Framer Motion 中组合动画非常简单！
+         您只需向初始和目标对象添加额外的字段即可。
+         例如，在这里，我们的元素在 0 度和 180 度之间旋转，如果我们想同时进行水平平移，我们可以简单地添加一个"x"字段，就像上面的示例中一样。
+         
+         我在下面添加了这些字段，并进行了注释。如果您取消对它们的注释，您应该会看到我们的元素同时旋转和平移。
+         
+         您可以尝试将平移从水平变为垂直，只需将"x"字段替换为"y"字段即可。
         **/
         initial={{
           rotate: 0,

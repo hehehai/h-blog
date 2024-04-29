@@ -1,5 +1,4 @@
 const AppCode = `import { motion } from 'framer-motion';
-import './scene.css';
 
 const Example = () => {
   const blockVariants = {
@@ -12,7 +11,7 @@ const Example = () => {
   };
 
   return (
-    <div className="p-3">
+    <div className="py-16 flex items-center justify-center">
       <motion.div
         style={{
           background: 'linear-gradient(90deg,#ffa0ae 0%,#aacaef 75%)',

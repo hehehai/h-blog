@@ -1,5 +1,4 @@
 const AppCode = `import { motion } from 'framer-motion';
-import './scene.css';
 
 const Example = () => {
   const replies = [
@@ -60,7 +59,7 @@ const Example = () => {
   };
 
   return (
-    <div className="p-3">
+    <div className="p-4">
       <h4>Already {replies.length} furry friends liked this post!</h4>
       <motion.ul
         style={{
