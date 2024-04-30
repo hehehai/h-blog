@@ -27,7 +27,7 @@ publicAt: "2024-04-30"
 
 ### 布局动画的简要复习
 
-在 Framer Motion 中，您可以通过将 `layout` 道具设置为 `true` 来在不同布局之间为 `motion` 组件添加动画效果。这将导致我们所说的布局动画。
+在 Framer Motion 中，您可以通过将 `layout` prop 设置为 `true` 来在不同布局之间为 `motion` 组件添加动画效果。这将导致我们所说的布局动画。
 
 <FAQBox title="我们所说的“layout”是什么意思?">
 当我们谈论对“布局”或“布局属性”进行动画处理时，我们的意思是更新以下任何属性：
@@ -38,7 +38,7 @@ publicAt: "2024-04-30"
 
 </FAQBox>
 
-我们不能像其他类型的 Framer Motion 动画那样，使用 `initial` 和 `animate` 道具的组合在布局之间对 `motion` 组件进行动画处理。为此，我们需要使用 `layout` prop。
+我们不能像其他类型的 Framer Motion 动画那样，使用 `initial` 和 `animate` prop 的组合在布局之间对 `motion` 组件进行动画处理。为此，我们需要使用 `layout` prop。
 
 在下面的示例中，您将找到布局动画的第一个展示：
 
@@ -49,7 +49,7 @@ publicAt: "2024-04-30"
 
 我们可以看到，每次我们更改布局时，即发生重新渲染时， `layout` prop 都允许组件从以前的布局平滑过渡到新选择的布局。然而，没有它就没有过渡：正方形会突然移动。
 
-布局动画“使事情变得平滑”，并为某些用户交互增加了一定程度的物理性，而通常事情会突然过渡。它们可以大放异彩的一个例子是在列表中添加/删除元素时。对于像这样的用例，我倾向于大量使用布局动画，尤其是与其他 Framer Motion 功能, 如 `AnimatePresence` .
+布局动画“使变化变得平滑”，并为某些用户交互增加了一定程度的物理性，而通常变化会突然过渡。很好说明的一个例子是在列表中添加/删除元素时。对于像这样的用例，我倾向于大量使用布局动画，尤其是与其他 Framer Motion 功能, 如 `AnimatePresence` .
 
 下面的 playground 展示了我自己的 `NotificationList` 一个利用布局动画的组件：
 
@@ -77,7 +77,7 @@ publicAt: "2024-04-30"
 
 ## 修复失真
 
-在执行影响元件大小的布局动画时，某些属性（如 `borderRadius` 或 `boxShadow` ）的过渡过程中可能会出现一些失真。即使这些属性不是动画的一部分，也会发生这些失真。
+在执行影响元件大小的布局动画时，某些属性（如 `borderRadius` 或 `boxShadow` ）的过渡过程中可能会出现一些失真（留意边缘）。即使这些属性不是动画的一部分，也会发生这些失真。
 
 幸运的是，有一个简单的解决方法可以解决这些问题：将这些属性设置为内联样式，如下所示：
 
@@ -90,7 +90,7 @@ publicAt: "2024-04-30"
 
 ## 有关布局 prop 的更多信息
 
-我们刚刚看到，将 `layout` 道具设置为 `true` 后，我们可以通过转换与组件的大小或位置相关的任何属性，在布局之间为组件制作动画。我最近发现 `layout` prop 可以取更多值：
+我们刚刚看到，将 `layout` prop 设置为 `true` 后，我们可以通过转换与组件的大小或位置相关的任何属性，在布局之间为组件制作动画。我最近发现 `layout` prop 可以取更多值：
 
 - `layout="position"` ：我们只平滑地过渡与位置相关的属性。与大小相关的属性将突然转换。
 - `layout="size"` ：我们只平滑地转换与大小相关的属性。与位置相关的属性将突然转换。
@@ -98,7 +98,7 @@ publicAt: "2024-04-30"
 <Callout type="find">
   <img src="/static/images/framer-motion-layout/Framer Motion Layoutpropcharts.webp"/>
 
-表示位置和大小相关属性在时间函数中的演变的图表，对于布局道具的所有可能值
+表示位置和大小相关属性在时间函数中的演变的图表，对于布局 prop 的所有可能值
 
 </Callout>
 
@@ -106,7 +106,7 @@ publicAt: "2024-04-30"
 
 <FramerMotionLayoutAnimationsLayoutProp />
 
-为什么我们需要使用这些其他 `layout` 属性？实际用途是什么？你可能会问。有时，由于布局动画，调整大小的组件的内容最终可能会被“压扁”或“拉伸”。如果您在制作布局动画时看到这种情况发生，则只需将 `layout` prop 设置为 `position` 即可修复。
+你可能会问，为什么我们需要使用这些 `layout` 属性？实际用途是什么？。有时，由于布局动画调整大小的组件的内容最终可能会被“压扁”或“拉伸”。如果您在制作布局动画时看到这种情况发生，则只需将 `layout` prop 设置为 `position` 即可修复。
 
 下面您将找到此类用例的示例：
 
@@ -125,7 +125,7 @@ publicAt: "2024-04-30"
 我知道我不是唯一一个，我见过很多人混淆共享布局动画和 `LayoutGroup`
 
 <Callout type="find">
-困惑是理解。曾经有一个功能称为 `AnimatedSharedLayout` 实现共享布局动画所必需的功能，该功能在 `LayoutGroup` 引入的同时被弃用。
+曾经有一个功能称为 `AnimatedSharedLayout` 实现共享布局动画所必需的功能，该功能在 `LayoutGroup` 引入的同时被弃用。
 
 我最初以为 `LayoutGroup` 是要替换 `AnimatedSharedLayout` ，但我们将在这一部分看到事实并非如此。
 
@@ -135,7 +135,7 @@ publicAt: "2024-04-30"
 
 有人可能会认为这是另一种类型的布局动画，就像我们在上一部分中看到的那样，但有一个转折。这没有错，但也不是很准确。
 
-共享布局动画有自己的 API，与 `layout` 道具没有直接关系。我们不是对组件的位置和大小进行动画处理，而是在具有公共 `layoutId` 道具的所有实例之间对组件进行动画处理。为了说明这个概念，让我们看一下下面的 playground：
+共享布局动画有自己的 API，与 `layout` prop 没有直接关系。我们不是对组件的位置和大小进行动画处理，而是在具有公共 `layoutId` prop 的所有实例之间对组件进行动画处理。为了说明这个概念，让我们看一下下面的 playground：
 
 <FramerMotionArrowListSandpack />
 
@@ -161,21 +161,21 @@ publicAt: "2024-04-30"
 
 - 当选择新选项卡时，我们可以看到“选定的指标”从一个选项卡过渡到另一个选项卡
 - 当鼠标悬停在 Tabs 组件上时，“悬停高亮”将跟随用户的鼠标
-- 每个共享布局动画都有一个不同的 `layoutId` 道具： `underline` 和 `highlight`
+- 每个共享布局动画都有一个不同的 `layoutId` prop： `underline` 和 `highlight`
 
 <FramerMotionTabsSandpack />
 
-然而，有一个小问题。如果我们想构建一个定义了共享布局动画的可重用组件，并在同一页面中使用它两次，该怎么办？好吧，两个看似截然不同的共享布局动画最终都会使用相同的 `layoutId` 道具，因此，这会导致事情变得有点奇怪：
+然而，有一个小问题。如果我们想构建一个定义了共享布局动画的可重用组件，并在同一页面中使用它两次，该怎么办？好吧，两个看似截然不同的共享布局动画最终都会使用相同的 `layoutId` prop， 这会导致事情变得有点奇怪：
 
 <FramerMotionLayoutAnimationsTabsLayoutGroup />
 
-这就是图片 👀 的用武 `LayoutGroup` 之地。
+这就是图片 👀 的 `LayoutGroup` 用武之地。
 
 ## LayoutGroup 命名空间用例
 
 对于这个用例，我们可以将其视为 `LayoutGroup` 一种在共享布局动画之上使用的工具，并且与它们没有直接关系，因为它最初看起来可能。
 
-我们在上面看到， `layoutId` 道具没有考虑它们在组件的哪个实例中使用，即它们是全局的。在第一个用例中，我们将使用它来命名我们的共享布局动画：给它们一个唯一的 id ，这样它们就可以多次渲染，并且仍然表现明显。
+我们在上面看到， `layoutId` prop 没有考虑它们在组件的哪个实例中使用，即它们是全局的。在第一个用例中，我们将使用它来命名我们的共享布局动画：给它们一个唯一的 id ，这样它们就可以多次渲染，并且仍然表现明显。
 
 使用 LayoutGroup 命名共享布局动画的多个实例
 
@@ -206,30 +206,29 @@ const App = () => (
 
 <FramerMotionLayoutAnimationsTabsLayoutGroup layoutGroup />
 
-## LayoutGroup：分组用例
+## LayoutGroup： 分组用例
 
-命名共享布局动画并不是 的唯一 `LayoutGroup` 用例。其初衷其实是：
+命名共享布局动画并不是的唯一 `LayoutGroup` 用例。其初衷其实是：
 
 > 将应执行布局动画的运动组件组合在一起。
 
 但这究竟意味着什么？
 
-我们在第一部分看到，当重新渲染发生时，布局动画会将组件从一个布局过渡到另一个布局。这对于 `layout` 带有道具的 `motion` 组件中的所有内容都非常有效，但是兄弟组件呢？
+我们在第一部分看到，当重新渲染发生时，布局动画会将组件从一个布局过渡到另一个布局。这对于 `layout` 带有 prop 的 `motion` 组件中的所有内容都非常有效，但是兄弟组件呢？
 
 由于一个组件的布局动画，页面的整体布局可能会受到影响。例如，从列表中删除项目时，所有周围的组件都需要通过过渡或调整大小进行调整。这里的问题是，没有办法使这些其他组件顺利过渡，因为：
 
 - 它们本身不一定是 `motion` 组件
-- 它们没有重新渲染，因为没有与
+- 由于没有互动， 他们不会重新渲染
 - 由于它们没有重新渲染，因此即使定义了布局动画，它们也无法自行执行布局动画。
 
-这可以通过将每个同级组件包装在一个 `motion` `layout` 组件中来解决 `true` ，并将每个同级组件包装在一个组件中，并 `motion` 包装我们希望在整体布局更改时执行平滑过渡的所有组件 `LayoutGroup`。
+这可以通过将每个同级组件包装在一个 `motion` 组件中 `layout` `true` 来解决，并将每个同级组件包装在一个组件中，`motion` 包装我们希望在整体布局更改时执行平滑过渡的所有组件 `LayoutGroup`。
 
 在下面的小部件中，我通过渲染列表组件的两个实例来展示这一点，其中每个项目都是一个 `motion` 组件：
 
 <FramerMotionLayoutAnimationListLayoutGroup />
 
 - 尝试从第一个列表中删除一个项目，并注意到第一个列表中的项目执行平滑的布局动画，但第二个列表突然移动
-
 - 切换 `LayoutGroup` 换行，请注意，现在从第一个列表中删除项目时，第二个列表会平滑地过渡到其目标位置。
 
 <Callout type="thinking">
@@ -257,17 +256,17 @@ const MyList = () => {
 
   return (
     <Reorder.Group
-      // Specify the direction of the list (x for horizontal, y for vertical)
+      // 指定列表的方向（x代表水平，y代表垂直）
       axis="y"
-      // Specify the full set of items within your reorder group
+      // 指定重排序组中的完整项目集合。
       values={items}
-      // Callback that passes the newly reordered list of item
-      // Note: simply passing a useState setter here is equivalent to
+      // 通过新重新排序的项目列表的回调
+      // 注意：在这里简单地传递useState设置器
       // doing `(reordereditems) => setItmes(reordereditems)`
       onReorder={setItems}
     >
       {items.map((item) => (
-        // /!\ don't forget the value prop!
+        // /!\ 别忘记 value prop!
         <Reorder.Item key={item} value={item}>
           {item}
         </Reorder.Item>
@@ -294,12 +293,12 @@ const MyList = () => {
 
 您可以看到发生了一个奇怪的重叠问题：被拖动的项目有时会呈现在其同级后面。让元素始终被拖到其兄弟姐妹的顶部会感觉更自然，对吧？
 
-它不会一直发生，但如果您看到这一点，请不要担心。对于此问题，有一个简单的解决方法： `relative` 将 `position` CSS 属性设置为 的每个实例 `Reorder.Item`。
+它不会一直发生，但如果您看到这一点，请不要担心。对于此问题，有一个简单的解决方法： 将 `Reorder.Item` 的每个实例 `position` CSS 属性设置为 `relative`。
 
 </Callout>
 
 <FAQBox title="关于多态性的说明">
-两者都 `Reorder.Group` `Reorder.Item` 支持多态性，即它们允许开发人员选择将要呈现的底层 HTML 标记。但是，与其他支持多态性的库不同，这里只能传递 HTML 元素。
+`Reorder.Group` `Reorder.Item` 都支持多态性，它们允许开发人员选择将要呈现的底层 HTML 标记。但是，与其他支持多态性的库不同，这里只能传递 HTML 元素。
 
 ```tsx
 // Valid
@@ -312,7 +311,7 @@ const MyList = () => {
 <Reorder.Item as={Card} />
 ```
 
-在撰写这篇博文时，此道具将不接受自定义 React 组件。幸运的是，有一个简单的方法可以解决这个问题。如果您的组件库/设计系统支持多态性，则可以通过简单地在组件 as 的 prop 中传递所需的 `Reorder` 组件来解决此限制：
+在撰写这篇博文时，此 prop 将不接受自定义 React 组件。幸运的是，有一个简单的方法可以解决这个问题。如果您的组件库/设计系统支持多态性，则可以通过简单地在组件 as 的 prop 中传递所需的 `Reorder` 组件来解决此限制：
 
 ```tsx
 const Card = styled('div', {...});
@@ -327,7 +326,7 @@ const Card = styled('div', {...});
 
 ## 结合一切
 
-在下面的 Playground 中，您将找到一个更高级的示例，该示例利用 `Reorder.Group` `Reorder.Item` 了我们之前看到的布局动画的其他一些方面：
+在下面的 Playground 中，您将找到一个更高级的示例，该示例用 `Reorder.Group` `Reorder.Item` 实现了我们之前看到的布局动画的其他一些方面：
 
 <FramerMotionAdvanceReorderExample />
 
@@ -370,9 +369,9 @@ const Card = styled('div', {...});
       <Card
         as={Reorder.Item}
         style={{
-          position: 'relative', // this is needed to avoid weird overlap
-          borderRadius: '12px', // this is set as inline styles to avoid distortions
-          width: item.checked ? '70%' : '100%', // will be animated through layout animation
+          position: 'relative', // 这是为了避免奇怪的重叠
+          borderRadius: '12px', // 这被设置为内联样式以避免扭曲
+          width: item.checked ? '70%' : '100%', // 将通过布局动画进行过渡
         }}
         value={item}
       >
@@ -401,7 +400,7 @@ const Card = styled('div', {...});
 </LayoutGroup>
 ```
 
-想自己运行这个例子并在其上进行黑客攻击吗？您可以在我博客的 [Github 存储库](https://github.com/MaximeHeckel/blog.maximeheckel.com/blob/4ce1571e758dc1bae6eeb1bf7607e56de1405faf/core/components/MDX/Widgets/FramerMotionLayoutAnimations/AdvanceReorderExample.tsx)中找到此示例的完整实现。
+想自己运行这个例子并在其上进行创作吗？您可以在我博客的 [Github 存储库](https://github.com/MaximeHeckel/blog.maximeheckel.com/blob/4ce1571e758dc1bae6eeb1bf7607e56de1405faf/core/components/MDX/Widgets/FramerMotionLayoutAnimations/AdvanceReorderExample.tsx)中找到此示例的完整实现。
 
 ## 结论
 
@@ -409,6 +408,6 @@ const Card = styled('div', {...});
 
 我希望这篇博文可以作为指导/帮助者，使您自己的动画看起来绝对完美 ✨，尤其是在处理过渡的细节时。花这么多时间阅读和解决我们在这篇博文中展示的问题可能听起来有点矫枉过正，但相信我，这是值得的！
 
-## 想走得更远吗？
+## 进一步了解？
 
 我建议看一下 [Framer Motion 文档](https://www.framer.com/docs/introduction/)中提供的一些复杂示例。该团队提出了非常好的例子，例如这个拖动以[重新排序选项卡](https://codesandbox.io/s/framer-motion-5-drag-to-reorder-tabs-zd2q7?from-embed)组件，它包含我在这篇博文中介绍的任务列表示例中使用的每个概念。在那之后，我会试着看看你可以在你自己的项目 🪄 上撒一些布局动画魔法。没有比自己建造东西更好的学习方式了！

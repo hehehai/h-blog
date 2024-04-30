@@ -107,7 +107,7 @@ Framer Motion 中有许多类型的过渡可用，因此我在下面添加了这
 
 这就是为什么我最喜欢的 Framer Motion 功能之一是能够通过变体以声明方式定义动画。
 
-变体是具有预定义动画对象的集合，这是我们在上面示例中在 `animation` 道具中传递的对象类型。
+变体是具有预定义动画对象的集合，这是我们在上面示例中在 `animation` prop中传递的对象类型。
 
 下面是一个示例，演示了如何利用变体。请注意我们如何在 `buttonVariants` 对象中声明一组变体，以及如何在运动组件中引用这些变体的相应键：
 
@@ -146,14 +146,14 @@ const AnimatedButton = () => {
 
 好吧，你别担心！ Framer Motion 还允许您将变体定义为函数。每个变体作为一个函数可以接受一个参数并返回一个动画对象。该参数必须通过运动组件的 `custom` props 中传递。下面的示例展示了变体函数的示例，当按钮被点击或未被点击时，悬停变体将返回不同的对象。按钮 `isClicked` 的状态在运动组件的 `custom` props 中传递。
 
-将变体和自定义道具与运动组件一起使用
+将变体和自定义prop与运动组件一起使用
 
 ```tsx
 import { motion } from "framer-motion";
 
 const AnimatedButton = () => {
   const buttonVariants = {
-    // 任何声明为函数的变体都将继承“自定义道具”作为参数
+    // 任何声明为函数的变体都将继承“自定义prop”作为参数
     hover: (clicked) => ({
       // 一旦点击按钮，将不再在悬停时缩放
       scale: clicked ? 1 : 1.5,

@@ -8,7 +8,7 @@ publicAt: "2024-04-29"
 
 > 本文转发并翻译至: [Advanced animation patterns with Framer Motion](https://blog.maximeheckel.com/posts/advanced-animation-patterns-with-framer-motion/)
 
-我从[我的指南](https://blog.maximeheckel.com/posts/guide-animations-spark-joy-framer-motion/)【[中文](https://www.hehehai.cn/posts/framer-motion-guide)】中得到 ✨ 了很多 ✨ 积极的反馈，这些动画用 Framer Motion 来创造激发人们的快乐，不可否认的是，这个库激起了许多开发人员对基于 Web 的动画世界的兴趣。
+我从[我的指南](https://blog.maximeheckel.com/posts/guide-animations-spark-joy-framer-motion/)【[中文](https://www.hehehai.cn/posts/framer-motion-guide)】中得到 ✨ 了很多 ✨ 积极的反馈，这些动画用 Framer Motion 来激发人们的创造热情，不可否认的是，这个库激起了许多开发人员对基于 Web 的动画世界的兴趣。
 
 虽然我在上一篇文章中介绍了构成动画的许多基础部分，以及如何使用 Framer Motion 轻松编排多个过渡，但我没有涉及该库提供的许多更高级的功能。
 
@@ -38,7 +38,7 @@ Framer Motion 允许变体“向动”通过每个运动子组件，只要这些
 1. 有一个“看不见的”运动层覆盖在卡片和标签上。该层包含将变体设置为“悬停”的 `whileHover` props。
 2. “发光”本身也是一个运动组件，但是，它唯一定义的是它自己的 `variants` 带有 `hover` 键的对象。
 
-因此，当悬停这个不可见的层时，我们切换“悬停”变体，任何在其 `variants` props 中定义了此变体的子运动组件都将检测到此更改并切换相应的行为。
+因此，当悬停这个不可见的层时，我们切换“悬停”变体，任何在其 `variants` prop 中定义了此变体的子运动组件都将检测到此更改并切换相应的行为。
 
 使用成帧器运动的传播模式示例
 
@@ -59,7 +59,7 @@ const CardWithGlow = () => {
       {/* 子级动画组件设置与父级设置的键匹配的变量，以相应地进行动画。 */}
       <motion.div variants={glowVariants} className="glow"/>
       <Card>
-        <div>Some text on the card/div>
+        <div>卡片上的一些文字</div>
       </Card>
     </motion.div>
   )
@@ -73,7 +73,7 @@ const CardWithGlow = () => {
 现在让我们应用我们学到的关于 Framer Motion 的传播机制的知识！在下面的操场上，你会发现一个带有“悬停”动画的运动组件。将鼠标悬停在该组件的右端时，一个小图标将显示在该组件的右侧。您可以尝试：
 
 - 修改用于包装按钮的运动组件中使用的变体键，并看到现在它偏离了父组件设置的内容，动画不会触发，并且按钮在悬停时不可见。
-- 在包裹按钮的运动组件上设置一个 `animate` props，并看到它现在会自行制作动画，并且不会使用父级在悬停时设置的变体。
+- 在包裹按钮的运动组件上设置一个 `animate` prop ，并看到它现在会自行制作动画，并且不会使用父级在悬停时设置的变体。
 
 <AdvancedFramerMotionSandpack snippet="snippet1" />
 
@@ -116,13 +116,13 @@ const MagicComponent = () => {
       onClick={hideButton}
       custom={hidding}
     >
-      Click to hide
+      单击隐藏
     </motion.button>
   )
 }
 ```
 
-另一方面， `AnimatePresence` 它经过深思熟虑且易于使用。只需将任何运动组件包装在一个 `AnimatePresence` 组件中，您就可以设置 `exit` props！
+另一方面， `AnimatePresence` 它经过深思熟虑且易于使用。只需将任何运动组件包装在一个 `AnimatePresence` 组件中，您就可以设置 `exit` prop！
 
 `AnimatePresence` 用例示例
 
@@ -138,7 +138,7 @@ const MagicComponent = () => {
           exit={{ opacity: 0 }}
           onClick={() => setHidden(true)}
         >
-          Click to hide
+          单击隐藏
         </motion.button>
       )}
     </AnimatePresence>
@@ -161,30 +161,30 @@ const MagicComponent = () => {
 
 为了根据用户按下的按钮设置正确的过渡方向（左或右），我在用户悬停在按钮上时设置了一个状态，该状态将相应地改变过渡的方向（虽然这不是最好的实现方式，但它有效 😄）。尽管右侧的示例（使用 `AnimatePresence`）完美运行，但你可能已经注意到左侧的示例中，只需将鼠标悬停在其中一个按钮上，过渡就会开始。
 
-它似乎 `AnimatePresence` 可以跟踪在给定时间和整个状态更改中渲染的运动组件。
+似乎 `AnimatePresence` 可以跟踪在给定时间和整个状态更改中渲染的运动组件。
 
-为此，我仍然需要研究 Framer Motion 的内部工作原理，但是，尽管这让我感到惊讶，但考虑到用例，这种行为是有道理的。
+为此，我仍然需要研究 Framer Motion 的内部工作原理，尽管这让我感到惊讶，但考虑到用例，这种行为是有道理的。
 
 </Callout>
 
-我们现在有一个很棒的新工具，可以用来让我们的过渡变得更好！是时候在下面的操场上尝试一下了：
+我们现在有一个很棒的新工具，可以用来让我们的过渡变得更好！是时候在下面的 Playaround 上尝试一下了：
 
-- 尝试删除 `AnimatePresence` 组件。请注意，这会使 Framer Motion 跳过 `exit` props 中指定的动画。
-- 尝试修改 `exit` 道具中定义的动画。例如，您可以使整个组件在退出时从 1 缩放到 0。（我已经在下面 😄 的代码中添加了注释的正确动画对象）
+- 尝试删除 `AnimatePresence` 组件。请注意，这会使 Framer Motion 跳过 `exit` prop 中指定的动画。
+- 尝试修改 `exit` prop 中定义的动画。例如，您可以使整个组件在退出时从 1 缩放到 0。（我已经在下面 😄 的代码中添加了被注释的正确动画对象）
 
 <AdvancedFramerMotionSandpack snippet="snippet2" />
 
 ## 布局动画
 
-我们现在知道如何：
+我们现在知道：
 
 - 在一组运动组件中传播动画
 - 向组件添加 `exit` 过渡，以便它可以正常卸载
 
-这些高级模式应该使我们能够制作一些非常流畅的过渡，对吧？好吧，等到您听到更多关于 Framer Motion 如何处理布局动画的信息！
+这些高级模式应该使我们能够制作一些非常流畅的过渡，对吧？ ok 等到您听到更多关于 Framer Motion 如何处理布局动画的信息！
 
 <Callout type="thinking">
-毫不夸张地说，布局动画是一个非常广泛的主题！在撰写和更新这一部分后，我决定撰写一篇专门的博客文章，讨论关于 Framer Motion 布局动画的一切：[《Framer Motion布局动画完全指南》](https://blog.maximeheckel.com/posts/framer-motion-layout-animations/)，其中包含大量示例。
+毫不夸张地说，布局动画是一个非常广泛的主题！在撰写和更新这一部分后，我决定撰写一篇专门的博客文章，讨论关于 Framer Motion 布局动画的一切：[《Framer Motion布局动画完全指南》](https://blog.maximeheckel.com/posts/framer-motion-layout-animations/)【[中文](https://www.hehehai.cn/posts/framer-motion-layout)】，其中包含大量示例。
 
 如果您想对这个主题进行简单的介绍，以下部分仍然相关，但不要忘记将完整指南添加为书签以备后用 🙂！
 
@@ -208,14 +208,12 @@ const MagicComponent = () => {
 
 我们可以在这里观察到很多事情：
 
-- 第一个示例不起作用，看起来 Framer Motion 无法像优雅地将不透明度从 0 过渡到 1 那样，平滑地在 `justify-content` 属性之间进行过渡。
-- 但是，第二个组件按预期在 `flex-start` 和 `flex-end` 属性之间转换。通过在运动组件中设置为 `layout` `true`，Framer Motion 可以平滑地转换组件 `justify-content` 的属性。
-- 第二个组件的另一个优点是：它不像第一个组件那样对 Framer Motion 有那么多的“硬依赖性”。我们可以简单地用一个简单的 `div` 替换它 `motion.div` ，组件本身仍然可以工作。
+- 第一个示例不起作用，看起来 Framer Motion 无法优雅地将不透明度从 0 过渡到 1 那样，平滑地在 `justify-content` 属性之间进行过渡。
+- 但第二个组件按预期在 `flex-start` 和 `flex-end` 属性之间转换。通过在运动组件中设置为 `layout` `true`，Framer Motion 可以平滑地转换组件 `justify-content` 的属性。
+- 第二个组件的另一个优点是：它不像第一个组件那样对 Framer Motion 有那么多的“硬依赖性”。我们可以用一个简单的 `div` 替换 `motion.div` ，组件本身仍然可以工作。
 
 <Callout type="thinking">
-  我计划重新访问此博客上实现的一些动画，并可能将它们转换为适当的 `layout`
-  动画以简化代码。我很确定我的 `Header` 和 `Search`
-  组件可以从中受益，因为它们的动画以布局/高度变化为中心。
+  我计划调整此博客上实现的一些动画，并可能将它们转换为适当的 `layout` 动画以简化代码。我很确定我的 `Header` 和 `Search` 组件可以从中受益，因为它们的动画以布局/高度变化为中心。
 </Callout>
 
 ## 共享布局动画
@@ -233,7 +231,7 @@ const MagicComponent = () => {
 
 </Callout>
 
-在最新版本的 Framer Motion 中，构建共享布局动画得到了极大的改进：我们唯一需要做的就是为共享布局动画中的组件设置一个公共 `layoutId` props。
+在最新版本的 Framer Motion 中，构建共享布局动画得到了极大的改进：我们唯一需要做的就是为共享布局动画中的组件设置一个公共 `layoutId` prop。
 
 下面，您将找到一个小组件，其中展示了共享布局动画的示例。
 
@@ -244,7 +242,7 @@ const MagicComponent = () => {
 - 启用公共 `layoutId` 时，边框将正常移动到新选定的元素
 - 当公共 `layoutId` 元素被禁用时，边框将突然出现在新选择的元素周围（即未定义或不同）
 
-为了获得这个看似复杂的动画，我们需要做的就是添加一个道具，就是这样！✨ 特别是在这个例子中，我添加的只是对蓝色圆圈组件的每个实例的共同 `layoutId` 调用 `border` 。
+为了获得这个看似复杂的动画，我们需要做的就是添加一个 prop，就是这样！✨ 特别是在这个例子中，我添加的只是对蓝色圆圈组件的每个实例的共同 `layoutId` 调用 `border` 。
 
 使用`layoutId` prop 的共享动画布局示例
 
@@ -283,23 +281,23 @@ const MagicWidgetComponent = () => {
 ```
 
 <Callout type="find">
-  在以前版本的 Framer Motion 中，以前 `v5.0` ，这种用例需要现在已弃用 `AnimatedSharedLayout` 的组件。
+在以前版本的 Framer Motion 中，以前 `v5.0` ，这种用例需要现在已弃用 `AnimatedSharedLayout` 的组件。
 
-除了处理共享布局动画之外，此组件还有助于处理相互影响的布局动画。今天，如果您最终遇到涉及大量单个布局动画的情况，则需要将它们与 `LayoutGroup` 组件“分组”。
+除了处理共享布局动画之外，此组件还有助于处理相互影响的布局动画。现在，如果您最终遇到涉及大量单个布局动画的情况，则需要将它们与 `LayoutGroup` 组件“分组”。
 
 请参阅下面 playground 中的示例来尝试一下！
 
 </Callout>
 
-现在是时候尝试一下我们刚刚学到的东西了！最后一个示例将前面的所有 playground 编译在一起以创建此列表组件。此实现包括：
+是时候尝试一下我们刚刚学到的东西了！最后一个示例将前面的所有 playground 编译在一起以创建此列表组件。此实现包括：
 
-- 使用 `ListItem` 组件上的 `layout` 道具对列表重新排序进行动画处理
+- 使用 `ListItem` 组件上的 `layout` prop 对列表重新排序进行动画处理
 - 使用列表本身上的 `layout` prop，在单击时展开项目时优雅地调整大小
 - 用于防止布局动画期间出现故障的 `layout` prop 的其他实例（尤其是涉及更改列表项高度的实例）
 
 您可以尝试：
 
-- 注释掉或删除 上的 `layout` `ListItem` prop，然后看到现在，重新排序突然发生，👉 不再过渡！
+- 注释掉或删除 `ListItem` 上的 `layout` prop，然后看到现在，重新排序突然发生，👉 不再过渡！
 - 注释掉或删除 `LayoutGroup` 并注意这如何影响所有布局动画
 - 尝试在 `<Title/>` 组件上添加 `layout` prop，并看到它在物品高度变化时优雅地调整
 
