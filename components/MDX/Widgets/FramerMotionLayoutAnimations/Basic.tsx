@@ -80,7 +80,7 @@ const Basic = () => {
               id="use-layout"
               onCheckedChange={() => setLayout((prev) => !prev)}
             />
-            <Label htmlFor="use-layout">Use layout animation</Label>
+            <Label htmlFor="use-layout">使用布局动画</Label>
           </div>
         </div>
       </div>

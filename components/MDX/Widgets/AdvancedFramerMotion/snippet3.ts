@@ -19,7 +19,7 @@ const SwitchHandle1 = styled(motion.div, {
   borderRadius: '50%',
 });
 
-// Attempt at a Switch motion component without layout animation: It simply does not work
+// 尝试在没有布局动画的情况下使用Switch运动组件：它根本行不通
 const Switch1 = () => {
   const [active, setActive] = React.useState(false);
 

@@ -5,7 +5,7 @@ import Pill from './Pill';
 
 const List = styled(motion.ul, {
   padding: '16px',
-  width: '350px',
+  maxWidth: '340px',
   background: ' hsl(223, 15%, 10%)',
   borderRadius: '8px',
   display: 'grid',
@@ -14,7 +14,7 @@ const List = styled(motion.ul, {
 
 
 const ListItem = styled(motion.li, {
-  minWidth: '300px',
+  width: '100%',
   background: 'hsla(222, 89%, 65%, 10%)',
   boxShadow: '0 0px 10px -6px rgba(0, 24, 40, 0.3)',
   borderRadius: '8px',

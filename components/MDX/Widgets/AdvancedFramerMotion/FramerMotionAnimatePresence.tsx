@@ -138,13 +138,17 @@ const FramerMotionAnimatePresence = () => {
   return (
     <TransitionGridWrapper>
       <DesignSystemCard className="overflow-hidden">
-        <DesignSystemCardHeader className="mb-10">Without AnimatePresence</DesignSystemCardHeader>
+        <DesignSystemCardHeader className="mb-10">
+          不使用 AnimatePresence
+        </DesignSystemCardHeader>
         <AnimationCardContent>
           <ContentDemo />
         </AnimationCardContent>
       </DesignSystemCard>
       <DesignSystemCard className="overflow-hidden">
-        <DesignSystemCardHeader className="mb-10">With AnimatePresence</DesignSystemCardHeader>
+        <DesignSystemCardHeader className="mb-10">
+          使用 AnimatePresence
+        </DesignSystemCardHeader>
         <AnimationCardContent>
           <ContentDemo withAnimatePresence />
         </AnimationCardContent>

@@ -15,7 +15,7 @@ const SharedLayoutAnimationDetails = () => {
 
   return (
     <Card>
-      <CardHeader>小型共享布局动画调试器</CardHeader>
+      <CardHeader>共享布局动画调试器</CardHeader>
       <div className="flex flex-col items-center">
         <div className="flex gap-4">
           {ITEMS.map((item, index) => (

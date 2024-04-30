@@ -66,7 +66,7 @@ const LayoutPosition = () => {
     <Card>
       <CardHeader>{`实际用例示例 layout="position"`}</CardHeader>
       <div>
-        <div className="flex py-3 gap-2 px-4">
+        <div className="flex max-md:flex-col py-3 gap-2 px-4">
           {items.map((item) => (
             <Box as={motion.div} css={{ flexGrow: 1 }} key={item} layout>
               <div className="flex-grow bg-green-400 dark:bg-green-700 px-4 py-2 rounded-lg">

@@ -83,7 +83,7 @@ const AdvanceReorderExample = () => {
             })
           }
         >
-          Add item
+          添加
         </Button>
         <TooltipProvider>
           <Tooltip>
@@ -92,7 +92,7 @@ const AdvanceReorderExample = () => {
                 <Icon.Repeat />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Reset task list</TooltipContent>
+            <TooltipContent>复位列表</TooltipContent>
           </Tooltip>
         </TooltipProvider>
       </div>
