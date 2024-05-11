@@ -14,7 +14,7 @@ publicAt: "2024-01-16"
 - [Puppeteer](https://pptr.dev/): 一个 Node.js 库，它提供了一个高级 API 来通过 DevTools 协议控制 Chrome/Chromium
 - [Playwright](https://playwright.dev/): 支持对现代 Web 应用程序进行可靠的端到端测试。
 - [Crawlee](https://crawlee.dev/): Web 抓取和浏览器自动化库
-</FAQBox>
+  </FAQBox>
 
 但是，这在 [Nextjs](https://nextjs.org/) 的 [Vercel](https://vercel.com) 部署遇到了问题，它失败了！
 
@@ -126,8 +126,16 @@ const isDev = process.env.NODE_ENV === "development";
 
 ![remote headless chromium core](/static/images/vercel-deploy-headless/20240116112613.png)
 
+<Callout type="find">
+更新于 2024-05-09
+
+👉 Vercel Functions 免费版本从 10 秒增加到 60 秒 [更新](https://vercel.com/changelog/vercel-functions-for-hobby-can-now-run-up-to-60-seconds)
+
+👉 付费版本时长为 5 分钟 [文档](https://vercel.com/docs/functions/configuring-functions/duration)
+</Callout>
+
 ```js
-export const maxDuration = 10; // This function can run for a maximum of 5 seconds
+export const maxDuration = 60; // This function can run for a maximum of 60 seconds (update at 2024-05-09 form 10 seconds)
 export const dynamic = "force-dynamic";
 
 export async function GET() {
