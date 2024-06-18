@@ -1,5 +1,15 @@
 [
   {
+    "name": "Dokploy",
+    "subtitle": "开源的自部署服务管理平台",
+    "description": "- Docker 服务部署，自动解析安装打包。\n- 参与社区运营以及服务维护。\n- 体验优化及文档编写。",
+    "cover": "/static/projects/dokploy.webp",
+    "links": {
+      "github": "https://github.com/Dokploy/dokploy",
+      "site": "https://dokploy.com"
+    }
+  },
+  {
     "name": "Arco Design Vue",
     "subtitle": "基于 Arco Design 的 Vue UI 组件库。",
     "description": "- 60多个开箱即用的高质量组件。\n- 参与社区运营以及组件维护。\n- 组件功能实现及文档编写。",
