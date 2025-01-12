@@ -1,0 +1,19 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "extends": ["ultracite"],
+  "linter": {
+    "rules": {
+      "suspicious": {
+        "noConsole": {
+          "level": "warn",
+          "options": {
+            "allow": ["error", "warn", "info"]
+          }
+        }
+      },
+      "nursery": {
+        "noStaticElementInteractions": "off"
+      }
+    }
+  }
+}

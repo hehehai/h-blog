@@ -11,11 +11,19 @@
 
 ## ⌨️ 安装&运行
 
-使用 pnpm 安装运行， 博客使用 `Nextjs 12` 版本
+使用 pnpm 安装运行， 博客使用 `Nextjs 15` 版本
 
 ```shell
-npm install
-npm run dev
+pnpm install
+pnpm run dev
 ```
 
 打开 `http://localhost:3000`
+
+env 文件 `.env` 可选的
+
+```shell
+OPENPANEL_CLIENT_ID=client_id
+```
+
+openpanel 官网： <https://openpanel.dev/>
