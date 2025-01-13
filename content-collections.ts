@@ -64,7 +64,7 @@ const posts = defineCollection({
         slug,
         lastModified,
         mdx,
-        readingTime: readingInfo.minutes,
+        readingTime: Math.round(readingInfo.minutes),
         words: readingInfo.words,
       };
     } catch (error) {
