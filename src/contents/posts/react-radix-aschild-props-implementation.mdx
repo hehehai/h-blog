@@ -1,0 +1,520 @@
+---
+title: React 如何实现 Radix asChild 一样的属性组件
+description: Web 端中文字体的加载速度一直是网页优化的重点, 中文庞大的字符集导致字体文件通常超过1M, 本篇文章将从提取子集、字体分包两个方面进行优化。
+tags: React,Radix,ShadcnUI
+badges: 实践
+publicAt: "2024-10-05"
+---
+
+Radix 组件 asChild 使用
+
+当下极其热门的 Shadcn UI 我想很多 React 开发者都已经听说过或者使用过了，它是基于 Radix Primitives 并继承了它的组合式组件风格，并且主题化，本地化（无沙盒）的 UI 库。如果你还没有尝试过 Shadcn UI，我强烈建议你要尽快开始了！
+
+Shadcn UI 中很多元组件都有一个 `asChild` 属性，可以接受一个布尔值，默认是 `false` ，当将该值设为 `true` 时，该组件的 `props`（属性&事件）会被解构及合并（`style`、`className`、`on` 事件）到它的子节点上（注意：当使用 `asChild` 时，该组件有且只能有一个子节点）
+
+```tsx
+import { Button } from "@/components/ui/button";
+
+export default function DemoPage() {
+  return (
+    <div>
+      <Button>hello</Button>
+    </div>
+  );
+}
+```
+
+渲染的 html
+
+```html
+<div><button data-slot="button" class="...">hello</button></div>
+```
+
+多个子节点
+
+```tsx
+<Button>
+  <span>hello</span>
+  <span>ok</span>
+</Button>
+```
+
+渲染 html
+
+```html
+<button data-slot="button" class="...">
+  <span>hello</span><span>ok</span>
+</button>
+```
+
+使用 `asChild`
+
+```tsx
+import { Button } from "@/components/ui/button";
+
+export default function DemoPage() {
+  return (
+    <div>
+      <Button asChild>hello</Button>
+    </div>
+  );
+}
+```
+
+渲染 html
+
+```html
+<div></div>
+```
+
+你会发现是空的，这是因为 `asChild` 会使用子节点，且该节点必须是 `Element` 如果不是的话，会返回 `null` 所以我们这个组件就渲染成 `null` 了
+
+使用节点
+
+```tsx
+<Button asChild>
+  <span>hello</span>
+</Button>
+```
+
+渲染 html
+
+```html
+<span data-slot="button" class="...">hello</span>
+```
+
+可以看到，这里将 `Button` 组件的属性都带到了子节点上
+
+我们来测试下 `className` 的处理
+
+```tsx
+<Button asChild className="demo-1">
+  <span className="demo-2">hello</span>
+</Button>
+```
+
+渲染 html
+
+```html
+<span data-slot="button" class="... demo-1 demo-2">hello</span>
+```
+
+可以看到，这里将 `Button` 和 `span` 的 `className` 合并了，再来试试 `style` 和 `on` 事件
+
+```tsx
+<Button
+  asChild
+  className="demo-1"
+  style={{ backgroundColor: "red", color: "red" }}
+  onClick={() => {
+    console.log("Button");
+  }}
+>
+  <span
+    className="demo-2"
+    style={{ backgroundColor: "blue" }}
+    onClick={() => {
+      console.log("span");
+    }}
+  >
+    hello
+  </span>
+</Button>
+```
+
+渲染 html
+
+```html
+<span
+  class="... demo-1 demo-2"
+  style="background-color:blue;color:red"
+  data-slot="button"
+  >hello</span
+>
+```
+
+可以看到 `style` 也做了 merge，点击按钮，控制台打印
+
+```txt
+span
+Button
+```
+
+这里两个 `click` 都触发了，`span 事件在前` `Button` 事件在后（类似冒泡规则）
+
+我们可以判断事件 `e.defaultPrevented` 来触发 `click`
+
+```tsx
+<Button
+  asChild
+  className="demo-1"
+  style={{ backgroundColor: "red", color: "red" }}
+  onClick={(e) => {
+    if (!e.defaultPrevented) {
+      console.log("Button");
+    }
+  }}
+>
+  <span
+    className="demo-2"
+    style={{ backgroundColor: "blue" }}
+    onClick={(e) => {
+      e.preventDefault();
+      console.log("span");
+    }}
+  >
+    hello
+  </span>
+</Button>
+```
+
+这里 `span` 元素的 `click` 首先触发，触发后会为 `event` 设置 `defaultPrevented` 为 `true` ，我们就可在后续的事件判断中实现其他逻辑了。
+
+在使用 `asChild` 的情况下，如果设置多个子节点会发生错误
+
+```tsx
+<Button asChild>
+  <span>hello</span>
+  <span>world</span>
+</Button>
+```
+
+控制台会出现错误
+
+```txt
+stitched-error.ts:23 Uncaught Error: React.Children.only expected to receive a single React element child.
+    at Button (button.tsx:51:3)
+    at DemoPage (apps_web_src_app_dem…d5c2ac2._.js:18:348)
+```
+
+这里内部使用 `React.Children.only` 判断，有且仅可以有一个子节点
+
+## 使用 Radix Primitives `Slot` 和 `Slottable`
+
+使用 `Slot` 实现 Shadcn UI `Button` 组件
+
+```tsx
+import { cn } from "@/lib/utils";
+import { Slot } from "@radix-ui/react-slot";
+import type React from "react";
+
+interface DemoButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
+  asChild?: boolean;
+}
+
+export function DemoButton({ asChild, className, ...props }: DemoButtonProps) {
+  const Comp = asChild ? Slot : "button";
+
+  return (
+    <Comp
+      className={cn(
+        "bg-slate-900 text-white px-1.5 py-0.5 rounded-sm",
+        className
+      )}
+      {...props}
+    />
+  );
+}
+```
+
+使用
+
+```tsx
+import { DemoButton } from "@/components/demo-button";
+
+export default function DemoPage() {
+  return (
+    <div>
+      <DemoButton asChild>
+        <span>hello</span>
+      </DemoButton>
+    </div>
+  );
+}
+```
+
+渲染 html
+
+```html
+<span class="bg-slate-900 text-white px-1.5 py-0.5 rounded-sm">hello</span>
+```
+
+如果我们想构建一个复杂点的组件呢，例如：
+
+我们要构建一个 `Badge` 组件，为了让这个组件更灵活，我们需要该组件支持设置状态，设置 icon，设置 `children`, 且不同的状态会有不同的 icon 和主题色，同样为了适应不同的场景，它需要 `asChild`
+
+```tsx
+<div className="inline-flex items-center gap-1.5 bg-green-500 px-3 py-1 rounded-lg text-white">
+  <CheckCircle className="size-5" />
+  <span>Complete</span>
+</div>
+```
+
+封装一个组件 `DemoBadge`
+
+```tsx
+import { cn } from "@/lib/utils";
+import { Slot, Slottable } from "@radix-ui/react-slot";
+import { CheckCircle, CircleAlert, Loader2 } from "lucide-react";
+import type React from "react";
+
+interface DemoBadgeProps extends React.ComponentProps<"div"> {
+  asChild?: boolean;
+  status?: "pending" | "success" | "fail";
+  icon?: React.ReactNode;
+}
+
+export function DemoBadge({
+  icon,
+  status,
+  asChild,
+  className,
+  children,
+  ...props
+}: DemoBadgeProps) {
+  const Comp = asChild ? Slot : "div";
+
+  const statusMap = {
+    pending: {
+      className: "bg-gray-100 text-slate-800",
+      icon: <Loader2 className="animate-spin size-5" />,
+    },
+    success: {
+      className: "bg-green-500 text-white",
+      icon: <CheckCircle className="size-5" />,
+    },
+    fail: {
+      className: "bg-red-500 text-white",
+      icon: <CircleAlert className="size-5" />,
+    },
+  };
+
+  return (
+    <Comp
+      className={cn(
+        "inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-accent",
+        status ? statusMap[status].className : "",
+        className
+      )}
+      {...props}
+    >
+      {icon ? icon : status ? statusMap[status]?.icon : null}
+      <Slottable>{children}</Slottable>
+    </Comp>
+  );
+}
+```
+
+直接使用
+
+```tsx
+<DemoBadge status="fail">123</DemoBadge>
+```
+
+渲染的 html
+
+```html
+<div
+  class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-red-500 text-white"
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    class="lucide lucide-circle-alert size-5"
+  >
+    <circle cx="12" cy="12" r="10"></circle>
+    <line x1="12" x2="12" y1="8" y2="12"></line>
+    <line x1="12" x2="12.01" y1="16" y2="16"></line></svg
+  >123
+</div>
+```
+
+使用 `asChild`
+
+```tsx
+<DemoBadge status="fail" asChild>
+  <button type="button">123</button>
+</DemoBadge>
+```
+
+渲染 html
+
+```html
+<button
+  type="button"
+  class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-red-500 text-white"
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    class="lucide lucide-circle-alert size-5"
+  >
+    <circle cx="12" cy="12" r="10"></circle>
+    <line x1="12" x2="12" y1="8" y2="12"></line>
+    <line x1="12" x2="12.01" y1="16" y2="16"></line></svg
+  >123
+</button>
+```
+
+我们这里组件的定义使用了 `Slottable` 来实现，该组件会执行
+
+> 把 asChild 的子组件 作为顶层组件，且把该组件的子组件放到 `Slottable` 的 `children` 位置
+
+## 实现 `Slot`
+
+```tsx
+import React from "react";
+
+type AnyProps = Record<string, any>;
+
+function mergeProps(slotProps: AnyProps, childProps: AnyProps) {
+  // all child props should override
+  const overrideProps = { ...childProps };
+
+  for (const propName in childProps) {
+    const slotPropValue = slotProps[propName];
+    const childPropValue = childProps[propName];
+
+    const isHandler = /^on[A-Z]/.test(propName);
+    if (isHandler) {
+      // if the handler exists on both, we compose them
+      if (slotPropValue && childPropValue) {
+        overrideProps[propName] = (...args: unknown[]) => {
+          const result = childPropValue(...args);
+          slotPropValue(...args);
+          return result;
+        };
+      }
+      // but if it exists only on the slot, we use only this one
+      else if (slotPropValue) {
+        overrideProps[propName] = slotPropValue;
+      }
+    }
+    // if it's `style`, we merge them
+    else if (propName === "style") {
+      overrideProps[propName] = { ...slotPropValue, ...childPropValue };
+    } else if (propName === "className") {
+      overrideProps[propName] = [slotPropValue, childPropValue]
+        .filter(Boolean)
+        .join(" ");
+    }
+  }
+
+  return { ...slotProps, ...overrideProps };
+}
+
+interface UISlotProps extends React.HTMLAttributes<HTMLElement> {}
+
+export default function UISlot({
+  children,
+  className,
+  style,
+  ...slotProps
+}: UISlotProps) {
+  if (React.isValidElement(children)) {
+    const props = mergeProps(slotProps, children.props as AnyProps);
+    return React.cloneElement(children, props);
+  }
+
+  if (React.Children.count(children) > 1) {
+    React.Children.only(null);
+  }
+
+  return null;
+}
+```
+
+- 判断子节点必须是一个元素
+- 合并属性，特殊处理 `on` 事件，`className`, `style`
+- 返回合并属性后的 `clone` 元素
+
+## 实现 `Slottable`
+
+为了让 `Slot` 可以识别到 `Slottable` 我们需要为 `Slottable` Node 设置一个唯一值做为标识，我们这里使用 `Symbol`
+
+```tsx
+const SLOTTABLE_IDENTIFIER = Symbol("radix.slottable");
+```
+
+```tsx
+interface SlottableProps {
+  children: React.ReactNode;
+}
+
+export function Slottable({ children }: SlottableProps) {
+  return <>children</>;
+}
+
+Slottable.__radixId = SLOTTABLE_IDENTIFIER;
+
+export function isSlottable(
+  element: React.ReactNode
+): element is React.ReactElement<SlottableProps, typeof Slottable> {
+  return (
+    React.isValidElement(element) &&
+    typeof element.type === "function" &&
+    "__radixId" in element.type &&
+    element.type.__radixId === SLOTTABLE_IDENTIFIER
+  );
+}
+```
+
+在 `Slot` 组件中增加判断
+
+```tsx
+export default function UISlot({ children, ...slotProps }: UISlotProps) {
+  const childrenArray = React.Children.toArray(children);
+  const slottable = childrenArray.find(isSlottable);
+
+  if (slottable) {
+    const newElement = slottable.props.children;
+
+    const newChildren = childrenArray.map((child) => {
+      if (child === slottable) {
+        if (React.Children.count(newElement) > 1) {
+          return React.Children.only(null);
+        }
+        return React.isValidElement(newElement)
+          ? (newElement.props as { children: React.ReactNode }).children
+          : null;
+      }
+      return child;
+    });
+
+    return (
+      <UISlot {...slotProps}>
+        {React.isValidElement(newElement)
+          ? React.cloneElement(newElement, undefined, newChildren)
+          : null}
+      </UISlot>
+    );
+  }
+
+  if (React.isValidElement(children)) {
+    const props = mergeProps(slotProps, children.props as AnyProps);
+    return React.cloneElement(children, props);
+  }
+
+  if (React.Children.count(children) > 1) {
+    return React.Children.only(null);
+  }
+
+  return null;
+}
+```
+
+接着我们将 `DemoBadge` 组件的 `Slot` 和 `Slottable` 替换为我们自己写的，来测试下 `DemoBadge` 的使用效果
