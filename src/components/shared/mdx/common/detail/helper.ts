@@ -13,9 +13,21 @@ export const findSummary = (children: ReactNode): [ReactNode, ReactNode[]] => {
   const restChildren: ReactNode[] = [];
 
   Children.forEach(children, (child, index) => {
-    if (child && (child as ReactElement).type === Summary) {
-      summary ||= child;
-      return;
+    if (child && typeof child === 'object' && 'type' in child) {
+      const type = (child as ReactElement).type as any;
+      // 处理 React.lazy 组件
+      if (type?.$$typeof === Symbol.for('react.lazy')) {
+        const lazyValue = type._payload?.value;
+        if (lazyValue?.name === 'Summary') {
+          summary ||= child;
+          return;
+        }
+      }
+      // 处理普通组件
+      if (type === Summary) {
+        summary ||= child;
+        return;
+      }
     }
 
     let c: ReactNode = child;
