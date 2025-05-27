@@ -6,11 +6,11 @@ badges: 实践
 publicAt: "2024-10-05"
 ---
 
-Radix 组件 asChild 使用
+## Radix 组件 `asChild` 使用
 
-当下极其热门的 Shadcn UI 我想很多 React 开发者都已经听说过或者使用过了，它是基于 Radix Primitives 并继承了它的组合式组件风格，并且主题化，本地化（无沙盒）的 UI 库。如果你还没有尝试过 Shadcn UI，我强烈建议你要尽快开始了！
+当下极其热门的 [Shadcn UI](https://ui.shadcn.com/) 我想很多 [React](https://react.dev/) 开发者都已经听说过或者使用过了，它是基于 [Radix Primitives](https://www.radix-ui.com/primitives) 并继承了它的组合式组件风格，并且主题化，本地化（无沙盒）的 UI 库。如果你还没有尝试过 [Shadcn UI](https://ui.shadcn.com/)，我强烈建议你要尽快开始了！
 
-Shadcn UI 中很多元组件都有一个 `asChild` 属性，可以接受一个布尔值，默认是 `false` ，当将该值设为 `true` 时，该组件的 `props`（属性&事件）会被解构及合并（`style`、`className`、`on` 事件）到它的子节点上（注意：当使用 `asChild` 时，该组件有且只能有一个子节点）
+[Shadcn UI](https://ui.shadcn.com/) 中很多元组件都有一个 `asChild` 属性，可以接受一个布尔值，默认是 `false` ，当将该值设为 `true` 时，该组件的 `props`（属性&事件）会被解构及合并（`style`、`className`、`on` 事件）到它的子节点上（注意：当使用 `asChild` 时，该组件有且只能有一个子节点）
 
 ```tsx
 import { Button } from "@/components/ui/button";
@@ -101,26 +101,7 @@ export default function DemoPage() {
 
 可以看到，这里将 `Button` 和 `span` 的 `className` 合并了，再来试试 `style` 和 `on` 事件
 
-```tsx
-<Button
-  asChild
-  className="demo-1"
-  style={{ backgroundColor: "red", color: "red" }}
-  onClick={() => {
-    console.log("Button");
-  }}
->
-  <span
-    className="demo-2"
-    style={{ backgroundColor: "blue" }}
-    onClick={() => {
-      console.log("span");
-    }}
-  >
-    hello
-  </span>
-</Button>
-```
+<Demo1Code />
 
 渲染 html
 
@@ -144,29 +125,7 @@ Button
 
 我们可以判断事件 `e.defaultPrevented` 来触发 `click`
 
-```tsx
-<Button
-  asChild
-  className="demo-1"
-  style={{ backgroundColor: "red", color: "red" }}
-  onClick={(e) => {
-    if (!e.defaultPrevented) {
-      console.log("Button");
-    }
-  }}
->
-  <span
-    className="demo-2"
-    style={{ backgroundColor: "blue" }}
-    onClick={(e) => {
-      e.preventDefault();
-      console.log("span");
-    }}
-  >
-    hello
-  </span>
-</Button>
-```
+<Demo2Code />
 
 这里 `span` 元素的 `click` 首先触发，触发后会为 `event` 设置 `defaultPrevented` 为 `true` ，我们就可在后续的事件判断中实现其他逻辑了。
 
@@ -191,7 +150,7 @@ stitched-error.ts:23 Uncaught Error: React.Children.only expected to receive a s
 
 ## 使用 Radix Primitives `Slot` 和 `Slottable`
 
-使用 `Slot` 实现 Shadcn UI `Button` 组件
+使用 [`Slot`](https://www.radix-ui.com/primitives/docs/utilities/slot) 实现 Shadcn UI `Button` 组件
 
 ```tsx
 import { cn } from "@/lib/utils";
@@ -217,21 +176,7 @@ export function DemoButton({ asChild, className, ...props }: DemoButtonProps) {
 }
 ```
 
-使用
-
-```tsx
-import { DemoButton } from "@/components/demo-button";
-
-export default function DemoPage() {
-  return (
-    <div>
-      <DemoButton asChild>
-        <span>hello</span>
-      </DemoButton>
-    </div>
-  );
-}
-```
+<DemoSlot />
 
 渲染 html
 
@@ -305,11 +250,7 @@ export function DemoBadge({
 }
 ```
 
-直接使用
-
-```tsx
-<DemoBadge status="fail">123</DemoBadge>
-```
+<DemoBadge type="1" />
 
 渲染的 html
 
@@ -338,11 +279,7 @@ export function DemoBadge({
 
 使用 `asChild`
 
-```tsx
-<DemoBadge status="fail" asChild>
-  <button type="button">123</button>
-</DemoBadge>
-```
+<DemoBadge type="2" />
 
 渲染 html
 
@@ -518,3 +455,19 @@ export default function UISlot({ children, ...slotProps }: UISlotProps) {
 ```
 
 接着我们将 `DemoBadge` 组件的 `Slot` 和 `Slottable` 替换为我们自己写的，来测试下 `DemoBadge` 的使用效果
+
+<DemoCustom />
+
+## 参考
+
+- [Implement Radix's asChild pattern in React](https://www.jacobparis.com/content/react-as-child)
+- [Radix Primitives Slot](https://www.radix-ui.com/primitives/docs/utilities/slot)
+- [Shadcn UI Button](https://ui.shadcn.com/docs/components/button)
+- [DeepWiki Radix UI Primitives](https://deepwiki.com/radix-ui/primitives)
+
+## Q&A
+
+<Iframe
+  title="Slot 是如何实现的，如何使用，为什么会这么实现?"
+  src="https://deepwiki.com/search/slot_d3c3f200-450a-42da-8e18-bd25c1564b66"
+/>

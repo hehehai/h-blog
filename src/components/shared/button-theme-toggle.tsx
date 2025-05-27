@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { AnimatePresence, type Variants, motion } from 'motion/react';
-import { useTheme } from 'next-themes';
-import { type MouseEvent, useEffect, useState } from 'react';
-import ButtonFadeStyle from './button-fade-style';
-import { IconMoon, IconSun } from './icons';
+import { useTheme } from "next-themes";
+import { type MouseEvent, useEffect, useState } from "react";
+import ButtonFadeStyle from "./button-fade-style";
+import { IconMoon, IconSun } from "./icons";
+import { AnimatePresence, motion, Variants } from "motion/react";
 
 const themeVariants: Variants = {
   initial: (isMount: boolean) => ({
@@ -27,17 +27,19 @@ export default function ButtonThemeToggle() {
 
   const handleToggleTheme = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
+    setTheme(resolvedTheme === "dark" ? "light" : "dark");
   };
 
   useEffect(() => {
     setIsMount(true);
   }, []);
 
+  if (typeof window === "undefined") return null;
+
   return (
     <ButtonFadeStyle onClick={handleToggleTheme}>
       <AnimatePresence mode="wait">
-        {resolvedTheme === 'dark' ? (
+        {resolvedTheme === "dark" ? (
           <motion.div
             key="sun"
             className="text-2xl"
@@ -46,7 +48,7 @@ export default function ButtonThemeToggle() {
             animate="animate"
             exit="exit"
             custom={isMount}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
           >
             <IconSun />
           </motion.div>
@@ -59,7 +61,7 @@ export default function ButtonThemeToggle() {
             animate="animate"
             exit="exit"
             custom={isMount}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
           >
             <IconMoon />
           </motion.div>

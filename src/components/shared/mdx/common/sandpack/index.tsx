@@ -4,15 +4,22 @@ import { SandpackHolder } from './holder';
 
 const SandpackWrapper = lazy(() => import('./wrapper'));
 
-const SandpackBlock = memo(function Sandpack(props: SandpackProps) {
+const SandpackBlock = memo(function Sandpack({
+  options,
+  ...props
+}: SandpackProps) {
+  const { externalResources, ...rest } = options || {};
   return (
     <Suspense fallback={<SandpackHolder code={'Hello World!'} />}>
       <SandpackWrapper
         {...props}
         options={{
+          rtl: true,
           externalResources: [
+            ...(externalResources || []),
             'https://unpkg.com/@tailwindcss/ui/dist/tailwind-ui.min.css',
           ],
+          ...rest,
         }}
       />
     </Suspense>
