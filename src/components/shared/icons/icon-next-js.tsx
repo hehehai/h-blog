@@ -1,13 +1,13 @@
-import type { SVGProps } from 'react';
+import type { SVGProps } from "react";
 
 export default function NextJSIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
+      height="1em"
+      preserveAspectRatio="xMidYMid"
       viewBox="0 0 256 256"
       width="1em"
-      height="1em"
       xmlns="http://www.w3.org/2000/svg"
-      preserveAspectRatio="xMidYMid"
       {...props}
     >
       <title>NextJS</title>
@@ -20,18 +20,18 @@ export default function NextJSIcon(props: SVGProps<SVGSVGElement>) {
           <stop offset="0%" stopColor="#FFF" />
           <stop offset="100%" stopColor="#FFF" stopOpacity="0" />
         </linearGradient>
-        <circle id="a" cx="128" cy="128" r="128" />
+        <circle cx="128" cy="128" id="a" r="128" />
       </defs>
-      <mask id="b" fill="#fff">
+      <mask fill="#fff" id="b">
         <use xlinkHref="#a" />
       </mask>
       <g mask="url(#b)">
         <circle cx="128" cy="128" r="128" />
         <path
-          fill="url(#c)"
           d="M212.63 224.03 98.33 76.8H76.8v102.36h17.23V98.68L199.1 234.45a128.43 128.43 0 0 0 13.52-10.42Z"
+          fill="url(#c)"
         />
-        <path fill="url(#d)" d="M163.56 76.8h17.06v102.4h-17.06z" />
+        <path d="M163.56 76.8h17.06v102.4h-17.06z" fill="url(#d)" />
       </g>
     </svg>
   );

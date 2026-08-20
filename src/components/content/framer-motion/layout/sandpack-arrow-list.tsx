@@ -1,9 +1,10 @@
-'use client';
+"use client";
 
-import { useTheme } from '@maximeheckel/design-system';
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
+import { useTainwildTheme } from "@/components/lib/tainwild";
+
 const SandpackBlock = dynamic(
-  () => import('../../../shared/mdx/common/sandpack')
+  () => import("../../../shared/mdx/common/sandpack")
 );
 
 const ComponentsCode = `import { styled } from '@stitches/react';
@@ -58,14 +59,14 @@ const SelectableList = () => {
     <div className="flex items-center justify-center h-screen">
       <List>
         {ITEMS.map(item => (
-          <Item 
-            onClick={() => setSelected(item)}  
-            onKeyDown={(event: { key: string }) => event.key === 'Enter' ? setSelected(item) : null} 
+          <Item
+            onClick={() => setSelected(item)}
+            onKeyDown={(event: { key: string }) => event.key === 'Enter' ? setSelected(item) : null}
             tabIndex={0}
           >
-            
+
             <div>Item {item}</div>
-            {item === selected ? 
+            {item === selected ?
               <motion.div layoutId="arrow">
                 <ArrowIcon
                   style={{
@@ -107,29 +108,29 @@ canvas {
 }`;
 
 const SandpackArrowList = () => {
-  const { dark } = useTheme();
+  const { dark } = useTainwildTheme();
 
   return (
     <SandpackBlock
-      template="react"
       customSetup={{
         dependencies: {
-          'framer-motion': '6.2.4',
-          '@stitches/react': '1.2.5',
+          "@stitches/react": "1.2.5",
+          "framer-motion": "6.2.4",
         },
       }}
       files={{
-        '/App.js': {
+        "/App.js": {
           code: AppCode,
         },
-        '/Components.js': {
+        "/Components.js": {
           code: ComponentsCode,
         },
-        '/scene.css': {
+        "/scene.css": {
           code: dark ? SceneCSSDark : SceneCSSLight,
           hidden: true,
         },
       }}
+      template="react"
     />
   );
 };

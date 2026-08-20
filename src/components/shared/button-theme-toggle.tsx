@@ -1,31 +1,31 @@
 "use client";
 
-import { useTheme } from "next-themes";
+import { AnimatePresence, motion, type Variants } from "motion/react";
 import { type MouseEvent, useEffect, useState } from "react";
 import ButtonFadeStyle from "./button-fade-style";
 import { IconMoon, IconSun } from "./icons";
-import { AnimatePresence, motion, Variants } from "motion/react";
+import { useTheme } from "./theme-provider";
 
 const themeVariants: Variants = {
-  initial: (isMount: boolean) => ({
-    x: isMount ? 10 : 0,
-    opacity: isMount ? 0 : 1,
-  }),
   animate: {
-    x: 0,
     opacity: 1,
+    x: 0,
   },
   exit: {
-    x: -10,
     opacity: 0,
+    x: -10,
   },
+  initial: (isMount: boolean) => ({
+    opacity: isMount ? 0 : 1,
+    x: isMount ? 10 : 0,
+  }),
 };
 
 export default function ButtonThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
   const [isMount, setIsMount] = useState(false);
 
-  const handleToggleTheme = (e: MouseEvent<HTMLAnchorElement>) => {
+  const handleToggleTheme = (e: MouseEvent<HTMLElement>) => {
     e.preventDefault();
     setTheme(resolvedTheme === "dark" ? "light" : "dark");
   };
@@ -34,34 +34,36 @@ export default function ButtonThemeToggle() {
     setIsMount(true);
   }, []);
 
-  if (typeof window === "undefined") return null;
+  if (!isMount) {
+    return null;
+  }
 
   return (
     <ButtonFadeStyle onClick={handleToggleTheme}>
       <AnimatePresence mode="wait">
         {resolvedTheme === "dark" ? (
           <motion.div
-            key="sun"
-            className="text-2xl"
-            variants={themeVariants}
-            initial="initial"
             animate="animate"
-            exit="exit"
+            className="text-2xl"
             custom={isMount}
+            exit="exit"
+            initial="initial"
+            key="sun"
             transition={{ duration: 0.3, ease: "easeInOut" }}
+            variants={themeVariants}
           >
             <IconSun />
           </motion.div>
         ) : (
           <motion.div
-            key="moon"
-            className="text-2xl"
-            variants={themeVariants}
-            initial="initial"
             animate="animate"
-            exit="exit"
+            className="text-2xl"
             custom={isMount}
+            exit="exit"
+            initial="initial"
+            key="moon"
             transition={{ duration: 0.3, ease: "easeInOut" }}
+            variants={themeVariants}
           >
             <IconMoon />
           </motion.div>

@@ -1,37 +1,37 @@
-import type { MetadataRoute } from 'next';
+import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Hehehai - Blog',
-    short_name: 'Hehehai',
+    background_color: "#FFFFFF",
     description:
-      'Hehehai @一块木头 - 全栈开发，专注于前端应用程序和和用户界面设计.',
+      "Hehehai @一块木头 - 全栈开发，专注于前端应用程序和和用户界面设计.",
+    display: "standalone",
     icons: [
       {
-        src: '/icons/icon_x96.png',
-        sizes: '96x96',
-        type: 'image/png',
+        sizes: "96x96",
+        src: "/icons/icon_x96.png",
+        type: "image/png",
       },
       {
-        src: '/icons/icon_x128.png',
-        sizes: '128x128',
-        type: 'image/png',
+        sizes: "128x128",
+        src: "/icons/icon_x128.png",
+        type: "image/png",
       },
       {
-        src: '/icons/icon_x192.png',
-        sizes: '192x192',
-        type: 'image/png',
+        sizes: "192x192",
+        src: "/icons/icon_x192.png",
+        type: "image/png",
       },
       {
-        src: '/icons/icon_x512.png',
-        sizes: '512x512',
-        type: 'image/png',
+        sizes: "512x512",
+        src: "/icons/icon_x512.png",
+        type: "image/png",
       },
     ],
-    theme_color: '#000000',
-    background_color: '#FFFFFF',
-    start_url: '/',
-    display: 'standalone',
-    orientation: 'portrait',
+    name: "Hehehai - Blog",
+    orientation: "portrait",
+    short_name: "Hehehai",
+    start_url: "/",
+    theme_color: "#000000",
   };
 }

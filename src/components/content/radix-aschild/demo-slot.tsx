@@ -32,8 +32,6 @@ export default function App() {
 export default function DemoSlot() {
   return (
     <SandpackBlock
-      template="react-ts"
-      options={{ showConsole: true }}
       customSetup={{
         dependencies: {
           "@radix-ui/react-slot": "^1.2.0",
@@ -55,6 +53,8 @@ export default function DemoSlot() {
           code: UtilsCode,
         },
       }}
+      options={{ showConsole: true }}
+      template="react-ts"
     />
   );
 }

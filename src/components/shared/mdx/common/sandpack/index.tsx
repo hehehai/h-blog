@@ -1,8 +1,8 @@
-import type { SandpackProps } from '@codesandbox/sandpack-react';
-import { Suspense, lazy, memo } from 'react';
-import { SandpackHolder } from './holder';
+import type { SandpackProps } from "@codesandbox/sandpack-react";
+import { lazy, memo, Suspense } from "react";
+import { SandpackHolder } from "./holder";
 
-const SandpackWrapper = lazy(() => import('./wrapper'));
+const SandpackWrapper = lazy(() => import("./wrapper"));
 
 const SandpackBlock = memo(function Sandpack({
   options,
@@ -10,15 +10,15 @@ const SandpackBlock = memo(function Sandpack({
 }: SandpackProps) {
   const { externalResources, ...rest } = options || {};
   return (
-    <Suspense fallback={<SandpackHolder code={'Hello World!'} />}>
+    <Suspense fallback={<SandpackHolder code={"Hello World!"} />}>
       <SandpackWrapper
         {...props}
         options={{
-          rtl: true,
           externalResources: [
             ...(externalResources || []),
-            'https://unpkg.com/@tailwindcss/ui/dist/tailwind-ui.min.css',
+            "https://unpkg.com/@tailwindcss/ui/dist/tailwind-ui.min.css",
           ],
+          rtl: true,
           ...rest,
         }}
       />

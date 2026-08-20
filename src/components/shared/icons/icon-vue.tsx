@@ -1,13 +1,13 @@
-import type { SVGProps } from 'react';
+import type { SVGProps } from "react";
 
 export default function VueIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
+      height="1em"
+      preserveAspectRatio="xMidYMid"
       viewBox="0 0 256 221"
       width="1em"
-      height="1em"
       xmlns="http://www.w3.org/2000/svg"
-      preserveAspectRatio="xMidYMid"
       {...props}
     >
       <title>Vue</title>

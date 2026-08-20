@@ -1,10 +1,10 @@
-import exampleComponents from '@/components/content';
-import MDXContent from '@/components/shared/mdx';
-import PostTags from '@/components/shared/post/post-tags';
-import { getPostBySlug } from '@/functions/post';
-import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
-import { cache } from 'react';
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { cache } from "react";
+import exampleComponents from "@/components/content";
+import MDXContent from "@/components/shared/mdx";
+import PostTags from "@/components/shared/post/post-tags";
+import { getPostBySlug } from "@/functions/post";
 
 const getPost = cache(getPostBySlug);
 
@@ -20,13 +20,13 @@ export async function generateMetadata({
 
   if (!post) {
     return {
-      title: '文章不存在',
+      title: "文章不存在",
     };
   }
 
   return {
-    title: post.title,
     description: post.description,
+    title: post.title,
   };
 }
 
@@ -45,7 +45,7 @@ export default async function PostPage({ params }: PostPageProps) {
           {post.title}
         </div>
         <div className="justify-content mt-1.5 flex space-x-2 text-slate-700 text-sm dark:text-gray-200">
-          <PostTags title="标签:" tags={post.tags} isSimple />
+          <PostTags isSimple tags={post.tags} title="标签:" />
         </div>
         <div className="justify-content mt-1.5 flex space-x-2 text-slate-700 text-sm dark:text-gray-200">
           <PostTags tags={post.badges} />

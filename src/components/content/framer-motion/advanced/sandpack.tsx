@@ -1,11 +1,11 @@
-import dynamic from 'next/dynamic';
-import snippet1 from './snippet1';
-import snippet2 from './snippet2';
-import snippet3 from './snippet3';
-import snippet4 from './snippet4';
+import dynamic from "next/dynamic";
+import snippet1 from "./snippet1";
+import snippet2 from "./snippet2";
+import snippet3 from "./snippet3";
+import snippet4 from "./snippet4";
 
 const SandpackBlock = dynamic(
-  () => import('../../../shared/mdx/common/sandpack')
+  () => import("../../../shared/mdx/common/sandpack")
 );
 
 const SceneCSSDark = `
@@ -68,34 +68,32 @@ const SNIPPETS = {
   snippet4,
 };
 
-const GuideToFramerMotionSandpack = ({ snippet }: { snippet: string }) => {
-  return (
-    <SandpackBlock
-      options={{
-        autorun: true,
-      }}
-      template="react"
-      customSetup={{
-        dependencies: {
-          'framer-motion': '6.2.4',
-          '@stitches/react': '^1.2.7',
-        },
-      }}
-      files={{
-        '/App.js': {
-          code: SNIPPETS[snippet as keyof typeof SNIPPETS],
-        },
-        '/Pill.js': {
-          code: PillCode,
-          hidden: true,
-        },
-        '/scene.css': {
-          code: SceneCSSDark,
-          hidden: true,
-        },
-      }}
-    />
-  );
-};
+const GuideToFramerMotionSandpack = ({ snippet }: { snippet: string }) => (
+  <SandpackBlock
+    customSetup={{
+      dependencies: {
+        "@stitches/react": "^1.2.7",
+        "framer-motion": "6.2.4",
+      },
+    }}
+    files={{
+      "/App.js": {
+        code: SNIPPETS[snippet as keyof typeof SNIPPETS],
+      },
+      "/Pill.js": {
+        code: PillCode,
+        hidden: true,
+      },
+      "/scene.css": {
+        code: SceneCSSDark,
+        hidden: true,
+      },
+    }}
+    options={{
+      autorun: true,
+    }}
+    template="react"
+  />
+);
 
 export default GuideToFramerMotionSandpack;

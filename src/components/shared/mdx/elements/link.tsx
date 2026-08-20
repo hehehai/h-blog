@@ -1,7 +1,7 @@
-import { cn } from '@/lib/utils';
-import { Link } from 'next-view-transitions';
-import type { HTMLAttributes } from 'react';
-import { IconJumpLink } from '../../icons';
+import Link from "next/link";
+import type { HTMLAttributes } from "react";
+import { cn } from "@/lib/utils";
+import { IconJumpLink } from "../../icons";
 
 interface ElementLinkProps extends HTMLAttributes<HTMLAnchorElement> {
   href: string;
@@ -12,13 +12,13 @@ export default function ElementLink({
   className,
   ...props
 }: ElementLinkProps) {
-  const isInternalLink = href && (href.startsWith('/') || href.startsWith('#'));
+  const isInternalLink = href && (href.startsWith("/") || href.startsWith("#"));
 
   if (isInternalLink) {
     return (
       <Link
+        className={cn("underline-offset-4", className)}
         href={href}
-        className={cn('underline-offset-4', className)}
         {...props}
       >
         {props.children}
@@ -29,11 +29,11 @@ export default function ElementLink({
   return (
     <a
       className={cn(
-        'group inline cursor-pointer items-center space-x-1 break-all underline-offset-4',
+        "group inline cursor-pointer items-center space-x-1 break-all underline-offset-4",
         className
       )}
-      target="_blank"
       rel="noopener noreferrer nofollow"
+      target="_blank"
       {...props}
     >
       <span>{props.children}</span>

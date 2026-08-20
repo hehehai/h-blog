@@ -42,9 +42,7 @@ export default function DemoPage() {
 渲染 html
 
 ```html
-<button data-slot="button" class="...">
-  <span>hello</span><span>ok</span>
-</button>
+<button data-slot="button" class="..."><span>hello</span><span>ok</span></button>
 ```
 
 使用 `asChild`
@@ -106,10 +104,7 @@ export default function DemoPage() {
 渲染 html
 
 ```html
-<span
-  class="... demo-1 demo-2"
-  style="background-color:blue;color:red"
-  data-slot="button"
+<span class="... demo-1 demo-2" style="background-color:blue;color:red" data-slot="button"
   >hello</span
 >
 ```
@@ -166,10 +161,7 @@ export function DemoButton({ asChild, className, ...props }: DemoButtonProps) {
 
   return (
     <Comp
-      className={cn(
-        "bg-slate-900 text-white px-1.5 py-0.5 rounded-sm",
-        className
-      )}
+      className={cn("bg-slate-900 text-white px-1.5 py-0.5 rounded-sm", className)}
       {...props}
     />
   );
@@ -239,7 +231,7 @@ export function DemoBadge({
       className={cn(
         "inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-accent",
         status ? statusMap[status].className : "",
-        className
+        className,
       )}
       {...props}
     >
@@ -255,9 +247,7 @@ export function DemoBadge({
 渲染的 html
 
 ```html
-<div
-  class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-red-500 text-white"
->
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-red-500 text-white">
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
@@ -345,9 +335,7 @@ function mergeProps(slotProps: AnyProps, childProps: AnyProps) {
     else if (propName === "style") {
       overrideProps[propName] = { ...slotPropValue, ...childPropValue };
     } else if (propName === "className") {
-      overrideProps[propName] = [slotPropValue, childPropValue]
-        .filter(Boolean)
-        .join(" ");
+      overrideProps[propName] = [slotPropValue, childPropValue].filter(Boolean).join(" ");
     }
   }
 
@@ -356,12 +344,7 @@ function mergeProps(slotProps: AnyProps, childProps: AnyProps) {
 
 interface UISlotProps extends React.HTMLAttributes<HTMLElement> {}
 
-export default function UISlot({
-  children,
-  className,
-  style,
-  ...slotProps
-}: UISlotProps) {
+export default function UISlot({ children, className, style, ...slotProps }: UISlotProps) {
   if (React.isValidElement(children)) {
     const props = mergeProps(slotProps, children.props as AnyProps);
     return React.cloneElement(children, props);
@@ -399,7 +382,7 @@ export function Slottable({ children }: SlottableProps) {
 Slottable.__radixId = SLOTTABLE_IDENTIFIER;
 
 export function isSlottable(
-  element: React.ReactNode
+  element: React.ReactNode,
 ): element is React.ReactElement<SlottableProps, typeof Slottable> {
   return (
     React.isValidElement(element) &&
@@ -464,10 +447,3 @@ export default function UISlot({ children, ...slotProps }: UISlotProps) {
 - [Radix Primitives Slot](https://www.radix-ui.com/primitives/docs/utilities/slot)
 - [Shadcn UI Button](https://ui.shadcn.com/docs/components/button)
 - [DeepWiki Radix UI Primitives](https://deepwiki.com/radix-ui/primitives)
-
-## Q&A
-
-<Iframe
-  title="Slot 是如何实现的，如何使用，为什么会这么实现?"
-  src="https://deepwiki.com/search/slot_d3c3f200-450a-42da-8e18-bd25c1564b66"
-/>

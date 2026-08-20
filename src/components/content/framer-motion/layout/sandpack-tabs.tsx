@@ -1,9 +1,10 @@
-'use client';
+"use client";
 
-import { useTheme } from '@maximeheckel/design-system';
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
+import { useTainwildTheme } from "@/components/lib/tainwild";
+
 const SandpackBlock = dynamic(
-  () => import('../../../shared/mdx/common/sandpack')
+  () => import("../../../shared/mdx/common/sandpack")
 );
 
 const AppCode = `import { motion } from 'framer-motion';
@@ -89,7 +90,7 @@ export const Wrapper = styled('ul', {
     border: '1px solid #2B303B',
     gap: '32px',
 });
-    
+
 export const Tab = styled('li', {
     position: 'relative',
     listStyle: 'none',
@@ -97,7 +98,7 @@ export const Tab = styled('li', {
     width: '50px',
     height: '30px',
     outline: 'none',
-    
+
     span: {
       position: 'absolute',
       left: '4px',
@@ -134,29 +135,29 @@ canvas {
 }`;
 
 const SandpackTabs = () => {
-  const { dark } = useTheme();
+  const { dark } = useTainwildTheme();
 
   return (
     <SandpackBlock
-      template="react"
       customSetup={{
         dependencies: {
-          'framer-motion': '6.2.4',
-          '@stitches/react': '1.2.5',
+          "@stitches/react": "1.2.5",
+          "framer-motion": "6.2.4",
         },
       }}
       files={{
-        '/App.js': {
+        "/App.js": {
           code: AppCode,
         },
-        '/Components.js': {
+        "/Components.js": {
           code: ComponentsCode,
         },
-        '/scene.css': {
+        "/scene.css": {
           code: dark ? SceneCSSDark : SceneCSSLight,
           hidden: true,
         },
       }}
+      template="react"
     />
   );
 };

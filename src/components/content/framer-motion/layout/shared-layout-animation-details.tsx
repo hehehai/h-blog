@@ -1,15 +1,19 @@
-'use client';
+"use client";
 
-import { Badge } from '@/components/ui/badge';
-import { Card, CardHeader } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Slider } from '@/components/ui/slider';
-import { Box, Flex, Icon } from '@maximeheckel/design-system';
-import { motion } from 'motion/react';
-import React from 'react';
+import { motion } from "motion/react";
+import React from "react";
+import {
+  TainwildBox as Box,
+  TainwildFlex as Flex,
+  Icon,
+} from "@/components/lib/tainwild";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardHeader } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
 
 const ITEMS = [1, 2, 3];
-const COLORS = ['var(--accent)', 'var(--pink-500)', 'var(--orange-900)'];
+const COLORS = ["var(--accent)", "var(--pink-500)", "var(--orange-900)"];
 
 const SharedLayoutAnimationDetails = () => {
   const [selected, setSelected] = React.useState(1);
@@ -22,24 +26,20 @@ const SharedLayoutAnimationDetails = () => {
         <div className="flex gap-4">
           {ITEMS.map((item, index) => (
             <Flex
-              key={item}
+              css={{
+                cursor: "pointer",
+              }}
               direction="column"
               justifyContent="space-between"
-              css={{
-                cursor: 'pointer',
-                '&:focus': { outline: 'none' },
-                '&:focus-visible': {
-                  outline: '1px solid var(--accent)',
-                },
-              }}
+              key={item}
               onClick={() => setSelected(item)}
               tabIndex={0}
             >
-              <Box css={{ height: '24px' }}>Item {item}</Box>
+              <Box css={{ height: "24px" }}>Item {item}</Box>
               {item === selected ? (
                 <Box
                   as={motion.div}
-                  css={{ height: '24px' }}
+                  css={{ height: "24px" }}
                   layoutId="arrow"
                   transition={{
                     layout: {
@@ -50,7 +50,7 @@ const SharedLayoutAnimationDetails = () => {
                   <Icon.Arrow
                     style={{
                       color: COLORS[index],
-                      transform: 'rotate(-90deg)',
+                      transform: "rotate(-90deg)",
                     }}
                   />
                 </Box>
@@ -64,11 +64,11 @@ const SharedLayoutAnimationDetails = () => {
               转场持续时间: <Badge>{duration}s</Badge>
             </Label>
             <Slider
-              value={[duration]}
-              min={0.2}
-              step={0.1}
               max={2}
+              min={0.2}
               onValueChange={([val]) => setDuration(val)}
+              step={0.1}
+              value={[duration]}
             />
           </div>
         </div>

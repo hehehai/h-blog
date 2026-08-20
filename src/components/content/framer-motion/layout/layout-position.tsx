@@ -1,30 +1,34 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { Card, CardHeader } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-
+import { motion } from "motion/react";
+import React from "react";
+import {
+  TainwildBox as Box,
+  TainwildFlex as Flex,
+  Icon,
+  styled,
+} from "@/components/lib/tainwild";
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip';
-import { Box, Flex, Icon, styled } from '@maximeheckel/design-system';
-import { motion } from 'motion/react';
-import React from 'react';
+} from "@/components/ui/tooltip";
 
 const IconButton = styled(motion.button, {
-  MozAppearance: 'none',
-  WebkitAppearance: 'none',
-  background: 'transparent',
-  color: 'inherit',
-  border: 'none',
-  cursor: 'pointer',
-  display: 'flex',
-  alignItems: 'center',
-  padding: '0',
+  alignItems: "center",
+  background: "transparent",
+  border: "none",
+  color: "inherit",
+  cursor: "pointer",
+  display: "flex",
+  MozAppearance: "none",
+  padding: "0",
+  WebkitAppearance: "none",
 });
 
 const ITEMS = [1, 2, 3];
@@ -37,7 +41,7 @@ const LayoutPosition = () => {
     ? `<motion.div layout>
   <Label variant="success">
     <motion.div
-      style={{ 
+      style={{
         width: '100%',
         display: 'flex',
         justifyContent: 'start',
@@ -52,7 +56,7 @@ const LayoutPosition = () => {
     : `<motion.div layout>
   <Label variant="success">
     <div
-      style={{ 
+      style={{
         width: '100%',
         display: 'flex',
         justifyContent: 'start',
@@ -73,19 +77,19 @@ const LayoutPosition = () => {
             <Box as={motion.div} css={{ flexGrow: 1 }} key={item} layout>
               <div className="flex-grow rounded-lg bg-green-400 px-4 py-2 dark:bg-green-700">
                 <Flex
-                  key={position}
                   as={motion.div}
-                  layout={position ? 'position' : true}
+                  css={{ width: "100%" }}
                   justifyContent="start"
-                  css={{ width: '100%' }}
+                  key={String(position)}
+                  layout={position ? "position" : true}
                 >
                   <IconButton
-                    className="mr-2"
-                    title="Dismiss label"
                     aria-label="Dismiss label"
+                    className="mr-2"
                     onClick={() =>
                       setItems((prev) => prev.filter((label) => label !== item))
                     }
+                    title="Dismiss label"
                   >
                     <Icon.X size={3} />
                   </IconButton>
@@ -109,10 +113,10 @@ const LayoutPosition = () => {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  aria-label="Reset"
                   aria-describedby="reset-tooltip"
-                  size="icon"
+                  aria-label="Reset"
                   onClick={() => setItems(ITEMS)}
+                  size="icon"
                 >
                   <Icon.Repeat />
                 </Button>

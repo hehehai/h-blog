@@ -1,76 +1,76 @@
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 
 // Guide
-export const AnimationTypes = dynamic(() => import('./guide/animation-types'));
+export const AnimationTypes = dynamic(() => import("./guide/animation-types"));
 
 export const ClipboardAnimationDetails = dynamic(
-  () => import('./guide/clipboard-animation-details')
+  () => import("./guide/clipboard-animation-details")
 );
 
 export const GuideToFramerMotionSandpack = dynamic(
-  () => import('./guide/sandpack')
+  () => import("./guide/sandpack")
 );
 
-export const Orchestration = dynamic(() => import('./guide/orchestration'));
+export const Orchestration = dynamic(() => import("./guide/orchestration"));
 
 // Advanced
 export const FramerMotionPropagation = dynamic(
-  () => import('./advanced/propagation')
+  () => import("./advanced/propagation")
 );
 
 export const AdvancedFramerMotionSandpack = dynamic(
-  () => import('./advanced/sandpack')
+  () => import("./advanced/sandpack")
 );
 
 export const FramerMotionAnimatePresence = dynamic(
-  () => import('./advanced/animate-presence')
+  () => import("./advanced/animate-presence")
 );
 
 export const FramerMotionAnimationLayout = dynamic(
-  () => import('./advanced/animation-layout')
+  () => import("./advanced/animation-layout")
 );
 
 // Layout
 export const FramerMotionLayoutAnimationsBasic = dynamic(
-  () => import('./layout/basic')
+  () => import("./layout/basic")
 );
 
 export const FramerMotionToastNotificationSandpack = dynamic(
-  () => import('./layout/sandpack-notification')
+  () => import("./layout/sandpack-notification")
 );
 
 export const FramerMotionDistortions = dynamic(
-  () => import('./layout/distortions')
+  () => import("./layout/distortions")
 );
 
 export const FramerMotionLayoutAnimationsLayoutProp = dynamic(
-  () => import('./layout/layout-prop')
+  () => import("./layout/layout-prop")
 );
 
 export const FramerMotionLayoutAnimationsLayoutPosition = dynamic(
-  () => import('./layout/layout-position')
+  () => import("./layout/layout-position")
 );
 
 export const FramerMotionArrowListSandpack = dynamic(
-  () => import('./layout/sandpack-arrow-list')
+  () => import("./layout/sandpack-arrow-list")
 );
 
 export const FramerMotionLayoutAnimationsSharedLayoutAnimationDetails = dynamic(
-  () => import('./layout/shared-layout-animation-details')
+  () => import("./layout/shared-layout-animation-details")
 );
 
 export const FramerMotionTabsSandpack = dynamic(
-  () => import('./layout/sandpack-tabs')
+  () => import("./layout/sandpack-tabs")
 );
 
 export const FramerMotionLayoutAnimationsTabsLayoutGroup = dynamic(
-  () => import('./layout/tabs-layout-group')
+  () => import("./layout/tabs-layout-group")
 );
 
 export const FramerMotionLayoutAnimationListLayoutGroup = dynamic(
-  () => import('./layout/list-layout-group')
+  () => import("./layout/list-layout-group")
 );
 
 export const FramerMotionAdvanceReorderExample = dynamic(
-  () => import('./layout/advance-reorder-example')
+  () => import("./layout/advance-reorder-example")
 );

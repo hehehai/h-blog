@@ -1,9 +1,10 @@
-'use client';
+"use client";
 
-import { useTheme } from '@maximeheckel/design-system';
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
+import { useTainwildTheme } from "@/components/lib/tainwild";
+
 const SandpackBlock = dynamic(
-  () => import('../../../shared/mdx/common/sandpack')
+  () => import("../../../shared/mdx/common/sandpack")
 );
 
 const AppCode = `import { motion, AnimatePresence } from 'framer-motion';
@@ -17,9 +18,9 @@ const Notifications = () => {
   const [notifications, setNotifications] = React.useState(ITEMS)
 
   return (
-    <Wrapper> 
+    <Wrapper>
       <AnimatePresence>
-        {notifications.map((item) => 
+        {notifications.map((item) =>
             <motion.div
               key={item}
               onClick={() => setNotifications((prev) => prev.filter(notification => notification !== item))}
@@ -28,7 +29,7 @@ const Notifications = () => {
                 y: 150,
                 x: 0,
                 opacity: 0,
-              }} 
+              }}
               animate={{
                 y: 0,
                 x: 0,
@@ -39,8 +40,8 @@ const Notifications = () => {
               }}
             >
               <Toast>{item}</Toast>
-            </motion.div> 
-        )}   
+            </motion.div>
+        )}
       </AnimatePresence>
     </Wrapper>
   );
@@ -92,29 +93,29 @@ canvas {
 }`;
 
 const SandpackNotification = () => {
-  const { dark } = useTheme();
+  const { dark } = useTainwildTheme();
 
   return (
     <SandpackBlock
-      template="react"
       customSetup={{
         dependencies: {
-          'framer-motion': '6.2.4',
-          '@stitches/react': '1.2.5',
+          "@stitches/react": "1.2.5",
+          "framer-motion": "6.2.4",
         },
       }}
       files={{
-        '/App.js': {
+        "/App.js": {
           code: AppCode,
         },
-        '/Components.js': {
+        "/Components.js": {
           code: ComponentsCode,
         },
-        '/scene.css': {
+        "/scene.css": {
           code: dark ? SceneCSSDark : SceneCSSLight,
           hidden: true,
         },
       }}
+      template="react"
     />
   );
 };

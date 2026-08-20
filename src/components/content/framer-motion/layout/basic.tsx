@@ -1,20 +1,19 @@
-'use client';
+"use client";
 
-import { Card } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Switch } from '@/components/ui/switch';
-import { Box } from '@maximeheckel/design-system';
-import { motion } from 'motion/react';
-import React from 'react';
+import React from "react";
+import { TainwildBox } from "@/components/lib/tainwild";
+import { Card } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Switch } from "@/components/ui/switch";
 
 const Basic = () => {
-  const [position, setPosition] = React.useState('start');
+  const [position, setPosition] = React.useState("start");
   const [layout, setLayout] = React.useState(false);
 
   const codeString = layout
     ? `// position: ${position}
-    
+
 <motion.div
   layout
   style={{
@@ -23,7 +22,7 @@ const Basic = () => {
   //...
 />`
     : `// position: ${position}
-    
+
 <motion.div
   style={{
     justifySelf: position,
@@ -35,49 +34,48 @@ const Basic = () => {
   return (
     <Card>
       <div className="p-4">
-        <Box
+        <TainwildBox
           css={{
-            display: 'grid',
-            width: '100%',
+            display: "grid",
+            width: "100%",
           }}
         >
-          <Box
-            as={motion.div}
-            key={layout}
-            layout={layout}
+          <TainwildBox
             css={{
-              width: '100px',
-              height: '100px',
               background:
-                'linear-gradient(-60deg,#2E83FF -10%,#EB7D9F 50%, #FFCBBE 100%)',
-              borderRadius: '12px',
+                "linear-gradient(-60deg,#2E83FF -10%,#EB7D9F 50%, #FFCBBE 100%)",
+              borderRadius: "12px",
+              height: "100px",
               justifySelf: position,
+              width: "100px",
             }}
+            key={String(layout)}
+            layout={layout}
           />
-        </Box>
+        </TainwildBox>
         <div className="mt-5 flex flex-col items-center">
           <RadioGroup
-            value={position}
-            onValueChange={setPosition}
             className="mb-3 flex items-center space-x-3"
+            onValueChange={setPosition}
+            value={position}
           >
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="start" id="start" />
+              <RadioGroupItem id="start" value="start" />
               <Label htmlFor="start">Start</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="center" id="center" />
+              <RadioGroupItem id="center" value="center" />
               <Label htmlFor="center">Center</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="end" id="end" />
+              <RadioGroupItem id="end" value="end" />
               <Label htmlFor="end">End</Label>
             </div>
           </RadioGroup>
           <div className="flex items-center space-x-2">
             <Switch
-              checked={layout}
               aria-label="Use layout animation"
+              checked={layout}
               id="use-layout"
               onCheckedChange={() => setLayout((prev) => !prev)}
             />

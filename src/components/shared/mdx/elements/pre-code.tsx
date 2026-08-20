@@ -1,5 +1,5 @@
-import { cn } from '@/lib/utils';
-import type { HTMLAttributes } from 'react';
+import type { HTMLAttributes } from "react";
+import { cn } from "@/lib/utils";
 
 interface ElementPreCodeProps extends HTMLAttributes<HTMLPreElement> {
   isLink: boolean;
@@ -14,10 +14,10 @@ export default function ElementPreCode({
     <div className="relative">
       <pre
         className={cn(
-          'block break-words rounded-xl px-1 text-secondary no-underline dark:bg-slate-900 dark:text-secondary-foreground',
+          "wrap-break-word block rounded-xl px-0 text-secondary no-underline dark:bg-slate-900 dark:text-secondary-foreground",
           {
-            'bg-opacity-60 py-px': !isLink,
-            'bg-highlight py-0 dark:bg-highlight-dark': isLink,
+            "bg-highlight py-0 dark:bg-highlight-dark": isLink,
+            "bg-opacity-60 py-px": !isLink,
           },
           className
         )}

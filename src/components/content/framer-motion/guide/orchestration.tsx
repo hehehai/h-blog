@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Slider } from '@/components/ui/slider';
-import { useDebouncedValue } from '@maximeheckel/design-system';
-import { motion } from 'motion/react';
-import React from 'react';
-import { AnimationCardContent } from '../common-styled';
+import { motion } from "motion/react";
+import React from "react";
+import { useDebouncedValue } from "@/components/lib/tainwild";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
+import { AnimationCardContent } from "../common-styled";
 
 const Orchestration = () => {
   const [key, setKey] = React.useState(0);
@@ -18,29 +18,28 @@ const Orchestration = () => {
   const debouncedStagger = useDebouncedValue(staggerChildren, 500);
 
   const boxVariants = {
-    out: {
-      y: 600,
-    },
     in: {
-      y: 0,
       transition: {
-        duration: '0.6',
         delayChildren,
+        duration: 0.6,
         staggerChildren,
       },
+      y: 0,
+    },
+    out: {
+      y: 600,
     },
   };
 
   const iconVariants = {
-    out: {
-      x: -600,
-    },
     in: {
       x: 0,
     },
+    out: {
+      x: -600,
+    },
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   React.useEffect(() => {
     setKey(key + 1);
   }, [debouncedDelay, debouncedStagger]);
@@ -49,10 +48,10 @@ const Orchestration = () => {
     <Card className="p-5">
       <AnimationCardContent
         css={{
-          margin: '0 auto',
-          maxWidth: '440px',
-          height: '540px',
-          paddingBottom: '32px',
+          height: "540px",
+          margin: "0 auto",
+          maxWidth: "440px",
+          paddingBottom: "32px",
         }}
       >
         <form className="w-full">
@@ -62,11 +61,11 @@ const Orchestration = () => {
             </Label>
             <Slider
               id="delayChildren"
-              value={[delayChildren]}
-              min={0}
               max={5}
-              step={0.1}
+              min={0}
               onValueChange={([val]) => setDelayChildren(val)}
+              step={0.1}
+              value={[delayChildren]}
             />
           </div>
           <div className="space-y-3">
@@ -75,49 +74,49 @@ const Orchestration = () => {
             </Label>
             <Slider
               id="staggerChildren"
-              value={[staggerChildren]}
-              min={0}
               max={5}
-              step={0.1}
+              min={0}
               onValueChange={([val]) => setStaggerChildren(val)}
+              step={0.1}
+              value={[staggerChildren]}
             />
           </div>
         </form>
         <motion.div
+          animate="in"
+          initial="out"
           key={key}
           style={{
-            background: 'linear-gradient(90deg,#ffa0ae 0%,#aacaef 75%)',
-            height: '280px',
-            width: '230px',
-            borderRadius: '10px',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'space-evenly',
-            fontSize: '48px',
-            overflow: 'hidden',
+            alignItems: "center",
+            background: "linear-gradient(90deg,#ffa0ae 0%,#aacaef 75%)",
+            borderRadius: "10px",
+            display: "flex",
+            flexDirection: "column",
+            fontSize: "48px",
+            height: "280px",
+            justifyContent: "space-evenly",
+            overflow: "hidden",
+            width: "230px",
           }}
           variants={boxVariants}
-          initial="out"
-          animate="in"
         >
           <motion.span
-            role="img"
             aria-labelledby="magic wand"
+            role="img"
             variants={iconVariants}
           >
             🚀
           </motion.span>
           <motion.span
-            role="img"
             aria-labelledby="sparkles"
+            role="img"
             variants={iconVariants}
           >
             ✨
           </motion.span>
           <motion.span
-            role="img"
             aria-labelledby="party popper"
+            role="img"
             variants={iconVariants}
           >
             🎉

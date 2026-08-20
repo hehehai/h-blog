@@ -1,9 +1,29 @@
 [
   {
+    "name": "Voxt",
+    "subtitle": "🎙️ 本地优先的语音转文本 App",
+    "description": "- Swift 桌面 App 的建构和模型链路。\n- MLX 模型的接入和使用封装。\n- 远程模型的适配接入。",
+    "cover": "/static/images/projects/voxt.webp",
+    "links": {
+      "github": "https://github.com/hehehai/voxt",
+      "site": "https://voxt.actnow.dev"
+    }
+  },
+  {
+    "name": "Tiny SVG",
+    "subtitle": "🖼️ 压缩 SVG 到最佳可用状态!",
+    "description": "- Tanstack Start + ORPC + Drizzle ORM。\n- PWA + 多语言 + 缓存。\n- Figma 插件的编写和实现。",
+    "cover": "/static/images/projects/tiny-svg.webp",
+    "links": {
+      "github": "https://github.com/hehehai/tiny-svg",
+      "site": "https://tiny-svg.actnow.dev"
+    }
+  },
+  {
     "name": "refto",
     "subtitle": "🤯 最新设计感网站收集，释放无限灵感!",
     "description": "- Next + tRPC + Prisma。\n- 瀑布流数据懒加载。\n- 图片数据持久化存储。",
-    "cover": "/static/projects/refto.jpg",
+    "cover": "/static/images/projects/refto.webp",
     "links": {
       "site": "https://refto.one/"
     }
@@ -14,8 +34,7 @@
     "description": "- Google Gemini 分析职位摘要。\n- 动态数据搜索，路由跳转。\n- 瀑布流数据加载。",
     "cover": "/static/projects/x-hiring.jpg",
     "links": {
-      "github": "https://github.com/hehehai/x-hiring",
-      "site": "https://x-hiring.hehehai.cn/"
+      "github": "https://github.com/hehehai/x-hiring"
     }
   },
   {
@@ -24,8 +43,7 @@
     "description": "- 微博账户数据抓取。\n- 抓取数据缓存，路由缓存。\n- 图片生成及下载",
     "cover": "/static/projects/weibo-worth.jpg",
     "links": {
-      "github": "https://github.com/hehehai/weibo-worth",
-      "site": "https://weibo.hehehai.cn/"
+      "github": "https://github.com/hehehai/weibo-worth"
     }
   },
   {
@@ -34,8 +52,7 @@
     "description": "- Next.js / Clerk / Prisma / Shadcn UI。\n- 颜色选择、色板生成、热门颜色查询。\n- 数据管理、身份认证、信息统计。",
     "cover": "/static/projects/coolos.jpg",
     "links": {
-      "github": "https://github.com/hehehai/coolos",
-      "site": "https://coolos.hehehai.cn/"
+      "github": "https://github.com/hehehai/coolos"
     }
   },
   {

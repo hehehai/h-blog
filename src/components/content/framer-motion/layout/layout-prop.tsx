@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Box } from '@maximeheckel/design-system';
-import { motion } from 'motion/react';
-import React from 'react';
+import { motion } from "motion/react";
+import React from "react";
+import { TainwildBox as Box } from "@/components/lib/tainwild";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 
 const LayoutProp = () => {
   const [expanded, setExpanded] = React.useState(true);
@@ -19,26 +19,26 @@ const LayoutProp = () => {
     <div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
         <Card>
-          <CardHeader>{'layout={true}'}</CardHeader>
+          <CardHeader>{"layout={true}"}</CardHeader>
           <CardContent className="grid h-[200px] overflow-hidden">
             <Box
               as={motion.div}
+              css={{
+                alignSelf: expanded ? "center" : "flex-start",
+                background:
+                  "linear-gradient(-60deg,#2E83FF -10%,#EB7D9F 50%, #FFCBBE 100%)",
+                height: expanded ? "20px" : "100%",
+                justifySelf: expanded ? "center" : "flex-start",
+                width: expanded ? "20px" : "100%",
+              }}
               layout
+              style={{
+                borderRadius: 20,
+              }}
               transition={{
                 layout: {
                   duration: 1.5,
                 },
-              }}
-              css={{
-                justifySelf: expanded ? 'center' : 'flex-start',
-                alignSelf: expanded ? 'center' : 'flex-start',
-                background:
-                  'linear-gradient(-60deg,#2E83FF -10%,#EB7D9F 50%, #FFCBBE 100%)',
-                width: expanded ? '20px' : '100%',
-                height: expanded ? '20px' : '100%',
-              }}
-              style={{
-                borderRadius: 20,
               }}
             />
           </CardContent>
@@ -48,22 +48,22 @@ const LayoutProp = () => {
           <CardContent className="grid h-[200px] overflow-hidden">
             <Box
               as={motion.div}
+              css={{
+                alignSelf: expanded ? "center" : "flex-start",
+                background:
+                  "linear-gradient(-60deg,#2E83FF -10%,#EB7D9F 50%, #FFCBBE 100%)",
+                height: expanded ? "20px" : "100%",
+                justifySelf: expanded ? "center" : "flex-start",
+                width: expanded ? "20px" : "100%",
+              }}
               layout="position"
+              style={{
+                borderRadius: 20,
+              }}
               transition={{
                 layout: {
                   duration: 1.5,
                 },
-              }}
-              css={{
-                justifySelf: expanded ? 'center' : 'flex-start',
-                alignSelf: expanded ? 'center' : 'flex-start',
-                background:
-                  'linear-gradient(-60deg,#2E83FF -10%,#EB7D9F 50%, #FFCBBE 100%)',
-                width: expanded ? '20px' : '100%',
-                height: expanded ? '20px' : '100%',
-              }}
-              style={{
-                borderRadius: 20,
               }}
             />
           </CardContent>
@@ -73,22 +73,22 @@ const LayoutProp = () => {
           <CardContent className="grid h-[200px] overflow-hidden">
             <Box
               as={motion.div}
+              css={{
+                alignSelf: expanded ? "center" : "flex-start",
+                background:
+                  "linear-gradient(-60deg,#2E83FF -10%,#EB7D9F 50%, #FFCBBE 100%)",
+                height: expanded ? "20px" : "100%",
+                justifySelf: expanded ? "center" : "flex-start",
+                width: expanded ? "20px" : "100%",
+              }}
               layout="size"
+              style={{
+                borderRadius: 20,
+              }}
               transition={{
                 layout: {
                   duration: 1.5,
                 },
-              }}
-              css={{
-                justifySelf: expanded ? 'center' : 'flex-start',
-                alignSelf: expanded ? 'center' : 'flex-start',
-                background:
-                  'linear-gradient(-60deg,#2E83FF -10%,#EB7D9F 50%, #FFCBBE 100%)',
-                width: expanded ? '20px' : '100%',
-                height: expanded ? '20px' : '100%',
-              }}
-              style={{
-                borderRadius: 20,
               }}
             />
           </CardContent>
@@ -96,8 +96,8 @@ const LayoutProp = () => {
       </div>
       <div className="mt-4 flex items-center justify-center space-x-2">
         <Switch
-          checked={expanded}
           aria-label="扩展卡片"
+          checked={expanded}
           id="expand-card"
           onCheckedChange={() => setExpanded((prev) => !prev)}
         />

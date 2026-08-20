@@ -1,6 +1,6 @@
-import Project from '@/components/shared/project/project-item';
-import contributionProjects from '@/contents/projects/contribution.json';
-import ownerProjects from '@/contents/projects/owner.json';
+import Project from "@/components/shared/project/project-item";
+import contributionProjects from "@/contents/projects/contribution.json";
+import ownerProjects from "@/contents/projects/owner.json";
 
 export default function Projects() {
   return (

@@ -1,13 +1,13 @@
-import type { MetadataRoute } from 'next';
+import type { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
   return {
+    host: "https://hehehai.cn",
     rules: {
-      userAgent: '*',
-      allow: '/',
-      disallow: '/api/',
+      allow: "/",
+      disallow: "/api/",
+      userAgent: "*",
     },
-    host: 'https://hehehai.cn',
-    sitemap: 'https://hehehai.cn/sitemap.xml',
+    sitemap: "https://hehehai.cn/sitemap.xml",
   };
 }

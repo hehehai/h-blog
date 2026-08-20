@@ -1,12 +1,11 @@
-'use client';
+"use client";
 
-import { Card } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-
-import { Box } from '@maximeheckel/design-system';
-import { motion } from 'motion/react';
-import React from 'react';
+import { motion } from "motion/react";
+import React from "react";
+import { TainwildBox as Box } from "@/components/lib/tainwild";
+import { Card } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 
 const Distortions = () => {
   const [expanded, setExpanded] = React.useState(false);
@@ -24,7 +23,7 @@ const Distortions = () => {
   width: 150px;
   height: 150px;
 }
-  
+
 // JS
 <motion.div
   layout
@@ -47,7 +46,7 @@ const Distortions = () => {
   width: 150px;
   height: 150px;
 }
-  
+
 // JS
 <motion.div
   layout
@@ -63,36 +62,36 @@ const Distortions = () => {
         <div className="flex min-h-[180px] justify-center">
           <Box
             as={motion.div}
-            key={inline}
+            css={{
+              alignSelf: "center",
+              background:
+                "linear-gradient(-60deg,#2E83FF -10%,#EB7D9F 50%, #FFCBBE 100%)",
+              borderRadius: "16px",
+              height: expanded ? "150px" : "20px",
+              justifySelf: "center",
+              width: expanded ? "150px" : "20px",
+            }}
+            key={String(inline)}
             layout
+            style={
+              inline
+                ? {
+                    borderRadius: "16px",
+                  }
+                : {}
+            }
             transition={{
               layout: {
                 duration: 1.5,
               },
             }}
-            css={{
-              justifySelf: 'center',
-              alignSelf: 'center',
-              background:
-                'linear-gradient(-60deg,#2E83FF -10%,#EB7D9F 50%, #FFCBBE 100%)',
-              width: expanded ? '150px' : '20px',
-              height: expanded ? '150px' : '20px',
-              borderRadius: '16px',
-            }}
-            style={
-              inline
-                ? {
-                    borderRadius: '16px',
-                  }
-                : {}
-            }
           />
         </div>
         <div className="mt-10 mb-2 flex items-center justify-center space-x-3">
           <div className="flex items-center space-x-2">
             <Switch
-              checked={expanded}
               aria-label="Expand card"
+              checked={expanded}
               id="expand-card-distort"
               onCheckedChange={() => setExpanded((prev) => !prev)}
             />
@@ -100,8 +99,8 @@ const Distortions = () => {
           </div>
           <div className="flex items-center space-x-2">
             <Switch
-              checked={inline}
               aria-label="Expand card"
+              checked={inline}
               id="distort"
               onCheckedChange={() => setInline((prev) => !prev)}
             />

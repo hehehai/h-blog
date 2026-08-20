@@ -1,6 +1,6 @@
-import type { ReactNode } from 'react';
-import { Details } from './detail';
-import { Summary } from './summary';
+import type { ReactNode } from "react";
+import { Details } from "./detail";
+import { Summary } from "./summary";
 
 export function FAQBox({
   title,

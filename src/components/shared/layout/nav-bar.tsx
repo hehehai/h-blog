@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { navMap } from '@/lib/config/nav';
-import { AnimatePresence } from 'motion/react';
-import { usePathname } from 'next/navigation';
-import { useState } from 'react';
-import NavItem from './nav-item';
+import { AnimatePresence } from "motion/react";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
+import { navMap } from "@/lib/config/nav";
+import NavItem from "./nav-item";
 
 export default function NavBar() {
   const pathname = usePathname();
-  const [hover, setHover] = useState('');
+  const [hover, setHover] = useState("");
 
   return (
     <AnimatePresence mode="wait">
@@ -16,11 +16,11 @@ export default function NavBar() {
         {navMap.map(({ href, text }) => (
           <NavItem
             active={hover === href || pathname === href}
-            key={href}
             href={href}
-            text={text}
+            key={href}
             onMouseEnter={() => setHover(href)}
-            onMouseLeave={() => setHover('')}
+            onMouseLeave={() => setHover("")}
+            text={text}
           />
         ))}
       </div>

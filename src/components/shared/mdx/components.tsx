@@ -5,23 +5,23 @@ import { FAQBox } from "./common/detail";
 import { Details } from "./common/detail/detail";
 import { Summary } from "./common/detail/summary";
 import EmbedStackblitz from "./common/embed-stackblitz";
+import Iframe from "./common/iframe";
 import SandpackBlock from "./common/sandpack";
 import ElementCode from "./elements/code";
 import ElementLink from "./elements/link";
 import ElementPreCode from "./elements/pre-code";
-import Iframe from "./common/iframe";
 
 export const components: MDXComponents = {
   a: ElementLink,
+  Callout,
+  CarouselMDX,
   // img: RoundedImage,
   code: ElementCode,
-  pre: ElementPreCode,
   details: Details,
-  summary: Summary,
-  FAQBox: FAQBox,
-  Callout,
   EmbedStackblitz,
-  SandpackBlock,
-  CarouselMDX,
+  FAQBox,
   Iframe,
+  pre: ElementPreCode,
+  SandpackBlock,
+  summary: Summary,
 };

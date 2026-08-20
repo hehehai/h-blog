@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { TerminalIcon } from 'lucide-react';
-import Link from 'next/link';
+import { TerminalIcon } from "lucide-react";
+import Link from "next/link";
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 
 export default function ErrorPage({
   error,
@@ -22,7 +22,7 @@ export default function ErrorPage({
       </Alert>
 
       <div className="mt-5 flex items-center">
-        <Button variant="outline" asChild>
+        <Button asChild variant="outline">
           <Link
             href={`https://github.com/hehehai/h-blog/issues/new?labels=runtime+error&title=${`Runtime: ${error.name}`}&body=${error.message}`}
             target="_blank"
@@ -30,7 +30,7 @@ export default function ErrorPage({
             提交问题
           </Link>
         </Button>
-        <Button onClick={() => reset()} className="ml-3">
+        <Button className="ml-3" onClick={() => reset()}>
           重试
         </Button>
       </div>

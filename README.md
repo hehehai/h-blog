@@ -11,7 +11,7 @@
 
 ## ⌨️ 安装&运行
 
-使用 pnpm 安装运行， 博客使用 `Nextjs 15` 版本
+使用 pnpm 安装运行，博客使用 Next.js App Router。
 
 ```shell
 pnpm install
@@ -20,10 +20,12 @@ pnpm run dev
 
 打开 `http://localhost:3000`
 
-env 文件 `.env` 可选的
+生产构建和质量检查：
 
 ```shell
-OPENPANEL_CLIENT_ID=client_id
+pnpm check-types
+pnpm check
+pnpm build
 ```
 
-openpanel 官网： <https://openpanel.dev/>
+环境变量文件 `.env` 是可选的。

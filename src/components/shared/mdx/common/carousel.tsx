@@ -1,15 +1,14 @@
-'use client';
+"use client";
 
-import type React from 'react';
-
+import Autoplay from "embla-carousel-autoplay";
+import type React from "react";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from '@/components/ui/carousel';
-import Autoplay from 'embla-carousel-autoplay';
+} from "@/components/ui/carousel";
 
 export function CarouselMDX({ items }: { items: React.ReactNode[] }) {
   return (

@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { cn } from '@/lib/utils';
-import { motion } from 'motion/react';
-import { type HTMLAttributes, type ReactNode, useState } from 'react';
+import { motion } from "motion/react";
+import { type HTMLAttributes, type ReactNode, useState } from "react";
+import { cn } from "@/lib/utils";
 
-interface ButtonFadeStyleProps extends HTMLAttributes<HTMLAnchorElement> {
+interface ButtonFadeStyleProps extends HTMLAttributes<HTMLElement> {
+  children?: ReactNode;
   label?: string;
   link?: string;
-  children?: ReactNode;
 }
 
 export default function ButtonFadeStyle({
@@ -19,20 +19,20 @@ export default function ButtonFadeStyle({
 }: ButtonFadeStyleProps) {
   const [mouseIn, setMouseIn] = useState(false);
 
-  const TagName = link ? 'a' : 'span';
+  const TagName = link ? "a" : "button";
   const TagAttr = link
     ? {
-        target: '_blank',
-        rel: 'noreferrer',
+        href: link,
+        rel: "noreferrer",
+        target: "_blank",
       }
-    : {};
+    : { type: "button" as const };
 
   return (
     <TagName
-      href={link}
       {...TagAttr}
       className={cn(
-        'relative inline-flex cursor-pointer overflow-hidden rounded-lg px-2 py-1 text-[0.8125rem] text-slate-900 leading-6 transition md:bg-transparent dark:text-white',
+        "relative inline-flex cursor-pointer overflow-hidden rounded-lg border-0 bg-transparent px-2 py-1 text-[0.8125rem] text-slate-900 leading-6 transition md:bg-transparent dark:text-white",
         className
       )}
       onMouseEnter={() => setMouseIn(true)}
@@ -44,10 +44,10 @@ export default function ButtonFadeStyle({
         {label && <span className="mr-[2px] ml-2">{label}</span>}
       </span>
       <motion.div
-        initial={false}
         animate={mouseIn ? { scale: 1 } : { scale: 0 }}
-        transition={{ duration: 0.2 }}
         className="absolute inset-0 h-full w-full bg-slate-700/[0.03] dark:bg-white/[0.06]"
+        initial={false}
+        transition={{ duration: 0.2 }}
       />
     </TagName>
   );

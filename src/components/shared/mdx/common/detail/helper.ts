@@ -1,24 +1,24 @@
 import {
   Children,
+  cloneElement,
   type Key,
   type ReactElement,
   type ReactNode,
-  cloneElement,
-} from 'react';
-import { Details } from './detail';
-import { Summary } from './summary';
+} from "react";
+import { Details } from "./detail";
+import { Summary } from "./summary";
 
 export const findSummary = (children: ReactNode): [ReactNode, ReactNode[]] => {
   let summary: ReactNode = null;
   const restChildren: ReactNode[] = [];
 
   Children.forEach(children, (child, index) => {
-    if (child && typeof child === 'object' && 'type' in child) {
+    if (child && typeof child === "object" && "type" in child) {
       const type = (child as ReactElement).type as any;
       // 处理 React.lazy 组件
-      if (type?.$$typeof === Symbol.for('react.lazy')) {
+      if (type?.$$typeof === Symbol.for("react.lazy")) {
         const lazyValue = type._payload?.value;
-        if (lazyValue?.name === 'Summary') {
+        if (lazyValue?.name === "Summary") {
           summary ||= child;
           return;
         }
@@ -34,10 +34,10 @@ export const findSummary = (children: ReactNode): [ReactNode, ReactNode[]] => {
     if (
       !summary &&
       child &&
-      typeof child === 'object' &&
-      'type' in child &&
+      typeof child === "object" &&
+      "type" in child &&
       (child as ReactElement).type !== Details &&
-      'props' in child &&
+      "props" in child &&
       child.props
     ) {
       const result = findSummary(

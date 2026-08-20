@@ -1,6 +1,6 @@
-import type { QueryPostItem } from '@/functions/post';
-import { Link } from 'next-view-transitions';
-import PostTags from './post-tags';
+import Link from "next/link";
+import type { QueryPostItem } from "@/functions/post";
+import PostTags from "./post-tags";
 
 export default function ContentItem({ post }: { post: QueryPostItem }) {
   const readingTime = Number.parseInt(String(post.readingTime));
@@ -8,8 +8,8 @@ export default function ContentItem({ post }: { post: QueryPostItem }) {
   return (
     <div>
       <Link
-        href={`/posts/${post.slug}`}
         className="font-medium text-xl leading-relaxed underline decoration-2 decoration-slate-700 underline-offset-8 transition hover:decoration-dotted"
+        href={`/posts/${post.slug}`}
       >
         {post.title}
       </Link>

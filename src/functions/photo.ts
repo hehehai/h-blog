@@ -1,15 +1,15 @@
-import type { AtlasMeta, Issue, Photo } from '@/types/photo';
+import type { AtlasMeta, Issue, Photo } from "@/types/photo";
 
 const MetaKeyMap: Record<keyof AtlasMeta, string> = {
-  description: 'Description: ',
-  place: 'Place: ',
-  time: 'Time: ',
+  description: "Description: ",
+  place: "Place: ",
+  time: "Time: ",
 };
 
 const MarkDownImageRgx = /!\[(?<alt>[^\]]*)\]\((?<path>.*?)(?="|\))\)/g;
 
 export const atlasParser = (body: string) => {
-  const lines = body.split('\r\n');
+  const lines = body.split("\r\n");
   const meta: AtlasMeta = {};
   const photos: Photo[] = [];
 
@@ -50,12 +50,12 @@ export async function getAtlas(page = 1) {
         issuesId: issue.id,
         title: issue.title,
         ...meta,
-        photos,
         labels: issue.labels.map((label) => ({
+          color: label.color,
           id: label.id,
           name: label.name,
-          color: label.color,
         })),
+        photos,
       };
     });
   }

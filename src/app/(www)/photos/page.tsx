@@ -1,6 +1,6 @@
-import PhotoItem from '@/components/shared/photo/photo-item';
-import { getAtlas } from '@/functions/photo';
-import type { Atlas } from '@/types/photo';
+import PhotoItem from "@/components/shared/photo/photo-item";
+import { getAtlas } from "@/functions/photo";
+import type { Atlas } from "@/types/photo";
 
 export default async function Photos() {
   const atlas = await getAtlas();

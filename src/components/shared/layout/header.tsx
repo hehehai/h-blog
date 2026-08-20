@@ -1,8 +1,8 @@
-import { siteConfig } from '@/lib/config/site';
-import { Link } from 'next-view-transitions';
-import ButtonFadeStyle from '../button-fade-style';
-import ButtonThemeToggle from '../button-theme-toggle';
-import { IconGithub, IconTwitter } from '../icons';
+import Link from "next/link";
+import { siteConfig } from "@/lib/config/site";
+import ButtonFadeStyle from "../button-fade-style";
+import ButtonThemeToggle from "../button-theme-toggle";
+import { IconGithub, IconTwitter } from "../icons";
 
 export default function Header() {
   return (

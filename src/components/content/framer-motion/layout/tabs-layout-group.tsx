@@ -1,101 +1,97 @@
-'use client';
+"use client";
 
-import { Card } from '@/components/ui/card';
-import { Box, Text } from '@maximeheckel/design-system';
-import { LayoutGroup, motion } from 'motion/react';
-import React from 'react';
+import { LayoutGroup } from "motion/react";
+import React from "react";
+import { TainwildBox, TainwildText } from "@/components/lib/tainwild";
+import { Card } from "@/components/ui/card";
 
 const TabsSharedLayoutAnimation = () => {
   const [focused, setFocused] = React.useState<string | null>(null);
-  const [selected, setSelected] = React.useState('Item 1');
-  const tabs = ['Item 1', 'Item 2', 'Item 3'];
+  const [selected, setSelected] = React.useState("Item 1");
+  const tabs = ["Item 1", "Item 2", "Item 3"];
 
   return (
-    <div
-      className="flex items-center justify-center gap-8 rounded-lg border border-[#2B303B] bg-[#1A1D23] px-4 py-2"
-      onMouseLeave={() => setFocused(null)}
-    >
+    <div className="flex items-center justify-center gap-8 rounded-lg border border-[#2B303B] bg-[#1A1D23] px-4 py-2">
       {tabs.map((item) => (
-        <Box
+        <TainwildBox
           as="div"
           css={{
-            position: 'relative',
-            listStyle: 'none',
-            cursor: 'pointer',
-            width: '60px',
-            height: '30px',
-            outline: 'none',
-            whiteSpace: 'nowrap',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            alignItems: "center",
+            cursor: "pointer",
+            display: "flex",
+            height: "30px",
+            justifyContent: "center",
+            listStyle: "none",
+            outline: "none",
+            position: "relative",
+            whiteSpace: "nowrap",
+            width: "60px",
           }}
           key={item}
           onClick={() => setSelected(item)}
-          onKeyDown={(event: { key: string }) =>
-            event.key === 'Enter' ? setSelected(item) : null
-          }
           onFocus={() => setFocused(item)}
+          onKeyDown={(event: { key: string }) =>
+            event.key === "Enter" ? setSelected(item) : null
+          }
           onMouseEnter={() => setFocused(item)}
+          onMouseLeave={() => setFocused(null)}
           tabIndex={0}
         >
-          <Text
-            size="1"
+          <TainwildText
             css={{
-              color: '#E8E8FD',
-              position: 'absolute',
+              bottom: 0,
+              color: "#E8E8FD",
               left: 4,
+              lineHeight: "1.5",
+              position: "absolute",
               right: 0,
               top: 2,
-              bottom: 0,
+              userSelect: "none",
               zIndex: 1,
-              userSelect: 'none',
-              lineHeight: '1.5',
             }}
+            size="sm"
           >
             {item}
-          </Text>
+          </TainwildText>
 
           {focused === item ? (
-            <Box
-              as={motion.div}
-              transition={{
-                layout: {
-                  duration: 0.2,
-                  ease: 'easeOut',
-                },
-              }}
+            <TainwildBox
               css={{
-                position: 'absolute',
-                bottom: '-2px',
-                left: '-10px',
+                background: "#23272F",
+                borderRadius: "8px",
+                bottom: "-2px",
+                height: "110%",
+                left: "-10px",
+                position: "absolute",
                 right: 0,
-                width: '140%',
-                height: '110%',
-                background: '#23272F',
-                borderRadius: '8px',
+                width: "140%",
                 zIndex: 0,
               }}
               layoutId="highlight"
+              transition={{
+                layout: {
+                  duration: 0.2,
+                  ease: "easeOut",
+                },
+              }}
             />
           ) : null}
           {selected === item ? (
-            <Box
-              as={motion.div}
+            <TainwildBox
               css={{
-                position: 'absolute',
-                bottom: '-10px',
-                left: '0px',
+                background: "#5686F5",
+                borderRadius: "8px",
+                bottom: "-10px",
+                height: "4px",
+                left: "0px",
+                position: "absolute",
                 right: 0,
-                height: '4px',
-                background: '#5686F5',
-                borderRadius: '8px',
                 zIndex: 0,
               }}
               layoutId="underline"
             />
           ) : null}
-        </Box>
+        </TainwildBox>
       ))}
     </div>
   );
@@ -110,15 +106,15 @@ const TabsLayoutGroup = (props: { layoutGroup: boolean }) => {
   const [selected, setSelected]
     = React.useState('Item 1');
   const tabs = [
-    'Item 1', 
-    'Item 2', 
+    'Item 1',
+    'Item 2',
     'Item 3'
   ];
 
   return (
     <LayoutGroup id={id}>
       <Wrapper
-        onMouseLeave={() => 
+        onMouseLeave={() =>
           setFocused(null)
         }
       >

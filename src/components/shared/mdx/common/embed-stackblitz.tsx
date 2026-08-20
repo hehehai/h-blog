@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import sdk, { type VM } from '@stackblitz/sdk';
-import type { EmbedOptions } from '@stackblitz/sdk';
-import { useCallback, useEffect, useRef } from 'react';
+import type { EmbedOptions } from "@stackblitz/sdk";
+import sdk, { type VM } from "@stackblitz/sdk";
+import { useCallback, useEffect, useRef } from "react";
 
 export interface EmbedStackblitzProps extends Partial<EmbedOptions> {
   id: string;
@@ -35,7 +35,6 @@ export default function EmbedStackblitz({
     [id]
   );
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     create(options);
   }, []);

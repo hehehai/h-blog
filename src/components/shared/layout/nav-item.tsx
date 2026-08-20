@@ -1,12 +1,12 @@
-import { cn } from '@/lib/utils';
-import { motion } from 'motion/react';
-import { Link } from 'next-view-transitions';
-import type { HTMLAttributes } from 'react';
+import { motion } from "motion/react";
+import Link from "next/link";
+import type { HTMLAttributes } from "react";
+import { cn } from "@/lib/utils";
 
 interface NavItemProps extends HTMLAttributes<HTMLAnchorElement> {
+  active: boolean;
   href: string;
   text: string;
-  active: boolean;
 }
 
 export default function NavItem({
@@ -18,22 +18,22 @@ export default function NavItem({
 }: NavItemProps) {
   return (
     <Link
+      className={cn("group relative px-5 pb-2 first:pl-0", className)}
       href={href}
-      className={cn('group relative px-5 pb-2 first:pl-0', className)}
       {...props}
     >
       <span>{text}</span>
       {active && (
         <motion.div
-          layoutId="underline"
-          initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
           className={cn(
-            'absolute bottom-0 h-1 rounded-full bg-zinc-700/10 dark:bg-white/20'
+            "absolute bottom-0 h-1 rounded-full bg-zinc-700/10 dark:bg-white/20"
           )}
+          exit={{ opacity: 0 }}
+          initial={{ opacity: 0 }}
+          layoutId="underline"
           style={{ width: `${text.length}em` }}
+          transition={{ duration: 0.3 }}
         />
       )}
     </Link>

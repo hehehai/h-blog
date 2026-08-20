@@ -1,5 +1,5 @@
-import type { QueryPostItem } from '@/functions/post';
-import PostItem from './post-item';
+import type { QueryPostItem } from "@/functions/post";
+import PostItem from "./post-item";
 
 export default function PostList({ posts }: { posts: QueryPostItem[] }) {
   return (

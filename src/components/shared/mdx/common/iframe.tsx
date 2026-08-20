@@ -3,21 +3,21 @@ import { Button } from "@/components/ui/button";
 export default function Iframe({ src, title }: { src: string; title: string }) {
   return (
     <div className="relative w-full">
-      <header className="flex items-center justify-between mb-2">
+      <header className="mb-2 flex items-center justify-between">
         <div className="font-medium">{title}</div>
-        <Button asChild variant="outline" className="h-7 text-sm">
+        <Button asChild className="h-7 text-sm" variant="outline">
           <a
-            href={src}
-            target="_blank"
-            rel="noopener noreferrer"
             className="no-underline"
+            href={src}
+            rel="noopener noreferrer"
+            target="_blank"
           >
             Open in new tab
           </a>
         </Button>
       </header>
-      <div className="w-full h-[500px] border border-border rounded-lg overflow-hidden">
-        <iframe src={src} className="w-full h-full" />
+      <div className="h-[500px] w-full overflow-hidden rounded-lg border border-border">
+        <iframe className="h-full w-full" src={src} title={title} />
       </div>
     </div>
   );

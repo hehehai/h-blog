@@ -1,11 +1,11 @@
-import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
-import type { HTMLAttributes } from 'react';
+import type { HTMLAttributes } from "react";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 interface PostTagsProps extends HTMLAttributes<HTMLDivElement> {
+  isSimple?: boolean;
   tags?: string[];
   title?: string;
-  isSimple?: boolean;
 }
 
 export default function PostTags({
@@ -21,18 +21,18 @@ export default function PostTags({
 
   return (
     <div
-      className={cn('flex flex-wrap items-center gap-2', className)}
+      className={cn("flex flex-wrap items-center gap-2", className)}
       {...props}
     >
       {title && <div>{title}</div>}
       {tags.map((tag) => (
         <Badge
-          variant="outline"
-          key={tag}
           className={cn(
-            'rounded-md font-normal',
-            isSimple && 'border-none px-1 text-sm underline'
+            "rounded-md font-normal",
+            isSimple && "border-none px-1 text-sm underline"
           )}
+          key={tag}
+          variant="outline"
         >
           {tag}
         </Badge>

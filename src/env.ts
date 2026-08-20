@@ -1,13 +1,7 @@
-import { createEnv } from '@t3-oss/env-nextjs';
-import { z } from 'zod';
+import { createEnv } from "@t3-oss/env-nextjs";
 
 export const env = createEnv({
+  client: {},
+  runtimeEnv: {},
   server: {},
-  client: {
-    NEXT_PUBLIC_OPENPANEL_CLIENT_ID: z.string().optional(),
-  },
-  runtimeEnv: {
-    NEXT_PUBLIC_OPENPANEL_CLIENT_ID:
-      process.env.NEXT_PUBLIC_OPENPANEL_CLIENT_ID,
-  },
 });

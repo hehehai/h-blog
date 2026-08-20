@@ -36,5 +36,14 @@
     "links": {
       "site": "https://bon-french.com"
     }
+  },
+  {
+    "name": "LevelRead",
+    "subtitle": "🪜 英语学习分级阅读App",
+    "description": "- BetterAuth 登录与验证。\n- 架构、链路、数据库设计。\n- 订阅付费功能与接口。",
+    "cover": "/static/images/projects/levelread.webp",
+    "links": {
+      "site": "https://levelread.com"
+    }
   }
 ]

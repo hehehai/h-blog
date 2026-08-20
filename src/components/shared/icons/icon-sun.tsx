@@ -1,12 +1,12 @@
-import type { SVGProps } from 'react';
+import type { SVGProps } from "react";
 
 export default function SunIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
-      width="1em"
+      fill="currentColor"
       height="1em"
       viewBox="0 0 100 100"
-      fill="currentColor"
+      width="1em"
       {...props}
     >
       <title>theme-toggle</title>

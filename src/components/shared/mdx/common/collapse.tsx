@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { cn } from '@/lib/utils';
-import { useEffect, useRef } from 'react';
-import type { HTMLAttributes } from 'react';
+import type { HTMLAttributes } from "react";
+import { useEffect, useRef } from "react";
+import { cn } from "@/lib/utils";
 
 interface CollapseProps extends HTMLAttributes<HTMLDivElement> {
-  isOpen: boolean;
   horizontal?: boolean;
+  isOpen: boolean;
 }
 
 export function Collapse({
@@ -34,8 +34,8 @@ export function Collapse({
       return;
     }
 
-    container.classList.toggle('duration-500', !isOpen);
-    container.classList.toggle('duration-300', isOpen);
+    container.classList.toggle("duration-500", !isOpen);
+    container.classList.toggle("duration-300", isOpen);
 
     if (horizontal) {
       // save initial width to avoid word wrapping when container width will be changed
@@ -48,14 +48,14 @@ export function Collapse({
     if (isOpen) {
       animationRef.current = window.setTimeout(() => {
         // should be style property in kebab-case, not css class name
-        container.style.removeProperty('height');
+        container.style.removeProperty("height");
       }, 300);
     } else {
       setTimeout(() => {
         if (horizontal) {
-          container.style.width = '0px';
+          container.style.width = "0px";
         } else {
-          container.style.height = '0px';
+          container.style.height = "0px";
         }
       }, 0);
     }
@@ -67,21 +67,21 @@ export function Collapse({
 
   return (
     <div
-      ref={containerRef}
       className={cn(
-        'transform-gpu overflow-hidden transition-all ease-in-out motion-reduce:transition-none',
+        "transform-gpu overflow-hidden transition-all ease-in-out motion-reduce:transition-none",
         className
       )}
+      ref={containerRef}
       style={initialOpen.current || horizontal ? undefined : { height: 0 }}
       {...props}
     >
       <div
-        ref={innerRef}
         className={cn(
-          'children-last-plan transition-opacity duration-500 ease-in-out motion-reduce:transition-none',
-          isOpen ? 'opacity-100' : 'opacity-0',
+          "children-last-plan transition-opacity duration-500 ease-in-out motion-reduce:transition-none",
+          isOpen ? "opacity-100" : "opacity-0",
           className
         )}
+        ref={innerRef}
       >
         {children}
       </div>

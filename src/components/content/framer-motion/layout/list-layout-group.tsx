@@ -1,41 +1,41 @@
-'use client';
+"use client";
 
-import { Card } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
+import { AnimatePresence, LayoutGroup, motion } from "motion/react";
+import React from "react";
+import { css, Icon } from "@/components/lib/tainwild";
 
-import { Badge } from '@/components/ui/badge';
-import { Icon, css } from '@maximeheckel/design-system';
-import { AnimatePresence, LayoutGroup, motion } from 'motion/react';
-import React from 'react';
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 
 const ITEMS = [
   {
-    text: 'Make some coffee ☕️',
     id: 1,
+    text: "Make some coffee ☕️",
   },
   {
-    text: 'Drink water 💧',
     id: 2,
+    text: "Drink water 💧",
   },
   {
-    text: 'Go to the gym 🏃‍♂️',
     id: 3,
+    text: "Go to the gym 🏃‍♂️",
   },
 ];
 
 const ITEMS2 = [
   {
-    text: 'Finish blog post ✍️',
     id: 1,
+    text: "Finish blog post ✍️",
   },
   {
-    text: 'Build new Three.js experiences ✨',
     id: 2,
+    text: "Build new Three.js experiences ✨",
   },
   {
-    text: 'Add new components to Design System 🌈',
     id: 3,
+    text: "Add new components to Design System 🌈",
   },
 ];
 
@@ -51,30 +51,30 @@ const List = (props: {
       <AnimatePresence>
         {listItems.map((item) => (
           <motion.div
-            layout
-            initial={{
-              opacity: 1,
-            }}
+            className="w-full rounded-lg border bg-background px-3 py-1"
             exit={{
               opacity: 0,
             }}
+            initial={{
+              opacity: 1,
+            }}
             key={item.id}
-            className="w-full rounded-lg border bg-background px-3 py-1"
+            layout
           >
             <div className="flex items-center space-x-3">
               <button
-                type="button"
-                className={css({
-                  background: 'transparent',
-                  boxShadow: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                })()}
                 onClick={() =>
                   setListItems((prev) =>
                     prev.filter((task) => task.id !== item.id)
                   )
                 }
+                style={css({
+                  background: "transparent",
+                  border: "none",
+                  boxShadow: "none",
+                  cursor: "pointer",
+                })}
+                type="button"
               >
                 <Icon.X size="4" />
               </button>
@@ -94,11 +94,11 @@ const ListLayoutGroup = () => {
 
   const codeString = layoutGroup
     ? `<LayoutGroup>
-  <List 
-    items={[...]} 
-    name="List 1" 
+  <List
+    items={[...]}
+    name="List 1"
   />
-  <List 
+  <List
     items={[...]}
     name="List 2"
   />
@@ -119,8 +119,8 @@ const ListLayoutGroup = () => {
       <div className="flex flex-col gap-3 p-4">
         <div className="flex items-center space-x-2">
           <Switch
-            checked={layoutGroup}
             aria-label="包裹 LayoutGroup"
+            checked={layoutGroup}
             id="use-layoutGroup"
             onCheckedChange={() => setLayoutGroup((prev) => !prev)}
           />

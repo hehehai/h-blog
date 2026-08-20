@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { useTheme } from '@maximeheckel/design-system';
-import { Loader2 } from 'lucide-react';
-import dynamic from 'next/dynamic';
-import { Suspense } from 'react';
-import snippet1 from './snippet1';
-import snippet2 from './snippet2';
-import snippet3 from './snippet3';
-import snippet4 from './snippet4';
-import snippet5 from './snippet5';
+import { Loader2 } from "lucide-react";
+import dynamic from "next/dynamic";
+import { Suspense } from "react";
+import { useTainwildTheme } from "@/components/lib/tainwild";
+import snippet1 from "./snippet1";
+import snippet2 from "./snippet2";
+import snippet3 from "./snippet3";
+import snippet4 from "./snippet4";
+import snippet5 from "./snippet5";
 
 const SandpackBlock = dynamic(
-  () => import('../../../shared/mdx/common/sandpack')
+  () => import("../../../shared/mdx/common/sandpack")
 );
 
 const SceneCSSDark = `
@@ -45,7 +45,7 @@ const SNIPPETS = {
 };
 
 const GuideToFramerMotionSandpack = ({ snippet }: { snippet: string }) => {
-  const { dark } = useTheme();
+  const { dark } = useTainwildTheme();
 
   return (
     <>
@@ -57,24 +57,24 @@ const GuideToFramerMotionSandpack = ({ snippet }: { snippet: string }) => {
         }
       >
         <SandpackBlock
-          options={{
-            autorun: true,
-          }}
-          template="react"
           customSetup={{
             dependencies: {
-              'framer-motion': '6.2.4',
+              "framer-motion": "6.2.4",
             },
           }}
           files={{
-            '/App.js': {
+            "/App.js": {
               code: SNIPPETS[snippet as keyof typeof SNIPPETS],
             },
-            '/scene.css': {
+            "/scene.css": {
               code: dark ? SceneCSSDark : SceneCSSLight,
               hidden: true,
             },
           }}
+          options={{
+            autorun: true,
+          }}
+          template="react"
         />
       </Suspense>
     </>

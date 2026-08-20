@@ -1,7 +1,7 @@
-import Footer from '@/components/shared/layout/footer';
-import Header from '@/components/shared/layout/header';
-import NavBar from '@/components/shared/layout/nav-bar';
-import type { ReactNode } from 'react';
+import type { ReactNode } from "react";
+import Footer from "@/components/shared/layout/footer";
+import Header from "@/components/shared/layout/header";
+import NavBar from "@/components/shared/layout/nav-bar";
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (

@@ -1,88 +1,80 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { Card as DesignSystemCard } from '@/components/ui/card';
-import { Flex, H3, Icon, Shadows, styled } from '@maximeheckel/design-system';
-import { motion } from 'motion/react';
-import React from 'react';
-import { AnimationCardContent } from '../common-styled';
+import { Layers } from "lucide-react";
+import { motion } from "motion/react";
+import React from "react";
+import {
+  TainwildFlex as Flex,
+  styled,
+  TainwildText,
+} from "@/components/lib/tainwild";
+import { Button } from "@/components/ui/button";
+import { Card as DesignSystemCard } from "@/components/ui/card";
+import { AnimationCardContent } from "../common-styled";
 
-const CardWrapper = styled('div', {
-  position: 'relative',
-  width: '300px',
-  height: '200px',
+const CardWrapper = styled("div", {
+  height: "200px",
+  position: "relative",
+  width: "300px",
 });
 
 const Wrapper = styled(motion.div, {
-  position: 'relative',
-  cursor: 'default',
+  cursor: "default",
+  position: "relative",
 });
 
 const CaptureLayer = styled(motion.div, {
-  position: 'absolute',
-  width: '300px',
-  height: '300px',
-  borderRadius: '32px',
   background:
-    'repeating-linear-gradient(-45deg, #15181e, #15181e 5px, rgba(92, 135, 246, 0.07) 5px, rgba(92, 135, 246, 0.07) 10px)',
-  opacity: 0.6,
-
-  zIndex: '3',
-  transformStyle: 'preserve-3d',
+    "repeating-linear-gradient(-45deg, #15181e, #15181e 5px, rgba(92, 135, 246, 0.07) 5px, rgba(92, 135, 246, 0.07) 10px)",
+  borderRadius: "32px",
   boxShadow: `1px 1px 0 1px #16181D,
     -1px 0 28px 0 rgb(34 33 81 / 1%), 28px 28px 28px 0 rgb(34 33 81 / 25%)`,
-  transition: '0.4s ease-in-out box-shadow, 0.4s ease-in-out opacity',
+  height: "300px",
+  opacity: 0.6,
+  position: "absolute",
+  transformStyle: "preserve-3d",
+  transition: "0.4s ease-in-out box-shadow, 0.4s ease-in-out opacity",
+  width: "300px",
 
-  '&:hover': {
-    boxShadow: `1px 1px 0 1px #16181D,
-      -1px 0 28px 0 rgba(34, 33, 81, 0.01),
-      54px 54px 28px -10px rgba(34, 33, 81, 0.15)`,
-  },
+  zIndex: "3",
+});
 
-  variants: {
-    show: {
-      true: {
-        opacity: 1,
-      },
-      false: {
-        opacity: 0,
-      },
+const captureLayerVariants = {
+  show: {
+    false: {
+      opacity: 0,
+    },
+    true: {
+      opacity: 1,
     },
   },
-});
+};
 
 const Glow = styled(motion.div, {
   background:
-    'linear-gradient(104.01deg, rgb(155, 235, 235) 5.51%, rgb(15, 166, 233) 98.93%)',
-  position: 'absolute',
-  top: '0',
-  left: '0',
-  width: '100%',
-  height: '100%',
-  webkitFilter: 'blur(15px)',
-  filter: 'blur(15px)',
-  borderRadius: '32px',
+    "linear-gradient(104.01deg, rgb(155, 235, 235) 5.51%, rgb(15, 166, 233) 98.93%)",
+  borderRadius: "32px",
+  filter: "blur(15px)",
+  height: "100%",
+  left: "0",
+  position: "absolute",
+  top: "0",
+  width: "100%",
 });
 
-const Card = styled('div', {
-  borderRadius: '32px',
-  border: '1px solid rgba(92, 135, 246, 0.7)',
-  marginBottom: '0px',
-  overflow: 'hidden',
-  position: 'relative',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  background: 'rgba(31, 36, 45, 0.5)',
-  boxShadow: Shadows[2],
-  height: '100%',
-  div: {
-    color: 'var(--text-tertiary)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '50px',
-  },
+const Card = styled("div", {
+  background: "rgba(31, 36, 45, 0.5)",
+  border: "1px solid rgba(92, 135, 246, 0.7)",
+  borderRadius: "32px",
+  boxShadow:
+    "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+  display: "flex",
+  flexDirection: "column",
+  height: "100%",
+  justifyContent: "center",
+  marginBottom: "0px",
+  overflow: "hidden",
+  position: "relative",
 });
 
 const CardWithGlow = () => {
@@ -106,21 +98,6 @@ const CardWithGlow = () => {
     },
   };
 
-  const topLayerVariants = {
-    hover: {
-      translateX: -25,
-      translateY: -10,
-      transition: {
-        duration: 0.5,
-        ease: 'easeInOut',
-      },
-    },
-    initial: {
-      translateX: -10,
-      translateY: 5,
-    },
-  };
-
   const layerVariants = {
     active: (inPerspective: boolean) => ({
       rotateX: inPerspective ? 51 : 0,
@@ -128,7 +105,7 @@ const CardWithGlow = () => {
       rotateZ: inPerspective ? 43 : 0,
       transition: {
         duration: 0.5,
-        ease: 'easeInOut',
+        ease: "easeInOut",
       },
     }),
     initial: {
@@ -137,7 +114,7 @@ const CardWithGlow = () => {
       rotateZ: 0,
       transition: {
         duration: 0.5,
-        ease: 'easeInOut',
+        ease: "easeInOut",
       },
     },
   };
@@ -146,27 +123,37 @@ const CardWithGlow = () => {
 
   return (
     <Flex
-      alignItems="center"
-      direction="column"
+      align="center"
       css={{
-        position: 'relative',
-        textAlign: 'center',
+        position: "relative",
+        textAlign: "center",
       }}
+      direction="column"
     >
       <Wrapper
-        initial="initial"
-        whileHover="hover"
-        whileTap="hover"
         animate="active"
         custom={inPerspective}
+        initial="initial"
         variants={layerVariants}
+        whileHover="hover"
+        whileTap="hover"
       >
-        <CaptureLayer show={inPerspective} variants={topLayerVariants} />
-        <H3>Hover me!</H3>
+        <CaptureLayer
+          show={inPerspective}
+          variants={captureLayerVariants}
+          whileHover={{
+            boxShadow: `1px 1px 0 1px #16181D,
+              -1px 0 28px 0 rgba(34, 33, 81, 0.01),
+              54px 54px 28px -10px rgba(34, 33, 81, 0.15)`,
+          }}
+        />
+        <TainwildText as="h3" size="xl" weight="bold">
+          Hover me!
+        </TainwildText>
         <br />
         <br />
         <CardWrapper>
-          <Glow variants={glowVariants} custom={inPerspective} />
+          <Glow custom={inPerspective} variants={glowVariants} />
           <Card>
             <div>✨ It&apos;s magic! ✨</div>
           </Card>
@@ -174,10 +161,10 @@ const CardWithGlow = () => {
         {inPerspective ? (
           <motion.div
             style={{
-              position: 'absolute',
-              fontSize: '12px',
-              top: '-55px',
-              maxWidth: '250px',
+              fontSize: "12px",
+              maxWidth: "250px",
+              position: "absolute",
+              top: "-55px",
             }}
             variants={tagVariants}
           >
@@ -187,11 +174,11 @@ const CardWithGlow = () => {
         {inPerspective ? (
           <motion.div
             style={{
-              position: 'absolute',
-              fontSize: '12px',
-              bottom: '-75px',
-              right: '-15px',
-              maxWidth: '250px',
+              bottom: "-75px",
+              fontSize: "12px",
+              maxWidth: "250px",
+              position: "absolute",
+              right: "-15px",
             }}
             variants={tagVariants}
           >
@@ -200,26 +187,24 @@ const CardWithGlow = () => {
         ) : null}
       </Wrapper>
       <Button
-        size="icon"
         className="mt-10"
-        variant="outline"
-        title={inPerspective ? 'Disable perspective' : 'Enable perspective'}
         onClick={() => setInPerspective((prev) => !prev)}
+        size="icon"
+        title={inPerspective ? "Disable perspective" : "Enable perspective"}
+        variant="outline"
       >
-        <Icon.Stack />
+        <Layers />
       </Button>
     </Flex>
   );
 };
 
-const FramerMotionPropagation = () => {
-  return (
-    <DesignSystemCard className="py-10">
-      <AnimationCardContent>
-        <CardWithGlow />
-      </AnimationCardContent>
-    </DesignSystemCard>
-  );
-};
+const FramerMotionPropagation = () => (
+  <DesignSystemCard className="py-10">
+    <AnimationCardContent>
+      <CardWithGlow />
+    </AnimationCardContent>
+  </DesignSystemCard>
+);
 
 export default FramerMotionPropagation;

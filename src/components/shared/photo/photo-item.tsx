@@ -1,5 +1,5 @@
-import type { Atlas } from '@/types/photo';
-import Image from 'next/image';
+import Image from "next/image";
+import type { Atlas } from "@/types/photo";
 
 export default function PhotoItem(props: Atlas) {
   const { title, photos, time } = props;
@@ -14,11 +14,11 @@ export default function PhotoItem(props: Atlas) {
         {photos.map((photo) => (
           <div className="relative h-72 w-full" key={photo.path}>
             <Image
+              alt={photo.alt ?? ""}
+              className="object-cover"
+              fill
+              sizes="(min-width: 768px) 33vw, 100vw"
               src={photo.path}
-              alt={photo.alt ?? ''}
-              lazyBoundary="200px"
-              layout="fill"
-              objectFit="cover"
             />
           </div>
         ))}

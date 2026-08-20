@@ -1,49 +1,48 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
-
+import { AnimatePresence, LayoutGroup, motion, Reorder } from "motion/react";
+import React from "react";
+import { css, Icon } from "@/components/lib/tainwild";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip';
-import { Icon, css } from '@maximeheckel/design-system';
-import { AnimatePresence, LayoutGroup, Reorder, motion } from 'motion/react';
-import React from 'react';
+} from "@/components/ui/tooltip";
 
 const ITEMS = [
   {
-    text: 'Finish blog post ✍️',
     checked: false,
     id: 1,
+    text: "Finish blog post ✍️",
   },
   {
-    text: 'Build new Three.js experiences ✨',
     checked: false,
     id: 2,
+    text: "Build new Three.js experiences ✨",
   },
   {
-    text: 'Add new components to Design System 🌈',
     checked: false,
     id: 3,
+    text: "Add new components to Design System 🌈",
   },
   {
-    text: 'Make some coffee ☕️',
     checked: false,
     id: 4,
+    text: "Make some coffee ☕️",
   },
   {
-    text: 'Drink water 💧',
     checked: false,
     id: 5,
+    text: "Drink water 💧",
   },
   {
-    text: 'Go to the gym 🏃‍♂️',
     checked: false,
     id: 6,
+    text: "Go to the gym 🏃‍♂️",
   },
 ];
 
@@ -73,16 +72,14 @@ const AdvanceReorderExample = () => {
         <Button
           disabled={items.length > 5}
           onClick={() =>
-            setItems((prev) => {
-              return [
-                ...prev,
-                {
-                  text: 'Prepare for space travel 🧑‍🚀',
-                  id: Math.random(),
-                  checked: false,
-                },
-              ];
-            })
+            setItems((prev) => [
+              ...prev,
+              {
+                checked: false,
+                id: Math.random(),
+                text: "Prepare for space travel 🧑‍🚀",
+              },
+            ])
           }
         >
           添加
@@ -90,7 +87,7 @@ const AdvanceReorderExample = () => {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button size="icon" onClick={() => setItems(ITEMS)}>
+              <Button onClick={() => setItems(ITEMS)} size="icon">
                 <Icon.Repeat />
               </Button>
             </TooltipTrigger>
@@ -101,43 +98,43 @@ const AdvanceReorderExample = () => {
       <LayoutGroup>
         <Reorder.Group
           axis="y"
-          values={items}
           onReorder={setItems}
-          className={css({
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '12px',
-            margin: '0',
-            padding: '0',
-            width: '100%',
-          })()}
+          style={css({
+            display: "flex",
+            flexDirection: "column",
+            gap: "12px",
+            margin: "0",
+            padding: "0",
+            width: "100%",
+          })}
+          values={items}
         >
           <AnimatePresence>
             {items.map((item) => (
               <motion.div
-                className="flex items-center justify-between gap-6"
-                key={item.id}
-                initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
+                className="flex items-center justify-between gap-6"
                 exit={{ opacity: 0, transition: { duration: 0.2 } }}
+                initial={{ opacity: 0 }}
+                key={item.id}
               >
                 <Reorder.Item
                   className="m-0 h-full flex-grow cursor-grab list-none rounded-md border"
                   style={{
-                    position: 'relative', // /!\ this is needed to avoid weird overlap
-                    borderRadius: '12px',
-                    width: item.checked ? '70%' : '100%', // layout resize animation
+                    borderRadius: "12px",
+                    position: "relative", // /!\ this is needed to avoid weird overlap
+                    width: item.checked ? "70%" : "100%", // layout resize animation
                   }}
                   value={item}
                 >
                   <motion.div
-                    layout="position"
                     className="flex items-center gap-6 px-4 py-2"
+                    layout="position"
                   >
                     <Checkbox
-                      id={`checkbox-${item.id}`}
                       aria-label="Mark as done"
                       checked={item.checked}
+                      id={`checkbox-${item.id}`}
                       onCheckedChange={() => completeItem(item.id)}
                     />
                     <div>{item.text}</div>
@@ -146,18 +143,18 @@ const AdvanceReorderExample = () => {
                 <AnimatePresence initial={false}>
                   {item.checked ? (
                     <motion.div
-                      layout
-                      initial={{ opacity: 0 }}
                       animate={{ opacity: 1, transition: { delay: 0.2 } }}
                       exit={{ opacity: 0 }}
+                      initial={{ opacity: 0 }}
+                      layout
                     >
                       <Button
-                        size="icon"
                         onClick={() =>
                           setItems((prev) =>
                             prev.filter((task) => task.id !== item.id)
                           )
                         }
+                        size="icon"
                       >
                         <Icon.X />
                       </Button>
@@ -169,7 +166,7 @@ const AdvanceReorderExample = () => {
           </AnimatePresence>
         </Reorder.Group>
         <motion.div layout>
-          <div>{'完成后检查列表中的项目!'}</div>
+          <div>{"完成后检查列表中的项目!"}</div>
         </motion.div>
       </LayoutGroup>
     </Card>

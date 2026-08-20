@@ -1,5 +1,5 @@
-import { cn } from '@/lib/utils';
-import type { HTMLAttributes } from 'react';
+import type { HTMLAttributes } from "react";
+import { cn } from "@/lib/utils";
 
 interface SandpackHolderProps extends HTMLAttributes<HTMLDivElement> {
   code: string;
@@ -11,7 +11,7 @@ export function SandpackHolder({
   ...props
 }: SandpackHolderProps) {
   return (
-    <div className={cn('sandpack-holder', className)} {...props}>
+    <div className={cn("sandpack-holder", className)} {...props}>
       <pre>{code}</pre>
     </div>
   );
