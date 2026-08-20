@@ -92,7 +92,7 @@ function PostPage() {
       </div>
       <main>
         <article className="prose prose-slate dark:prose-invert mt-4 w-full max-w-none">
-          <MDXContent code={post.mdx} components={exampleComponents} />
+          <MDXContent components={exampleComponents} slug={post.slug} />
         </article>
       </main>
     </div>

@@ -1,11 +1,5 @@
 import { defineCollection, defineConfig } from "@content-collections/core";
-import { compileMDX } from "@content-collections/mdx";
 import readingTime from "reading-time";
-import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import rehypeCodeTitles from "rehype-code-titles";
-import rehypeHighlight from "rehype-highlight";
-import rehypeSlug from "rehype-slug";
-import remarkGfm from "remark-gfm";
 import { z } from "zod";
 import { $ } from "zx";
 
@@ -42,29 +36,11 @@ const posts = defineCollection({
         }
       );
 
-      const mdx = await compileMDX(context, document, {
-        rehypePlugins: [
-          rehypeSlug,
-          rehypeCodeTitles,
-          rehypeHighlight,
-          [
-            rehypeAutolinkHeadings,
-            {
-              properties: {
-                className: ["anchor"],
-              },
-            },
-          ],
-        ],
-        remarkPlugins: [remarkGfm],
-      });
-
-      const readingInfo = readingTime(mdx);
+      const readingInfo = readingTime(document.content ?? "");
 
       return {
         ...document,
         lastModified,
-        mdx,
         readingTime: Math.round(readingInfo.minutes),
         slug,
         words: readingInfo.words,
