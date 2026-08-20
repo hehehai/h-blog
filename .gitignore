@@ -17,6 +17,7 @@
 /.output/
 /dist/
 /out/
+/.wrangler/
 
 # production
 /build

@@ -28,10 +28,11 @@ pnpm check
 pnpm build
 ```
 
-生产构建使用 Nitro Node Server：
+生产构建和 Cloudflare Workers 预览：
 
 ```shell
-pnpm start
+pnpm build
+pnpm preview
 ```
 
 环境变量文件 `.env` 是可选的。

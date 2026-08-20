@@ -1,12 +1,13 @@
+import { cloudflare } from "@cloudflare/vite-plugin";
 import contentCollections from "@content-collections/vite";
 import tailwindcss from "@tailwindcss/vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import react from "@vitejs/plugin-react";
-import { nitro } from "nitro/vite";
 import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [
+    cloudflare({ viteEnvironment: { name: "ssr" } }),
     contentCollections(),
     tailwindcss(),
     tanstackStart({
@@ -23,7 +24,6 @@ export default defineConfig({
       },
     }),
     react(),
-    nitro(),
   ],
   resolve: {
     tsconfigPaths: true,
