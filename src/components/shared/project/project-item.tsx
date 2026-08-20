@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { Image } from "@unpic/react";
 import type { HTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 import { IconGithub, IconWebsite } from "../icons";
@@ -40,11 +40,11 @@ export default function Project({
         <div className="relative aspect-[5/3] w-full drop-shadow-lg md:w-[420px] md:shrink-0">
           <Image
             alt={name}
-            className="rounded-xl object-cover"
-            fill
-            priority
-            sizes="(min-width: 768px) 420px, 100vw"
+            className="absolute inset-0 h-full w-full rounded-xl object-cover"
+            height={252}
+            layout="constrained"
             src={cover}
+            width={420}
           />
         </div>
         <div className="mt-4 flex grow flex-col md:mt-0">

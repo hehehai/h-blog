@@ -2,7 +2,6 @@ export { default as IconGithub } from "./icon-github";
 export { default as IconInfoCircle } from "./icon-info-circle";
 export { default as IconJumpLink } from "./icon-jump-link";
 export { default as IconMoon } from "./icon-moon";
-export { default as IconNextJS } from "./icon-next-js";
 export { default as IconReact } from "./icon-react";
 export { default as IconSpinner } from "./icon-spinner";
 export { default as IconSun } from "./icon-sun";

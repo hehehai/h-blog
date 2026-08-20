@@ -1,5 +1,5 @@
+import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
-import Link from "next/link";
 import type { HTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 
@@ -19,7 +19,7 @@ export default function NavItem({
   return (
     <Link
       className={cn("group relative px-5 pb-2 first:pl-0", className)}
-      href={href}
+      to={href}
       {...props}
     >
       <span>{text}</span>

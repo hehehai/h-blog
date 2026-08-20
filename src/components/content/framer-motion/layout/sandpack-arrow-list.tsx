@@ -1,11 +1,9 @@
 "use client";
 
-import dynamic from "next/dynamic";
+import { lazy } from "react";
 import { useTainwildTheme } from "@/components/lib/tainwild";
 
-const SandpackBlock = dynamic(
-  () => import("../../../shared/mdx/common/sandpack")
-);
+const SandpackBlock = lazy(() => import("../../../shared/mdx/common/sandpack"));
 
 const ComponentsCode = `import { styled } from '@stitches/react';
 

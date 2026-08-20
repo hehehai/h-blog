@@ -1,4 +1,17 @@
-export default function About() {
+import { createFileRoute } from "@tanstack/react-router";
+import { createSeoHead } from "@/lib/seo";
+
+export const Route = createFileRoute("/_site/about")({
+  component: About,
+  head: () =>
+    createSeoHead({
+      description: "了解一块木头的技术背景、专长与正在探索的项目。",
+      path: "/about",
+      title: "关于我 | Hehehai @一块木头",
+    }),
+});
+
+function About() {
   return (
     <article className="prose prose-slate dark:prose-invert">
       <h2 className="font-bold">@一块木头</h2>
@@ -18,7 +31,7 @@ export default function About() {
         <br />
         <a
           className="mx-1"
-          href="mailto: riverhohai@gmail.com"
+          href="mailto:riverhohai@gmail.com"
           rel="noreferrer"
           target="_blank"
         >

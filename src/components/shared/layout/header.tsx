@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import { siteConfig } from "@/lib/config/site";
 import ButtonFadeStyle from "../button-fade-style";
 import ButtonThemeToggle from "../button-theme-toggle";
@@ -8,7 +8,7 @@ export default function Header() {
   return (
     <div className="items-center justify-between py-12 md:flex">
       <div className="font-medium text-2xl">
-        <Link href="/">Hehehai.cn</Link>
+        <Link to="/">Hehehai.cn</Link>
       </div>
       <div className="mt-5 flex items-center space-x-4 md:mt-0">
         <ButtonFadeStyle label="Github" link={siteConfig.github}>

@@ -1,12 +1,10 @@
-import dynamic from "next/dynamic";
+import { lazy } from "react";
 import snippet1 from "./snippet1";
 import snippet2 from "./snippet2";
 import snippet3 from "./snippet3";
 import snippet4 from "./snippet4";
 
-const SandpackBlock = dynamic(
-  () => import("../../../shared/mdx/common/sandpack")
-);
+const SandpackBlock = lazy(() => import("../../../shared/mdx/common/sandpack"));
 
 const SceneCSSDark = `
 html {

@@ -1,8 +1,7 @@
 "use client";
 
 import { Loader2 } from "lucide-react";
-import dynamic from "next/dynamic";
-import { Suspense } from "react";
+import { lazy, Suspense } from "react";
 import { useTainwildTheme } from "@/components/lib/tainwild";
 import snippet1 from "./snippet1";
 import snippet2 from "./snippet2";
@@ -10,9 +9,7 @@ import snippet3 from "./snippet3";
 import snippet4 from "./snippet4";
 import snippet5 from "./snippet5";
 
-const SandpackBlock = dynamic(
-  () => import("../../../shared/mdx/common/sandpack")
-);
+const SandpackBlock = lazy(() => import("../../../shared/mdx/common/sandpack"));
 
 const SceneCSSDark = `
 html {

@@ -27,7 +27,7 @@ No test framework is configured. Before adding tests, verify the project's testi
 
 ## Tech Stack
 
-- **Framework**: Next.js 16 with App Router
+- **Framework**: TanStack Start with TanStack Router and Vite
 - **Styling**: Tailwind CSS 4
 - **Language**: TypeScript with strict mode enabled
 - **Components**: Radix UI primitives + shadcn/ui patterns
@@ -47,7 +47,7 @@ No test framework is configured. Before adding tests, verify the project's testi
 
 Example:
 ```ts
-import Link from 'next/link';
+import { Link } from '@tanstack/react-router';
 import { allPosts } from '@/content';
 import Footer from '@/components/shared/layout/footer';
 import type { ReactNode } from 'react';
@@ -80,17 +80,15 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 Button.displayName = 'Button';
 ```
 
-### Server Actions
-Use `'use server'` directive for server actions in `src/functions/` directory:
+### Server Functions
+Use TanStack Start's `createServerFn` for server-only data access in `src/functions/`:
 ```ts
-'use server';
-
+import { createServerFn } from '@tanstack/react-start';
 import { allPosts } from '@/content';
 
-export async function getPostBySlug(slug: string) {
-  const post = allPosts.find((post) => post.slug === slug);
-  return post;
-}
+export const getPostBySlug = createServerFn({ method: 'GET' })
+  .validator((data: { slug: string }) => data)
+  .handler(({ data }) => allPosts.find((post) => post.slug === data.slug));
 ```
 
 ### Types
@@ -112,11 +110,11 @@ export async function getPostBySlug(slug: string) {
 - Remove console.log/debugger before committing
 
 ### File Organization
-- `src/app/(www)/` - Page routes with layout grouping
+- `src/routes/` - File-based routes, layouts, and server endpoints
 - `src/components/shared/` - Reusable shared components
 - `src/components/ui/` - UI primitives (Radix-based)
 - `src/components/content/` - Content-specific components
-- `src/functions/` - Server actions and data fetching
+- `src/functions/` - Server functions and data fetching
 - `src/lib/` - Utilities and configurations
 - `src/contents/` - MDX content files
 - `contents/posts/` - Blog post MDX files
@@ -145,7 +143,7 @@ MDX content is processed by content-collections. When adding new posts:
 - Add `rel="noopener noreferrer"` when using `target="_blank"`
 
 ### Performance
-- Use Next.js `<Image>` component for images (configured in next.config.ts)
+- Use `@unpic/react` or an equivalent image component for application images
 - Avoid barrel files (index files that re-export everything)
 - Use specific imports over namespace imports
 - Server Components for data fetching, Client Components only when needed

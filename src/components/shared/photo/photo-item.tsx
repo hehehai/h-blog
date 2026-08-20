@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { Image } from "@unpic/react";
 import type { Atlas } from "@/types/photo";
 
 export default function PhotoItem(props: Atlas) {
@@ -14,11 +14,12 @@ export default function PhotoItem(props: Atlas) {
         {photos.map((photo) => (
           <div className="relative h-72 w-full" key={photo.path}>
             <Image
-              alt={photo.alt ?? ""}
-              className="object-cover"
-              fill
-              sizes="(min-width: 768px) 33vw, 100vw"
+              alt={photo.alt || `${title} 照片`}
+              className="absolute inset-0 h-full w-full object-cover"
+              height={800}
+              layout="constrained"
               src={photo.path}
+              width={1200}
             />
           </div>
         ))}

@@ -1,3 +1,3 @@
-import dynamic from "next/dynamic";
+import { lazy } from "react";
 
-export const ExampleMenu = dynamic(() => import("./menu"));
+export const ExampleMenu = lazy(() => import("./menu"));

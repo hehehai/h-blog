@@ -1,4 +1,4 @@
-import NextLink from "next/link";
+import { Link } from "@tanstack/react-router";
 import { siteConfig } from "@/lib/config/site";
 
 export default function ShortAboutMe() {
@@ -40,12 +40,12 @@ export default function ShortAboutMe() {
         </p>
       </article>
       <div className="mt-3">
-        <NextLink
+        <Link
           className="text-slate-700 underline decoration-2 decoration-slate-500 underline-offset-8 hover:decoration-dotted dark:text-gray-400"
-          href="/about"
+          to="/about"
         >
           我的故事 _
-        </NextLink>
+        </Link>
       </div>
     </div>
   );

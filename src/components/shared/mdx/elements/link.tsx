@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import type { HTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 import { IconJumpLink } from "../../icons";
@@ -18,7 +18,7 @@ export default function ElementLink({
     return (
       <Link
         className={cn("underline-offset-4", className)}
-        href={href}
+        to={href}
         {...props}
       >
         {props.children}

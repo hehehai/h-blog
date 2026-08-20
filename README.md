@@ -11,7 +11,7 @@
 
 ## ⌨️ 安装&运行
 
-使用 pnpm 安装运行，博客使用 Next.js App Router。
+使用 pnpm 安装运行，博客使用 TanStack Start、TanStack Router 和 Vite。
 
 ```shell
 pnpm install
@@ -26,6 +26,12 @@ pnpm run dev
 pnpm check-types
 pnpm check
 pnpm build
+```
+
+生产构建使用 Nitro Node Server：
+
+```shell
+pnpm start
 ```
 
 环境变量文件 `.env` 是可选的。

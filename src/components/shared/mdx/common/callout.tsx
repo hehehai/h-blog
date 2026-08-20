@@ -1,5 +1,5 @@
+import { Image } from "@unpic/react";
 import { cva } from "class-variance-authority";
-import Image from "next/image";
 import type { HTMLAttributes, ReactElement } from "react";
 import { cn } from "@/lib/utils";
 
@@ -51,9 +51,10 @@ export function Callout({
         <Image
           alt={type}
           className="h-full w-full object-contain"
-          fill
-          sizes="1.7em"
+          height={28}
+          layout="fixed"
           src={TypeToEmoji[type]}
+          width={28}
         />
       </div>
       <div className="children-last-plan w-full min-w-0 leading-7">

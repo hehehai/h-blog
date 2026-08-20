@@ -1,3 +1,4 @@
+import { createServerFn } from "@tanstack/react-start";
 import type { AtlasMeta, Issue, Photo } from "@/types/photo";
 
 const MetaKeyMap: Record<keyof AtlasMeta, string> = {
@@ -38,11 +39,16 @@ export const atlasParser = (body: string) => {
   };
 };
 
-export async function getAtlas(page = 1) {
-  const url = `https://api.github.com/repos/hehehai/h-blog/issues?assignee=hehehai&labels=photos&sort=created&direction=desc&per_page=100&page=${page}`;
+export const getAtlas = createServerFn({ method: "GET" })
+  .validator((data: { page?: number } = {}) => data)
+  .handler(async ({ data: { page = 1 } }) => {
+    const url = `https://api.github.com/repos/hehehai/h-blog/issues?assignee=hehehai&labels=photos&sort=created&direction=desc&per_page=100&page=${page}`;
 
-  const resData = await fetch(url);
-  if (resData.status === 200) {
+    const resData = await fetch(url);
+    if (resData.status !== 200) {
+      return [];
+    }
+
     const issues: Issue[] = await resData.json();
     return issues.map((issue) => {
       const { meta, photos } = atlasParser(issue.body);
@@ -58,6 +64,4 @@ export async function getAtlas(page = 1) {
         photos,
       };
     });
-  }
-  return [];
-}
+  });

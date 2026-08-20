@@ -1,76 +1,76 @@
-import dynamic from "next/dynamic";
+import { lazy } from "react";
 
 // Guide
-export const AnimationTypes = dynamic(() => import("./guide/animation-types"));
+export const AnimationTypes = lazy(() => import("./guide/animation-types"));
 
-export const ClipboardAnimationDetails = dynamic(
+export const ClipboardAnimationDetails = lazy(
   () => import("./guide/clipboard-animation-details")
 );
 
-export const GuideToFramerMotionSandpack = dynamic(
+export const GuideToFramerMotionSandpack = lazy(
   () => import("./guide/sandpack")
 );
 
-export const Orchestration = dynamic(() => import("./guide/orchestration"));
+export const Orchestration = lazy(() => import("./guide/orchestration"));
 
 // Advanced
-export const FramerMotionPropagation = dynamic(
+export const FramerMotionPropagation = lazy(
   () => import("./advanced/propagation")
 );
 
-export const AdvancedFramerMotionSandpack = dynamic(
+export const AdvancedFramerMotionSandpack = lazy(
   () => import("./advanced/sandpack")
 );
 
-export const FramerMotionAnimatePresence = dynamic(
+export const FramerMotionAnimatePresence = lazy(
   () => import("./advanced/animate-presence")
 );
 
-export const FramerMotionAnimationLayout = dynamic(
+export const FramerMotionAnimationLayout = lazy(
   () => import("./advanced/animation-layout")
 );
 
 // Layout
-export const FramerMotionLayoutAnimationsBasic = dynamic(
+export const FramerMotionLayoutAnimationsBasic = lazy(
   () => import("./layout/basic")
 );
 
-export const FramerMotionToastNotificationSandpack = dynamic(
+export const FramerMotionToastNotificationSandpack = lazy(
   () => import("./layout/sandpack-notification")
 );
 
-export const FramerMotionDistortions = dynamic(
+export const FramerMotionDistortions = lazy(
   () => import("./layout/distortions")
 );
 
-export const FramerMotionLayoutAnimationsLayoutProp = dynamic(
+export const FramerMotionLayoutAnimationsLayoutProp = lazy(
   () => import("./layout/layout-prop")
 );
 
-export const FramerMotionLayoutAnimationsLayoutPosition = dynamic(
+export const FramerMotionLayoutAnimationsLayoutPosition = lazy(
   () => import("./layout/layout-position")
 );
 
-export const FramerMotionArrowListSandpack = dynamic(
+export const FramerMotionArrowListSandpack = lazy(
   () => import("./layout/sandpack-arrow-list")
 );
 
-export const FramerMotionLayoutAnimationsSharedLayoutAnimationDetails = dynamic(
+export const FramerMotionLayoutAnimationsSharedLayoutAnimationDetails = lazy(
   () => import("./layout/shared-layout-animation-details")
 );
 
-export const FramerMotionTabsSandpack = dynamic(
+export const FramerMotionTabsSandpack = lazy(
   () => import("./layout/sandpack-tabs")
 );
 
-export const FramerMotionLayoutAnimationsTabsLayoutGroup = dynamic(
+export const FramerMotionLayoutAnimationsTabsLayoutGroup = lazy(
   () => import("./layout/tabs-layout-group")
 );
 
-export const FramerMotionLayoutAnimationListLayoutGroup = dynamic(
+export const FramerMotionLayoutAnimationListLayoutGroup = lazy(
   () => import("./layout/list-layout-group")
 );
 
-export const FramerMotionAdvanceReorderExample = dynamic(
+export const FramerMotionAdvanceReorderExample = lazy(
   () => import("./layout/advance-reorder-example")
 );

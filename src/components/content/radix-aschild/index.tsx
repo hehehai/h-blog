@@ -1,11 +1,11 @@
-import dynamic from "next/dynamic";
+import { lazy } from "react";
 
-export const Demo1Code = dynamic(() => import("./demo-code"));
+export const Demo1Code = lazy(() => import("./demo-code"));
 
-export const Demo2Code = dynamic(() => import("./demo2"));
+export const Demo2Code = lazy(() => import("./demo2"));
 
-export const DemoSlot = dynamic(() => import("./demo-slot"));
+export const DemoSlot = lazy(() => import("./demo-slot"));
 
-export const DemoBadge = dynamic(() => import("./demo-badge"));
+export const DemoBadge = lazy(() => import("./demo-badge"));
 
-export const DemoCustom = dynamic(() => import("./demo-custom"));
+export const DemoCustom = lazy(() => import("./demo-custom"));

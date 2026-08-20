@@ -1,7 +1,6 @@
 "use client";
 
-import type { EmbedOptions } from "@stackblitz/sdk";
-import sdk, { type VM } from "@stackblitz/sdk";
+import type { EmbedOptions, VM } from "@stackblitz/sdk";
 import { useCallback, useEffect, useRef } from "react";
 
 export interface EmbedStackblitzProps extends Partial<EmbedOptions> {
@@ -14,6 +13,8 @@ export default function EmbedStackblitz({
 }: EmbedStackblitzProps) {
   const embedRef = useRef<HTMLDivElement>(null);
   const instanceRef = useRef<VM | null>(null);
+  const optionsRef = useRef(options);
+  optionsRef.current = options;
 
   const create = useCallback(
     async (options: Partial<EmbedOptions>) => {
@@ -22,6 +23,7 @@ export default function EmbedStackblitz({
       }
 
       try {
+        const { default: sdk } = await import("@stackblitz/sdk");
         // Replaces the HTML element with the id of "embed"
         // with https://stackblitz.com/edit/my-cool-project embedded in an iframe,
         instanceRef.current = await sdk.embedProjectId(embedRef.current, id, {
@@ -36,8 +38,8 @@ export default function EmbedStackblitz({
   );
 
   useEffect(() => {
-    create(options);
-  }, []);
+    create(optionsRef.current).catch(() => undefined);
+  }, [create]);
 
   return (
     <div className="embed">

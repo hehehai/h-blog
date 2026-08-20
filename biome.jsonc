@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
-  "extends": ["ultracite/biome/core", "ultracite/biome/next"],
+  "extends": ["ultracite/biome/core"],
   "linter": {
     "rules": {
       "a11y": {
@@ -21,8 +21,10 @@
         "noNamespaceImport": "off"
       },
       "style": {
+        "noHeadElement": "off",
         "noNestedTernary": "off",
         "noSubstr": "off",
+        "useFilenamingConvention": "off",
         "useConsistentTypeDefinitions": "off",
         "useDestructuring": "off"
       },
