@@ -10,10 +10,14 @@ import rehypeHighlight from "rehype-highlight";
 import rehypeSlug from "rehype-slug";
 import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
-import { defineConfig } from "vite";
+import { defineConfig, lazyPlugins } from "vite-plus";
+import { getPostSources } from "./scripts/content";
+import { contentMetadataReload } from "./scripts/content-reload";
+
+const reactFilePattern = /\.(jsx|js|mdx|md|tsx|ts)$/;
 
 export default defineConfig({
-  plugins: [
+  plugins: lazyPlugins(() => [
     cloudflare({ viteEnvironment: { name: "ssr" } }),
     {
       enforce: "pre",
@@ -35,12 +39,14 @@ export default defineConfig({
       }),
     },
     contentCollections(),
+    contentMetadataReload(),
     tailwindcss(),
     tanstackStart({
+      pages: getPostSources().map(({ slug }) => ({ path: `/posts/${slug}` })),
       prerender: {
         autoStaticPathsDiscovery: true,
         concurrency: 4,
-        crawlLinks: true,
+        crawlLinks: false,
         enabled: true,
         failOnError: true,
         filter: ({ path }) => path !== "/photos" && !path.includes("#"),
@@ -48,13 +54,19 @@ export default defineConfig({
       router: {
         routesDirectory: "routes",
       },
+      server: {
+        entry: "server.tsx",
+      },
     }),
-    react({ include: /\.(jsx|js|mdx|md|tsx|ts)$/ }),
-  ],
+    react({ include: reactFilePattern }),
+  ]),
   resolve: {
     tsconfigPaths: true,
   },
   server: {
     port: 3000,
+  },
+  staged: {
+    "*.{js,jsx,mjs,cjs,ts,tsx,mts,cts,json,jsonc,css}": "vp exec ultracite fix",
   },
 });

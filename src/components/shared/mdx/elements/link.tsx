@@ -32,6 +32,7 @@ export default function ElementLink({
         "group inline cursor-pointer items-center space-x-1 break-all underline-offset-4",
         className
       )}
+      href={href}
       rel="noopener noreferrer nofollow"
       target="_blank"
       {...props}

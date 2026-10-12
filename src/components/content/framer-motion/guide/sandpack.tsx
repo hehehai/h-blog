@@ -3,6 +3,10 @@
 import { Loader2 } from "lucide-react";
 import { lazy, Suspense } from "react";
 import { useTainwildTheme } from "@/components/lib/tainwild";
+import {
+  MOTION_SANDBOX_DEPENDENCIES,
+  REACT_SANDBOX_ENTRY,
+} from "@/lib/sandbox-dependencies";
 import snippet1 from "./snippet1";
 import snippet2 from "./snippet2";
 import snippet3 from "./snippet3";
@@ -55,14 +59,13 @@ const GuideToFramerMotionSandpack = ({ snippet }: { snippet: string }) => {
       >
         <SandpackBlock
           customSetup={{
-            dependencies: {
-              "framer-motion": "6.2.4",
-            },
+            dependencies: MOTION_SANDBOX_DEPENDENCIES,
           }}
           files={{
             "/App.js": {
               code: SNIPPETS[snippet as keyof typeof SNIPPETS],
             },
+            "/index.js": REACT_SANDBOX_ENTRY,
             "/scene.css": {
               code: dark ? SceneCSSDark : SceneCSSLight,
               hidden: true,

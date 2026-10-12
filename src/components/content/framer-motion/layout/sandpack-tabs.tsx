@@ -2,6 +2,10 @@
 
 import { lazy } from "react";
 import { useTainwildTheme } from "@/components/lib/tainwild";
+import {
+  MOTION_SANDBOX_DEPENDENCIES,
+  REACT_SANDBOX_ENTRY,
+} from "@/lib/sandbox-dependencies";
 
 const SandpackBlock = lazy(() => import("../../../shared/mdx/common/sandpack"));
 
@@ -138,10 +142,7 @@ const SandpackTabs = () => {
   return (
     <SandpackBlock
       customSetup={{
-        dependencies: {
-          "@stitches/react": "1.2.5",
-          "framer-motion": "6.2.4",
-        },
+        dependencies: MOTION_SANDBOX_DEPENDENCIES,
       }}
       files={{
         "/App.js": {
@@ -150,6 +151,7 @@ const SandpackTabs = () => {
         "/Components.js": {
           code: ComponentsCode,
         },
+        "/index.js": REACT_SANDBOX_ENTRY,
         "/scene.css": {
           code: dark ? SceneCSSDark : SceneCSSLight,
           hidden: true,

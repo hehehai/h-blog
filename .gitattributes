@@ -1,0 +1,2 @@
+# Unified diff context markers are spaces, including on otherwise empty lines.
+patches/*.patch text eol=lf whitespace=-blank-at-eol

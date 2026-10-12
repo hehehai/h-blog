@@ -1,6 +1,11 @@
 "use client";
 
-import { motion, useMotionValue, useTransform } from "motion/react";
+import {
+  motion,
+  useMotionValue,
+  useMotionValueEvent,
+  useTransform,
+} from "motion/react";
 import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -28,18 +33,20 @@ const ClipboardAnimationDetails = () => {
   const [pathLengthVal, setPathLengthVal] = React.useState(pathLength.get());
 
   React.useEffect(() => {
-    if (isClicked) {
-      setTimeout(() => setIsClicked(false), duration * 3000);
+    if (!isClicked) {
+      return;
     }
-  }, [isClicked]);
+    const timer = window.setTimeout(() => setIsClicked(false), duration * 3000);
+    return () => window.clearTimeout(timer);
+  }, [duration, isClicked]);
 
-  opacity.onChange((latest: number) =>
-    setOpacityVal(Number.parseFloat(latest.toFixed(5)))
-  );
+  useMotionValueEvent(opacity, "change", (latest: number) => {
+    setOpacityVal(Number.parseFloat(latest.toFixed(5)));
+  });
 
-  pathLength.onChange((latest: number) =>
-    setPathLengthVal(Number.parseFloat(latest.toFixed(5)))
-  );
+  useMotionValueEvent(pathLength, "change", (latest: number) => {
+    setPathLengthVal(Number.parseFloat(latest.toFixed(5)));
+  });
 
   return (
     <Card className="items-center justify-between px-5 py-10 md:flex">

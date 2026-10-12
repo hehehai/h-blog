@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import PhotoItem from "@/components/shared/photo/photo-item";
+import { PhotoStatus } from "@/components/shared/photo/photo-status";
 import { getAtlas } from "@/functions/photo";
 import { createSeoHead } from "@/lib/seo";
 
@@ -15,12 +16,16 @@ export const Route = createFileRoute("/_site/photos")({
 });
 
 function Photos() {
-  const atlas = Route.useLoaderData();
+  const result = Route.useLoaderData();
 
   return (
     <div className="space-y-10">
-      {atlas.map((item) => (
-        <PhotoItem key={item.title} {...item} />
+      <PhotoStatus result={result} />
+      {result.status === "ready" && result.albums.length === 0 && (
+        <p>还没有照片。</p>
+      )}
+      {result.albums.map((item) => (
+        <PhotoItem key={item.issuesId} {...item} />
       ))}
     </div>
   );

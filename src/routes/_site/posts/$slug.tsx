@@ -2,15 +2,16 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import exampleComponents from "@/components/content";
 import MDXContent from "@/components/shared/mdx";
 import PostTags from "@/components/shared/post/post-tags";
-import type { Post } from "@/content";
-import { getPostBySlug } from "@/functions/post";
+import { getPostBySlug, type PostDetail } from "@/functions/post";
 import { siteConfig } from "@/lib/config/site";
+import { formatPostDate } from "@/lib/date";
+import { isPostSlug } from "@/lib/post-path";
 import { absoluteUrl, createSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/_site/posts/$slug")({
   component: PostPage,
   head: ({ loaderData }) => {
-    const post = loaderData as Post | undefined;
+    const post = loaderData as PostDetail | undefined;
 
     if (!post) {
       return { meta: [{ title: "文章不存在" }] };
@@ -63,7 +64,11 @@ export const Route = createFileRoute("/_site/posts/$slug")({
       ],
     };
   },
-  loader: async ({ params }): Promise<Post> => {
+  loader: async ({ params }): Promise<PostDetail> => {
+    if (!isPostSlug(params.slug)) {
+      throw notFound();
+    }
+
     const post = await getPostBySlug({ data: { slug: params.slug } });
     if (!post) {
       throw notFound();
@@ -73,7 +78,7 @@ export const Route = createFileRoute("/_site/posts/$slug")({
 });
 
 function PostPage() {
-  const post = Route.useLoaderData() as Post;
+  const post = Route.useLoaderData() as PostDetail;
 
   return (
     <div>
@@ -86,7 +91,7 @@ function PostPage() {
         </div>
         <div className="justify-content mt-1.5 flex space-x-2 text-slate-700 text-sm dark:text-gray-200">
           <PostTags tags={post.badges} />
-          {post.publicAt && <div>{post.publicAt.toLocaleDateString()}</div>}
+          {post.publicAt && <div>{formatPostDate(post.publicAt)}</div>}
           {!!post.readingTime && <div>约 {post.readingTime} 分钟</div>}
         </div>
       </div>

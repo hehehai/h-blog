@@ -1,9 +1,8 @@
 import { defineCollection, defineConfig } from "@content-collections/core";
 import readingTime from "reading-time";
 import { z } from "zod";
-import { $ } from "zx";
-
-const mdxFileRegex = /\.mdx?$/;
+import { getPostLastModified } from "./scripts/content";
+import { getPostSlug } from "./src/lib/post-path";
 
 const posts = defineCollection({
   directory: "src/contents/posts",
@@ -16,24 +15,24 @@ const posts = defineCollection({
       .optional(),
     content: z.string().optional(),
     description: z.string().min(1),
-    publicAt: z.string().transform((date) => new Date(date)),
+    publicAt: z.iso
+      .date()
+      .transform((date) => new Date(`${date}T00:00:00.000Z`)),
     tags: z
       .string()
       .transform((tags) => tags.split(","))
       .optional(),
     title: z.string().min(1),
   }),
-  transform: async (document, context) => {
+  transform: async (document) => {
     try {
-      const slug = document._meta.fileName.replace(mdxFileRegex, "");
+      const slug = getPostSlug(document._meta.filePath);
 
-      const lastModified = await context.cache(
-        document._meta.filePath,
-        async (filePath) => {
-          const { stdout } =
-            await $`git log -1 --format=%ai -- src/contents/posts/${filePath}`;
-          return new Date(stdout.toString().trim());
-        }
+      // Do not persist a path-only cache: Git history can change without the
+      // source path changing, and a new post may have no history yet.
+      const lastModified = await getPostLastModified(
+        `src/contents/posts/${document._meta.filePath}`,
+        document.publicAt
       );
 
       const readingInfo = readingTime(document.content ?? "");

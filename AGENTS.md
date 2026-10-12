@@ -6,34 +6,41 @@ This file provides guidance for agentic coding assistants working in this reposi
 
 ### Development
 ```bash
-pnpm install          # Install dependencies
-pnpm dev             # Start development server (http://localhost:3000)
-pnpm build           # Build for production
-pnpm start           # Start production server
+vp install --frozen-lockfile # Install pinned dependencies
+vp dev                      # Start development server (http://localhost:3000)
+vp build                    # Build for production and generate content/route types
+vp preview                  # Preview production in the local Workers runtime
+# pnpm dev/build/preview remain aliases for these VitePlus commands.
 ```
 
 ### Linting & Type Checking
 ```bash
-npx ultracite fix    # Format and auto-fix linting issues (run before committing)
-npx ultracite check  # Check for linting issues without fixing
-pnpm check           # Alias for ultracite check
-pnpm check-types     # Run TypeScript type checking (tsc --noEmit)
+vp exec ultracite fix # Format and auto-fix linting issues (run before committing)
+vp run check         # Run Ultracite/Biome (NOT the built-in vp check)
+vp run check-types   # Run TypeScript type checking (tsc --noEmit)
+# On a clean checkout, run vp build first to generate required types.
+# Keep Ultracite/Biome and Husky; do not run vp fmt across the repository.
 ```
 
 ### Testing
-No test framework is configured. Before adding tests, verify the project's testing approach with the user.
+No test framework is configured. The maintainer chose manual migration validation (temporary scripts and browser checks), not a new test suite. Before adding persistent tests, confirm the approach again.
 
 ---
 
 ## Tech Stack
 
-- **Framework**: TanStack Start with TanStack Router and Vite
+- **Framework**: TanStack Start with TanStack Router
+- **Build toolchain**: VitePlus (version and matching Vite core alias managed in pnpm-workspace.yaml)
+- **Runtime**: Node.js pinned in .node-version; production runs on Cloudflare Workers
+- **HTML rendering**: src/server.tsx is wired through both Vite Start and Wrangler. Wait for React allReady before reading the stream and keep progressiveChunkSize infinite so prerendered article bodies work without JS. Preserve abort/timeout cleanup and client-side MDX splitting; see docs/browser-regression.md
 - **Styling**: Tailwind CSS 4
 - **Language**: TypeScript with strict mode enabled
 - **Components**: Radix UI primitives + shadcn/ui patterns
 - **Content**: MDX via content-collections
 - **Linting/Formatting**: Ultracite (Biome preset) with pre-commit hook
-- **Package Manager**: pnpm
+- **Package Manager**: pnpm, pinned in package.json (currently v12)
+- **Embedded demos**: React/Motion/Radix versions derive from package.json via src/lib/sandbox-dependencies.ts; do not restore the React 17 / Motion 6 workaround
+- **Dependency security**: Keep the 24-hour release-age policy. Exceptions must be exact versions approved for the upgrade, never broad package-name or wildcard bypasses. See docs/dependency-upgrade.md and docs/braces-mitigation.md for the development-only advisory and version-bound local mitigation. Do not drop or bypass patchedDependencies merely to make an upgrade install; verify an upstream fix before removing the patch
 
 ---
 
@@ -127,13 +134,15 @@ export const getPostBySlug = createServerFn({ method: 'GET' })
 - Files: kebab-case for components (`post-item.tsx`), camelCase for utilities (`utils.ts`)
 
 ### Pre-Commit Hook
-The pre-commit hook automatically runs `npx ultracite fix` on staged files. Any formatting changes will be re-staged. No manual intervention needed.
+Husky runs `vp staged`, which applies `vp exec ultracite fix` only to staged Biome-supported files. VitePlus manages backup/restoration for partially staged files; do not reintroduce manual stash/pop or blanket git add logic. Staged checks require Git >= 2.32 and the Node versions declared in package.json.
 
 ### Content Collections
 MDX content is processed by content-collections. When adding new posts:
-1. Create `.mdx` or `.md` files in `src/contents/posts/`
-2. Include frontmatter with title, description, tags, badges, publicAt
-3. The filename becomes the slug (extension removed)
+1. Create `.mdx` or `.md` files in `src/contents/posts/` (subdirectories are supported)
+2. Include frontmatter with title, description, tags, badges, publicAt; publicAt must be a valid YYYY-MM-DD date
+3. The filename becomes the slug (extension removed): 1–200 ASCII letters, digits, hyphens or underscores. Slugs must be unique across subdirectories and extensions
+4. Build-time scanning explicitly prerenders every article; do not restore link crawling as the sole discovery mechanism
+5. Last-modified dates use full Git history, or the publication date when history is absent/shallow. Keep Node-only content utilities in scripts/, never in application runtime imports
 
 ### Accessibility
 - Provide meaningful alt text for images
@@ -154,8 +163,8 @@ MDX content is processed by content-collections. When adding new posts:
 
 Always run:
 ```bash
-npx ultracite fix    # Auto-fix formatting and linting
-pnpm check-types     # Verify type safety
+vp exec ultracite fix # Auto-fix formatting and linting
+vp run check-types   # Verify type safety
 ```
 
-The pre-commit hook will automatically run `npx ultracite fix` but type checking is manual.
+The pre-commit hook runs `vp staged` but type checking is manual.

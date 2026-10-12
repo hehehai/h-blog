@@ -1,16 +1,23 @@
 import type { MDXComponents } from "mdx/types";
-import type { ReactElement } from "react";
+import { lazy, type ReactElement, Suspense } from "react";
+import { getPostSlug } from "@/lib/post-path";
 import { components as defaultComponents } from "./components";
 
 type MDXPostComponent = (props: { components?: MDXComponents }) => ReactElement;
 
-const postModules = import.meta.glob(
-  ["/src/contents/posts/*.mdx", "/src/contents/posts/*.md"],
-  {
-    eager: true,
-    import: "default",
-  }
-) as Record<string, MDXPostComponent>;
+const postModules = import.meta.glob<MDXPostComponent>(
+  ["/src/contents/posts/**/*.mdx", "/src/contents/posts/**/*.md"],
+  { import: "default" }
+);
+
+// Create lazy component identities once, not on each render. Vite tracks the
+// source modules for HMR, while production builds split them by article.
+const postComponents = new Map(
+  Object.entries(postModules).map(([filePath, load]) => [
+    getPostSlug(filePath),
+    lazy(async () => ({ default: await load() })),
+  ])
+);
 
 export default function MDXContent({
   slug,
@@ -19,20 +26,20 @@ export default function MDXContent({
   slug: string;
   components?: MDXComponents;
 }) {
-  const Component =
-    postModules[`/src/contents/posts/${slug}.mdx`] ??
-    postModules[`/src/contents/posts/${slug}.md`];
+  const Component = postComponents.get(slug);
 
   if (!Component) {
     throw new Error(`No compiled MDX component found for post "${slug}"`);
   }
 
   return (
-    <Component
-      components={{
-        ...defaultComponents,
-        ...components,
-      }}
-    />
+    <Suspense fallback={<p role="status">正在加载文章…</p>}>
+      <Component
+        components={{
+          ...defaultComponents,
+          ...components,
+        }}
+      />
+    </Suspense>
   );
 }

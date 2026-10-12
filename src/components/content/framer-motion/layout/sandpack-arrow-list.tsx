@@ -2,6 +2,10 @@
 
 import { lazy } from "react";
 import { useTainwildTheme } from "@/components/lib/tainwild";
+import {
+  MOTION_SANDBOX_DEPENDENCIES,
+  REACT_SANDBOX_ENTRY,
+} from "@/lib/sandbox-dependencies";
 
 const SandpackBlock = lazy(() => import("../../../shared/mdx/common/sandpack"));
 
@@ -58,8 +62,9 @@ const SelectableList = () => {
       <List>
         {ITEMS.map(item => (
           <Item
+            key={item}
             onClick={() => setSelected(item)}
-            onKeyDown={(event: { key: string }) => event.key === 'Enter' ? setSelected(item) : null}
+            onKeyDown={(event) => event.key === 'Enter' ? setSelected(item) : null}
             tabIndex={0}
           >
 
@@ -111,10 +116,7 @@ const SandpackArrowList = () => {
   return (
     <SandpackBlock
       customSetup={{
-        dependencies: {
-          "@stitches/react": "1.2.5",
-          "framer-motion": "6.2.4",
-        },
+        dependencies: MOTION_SANDBOX_DEPENDENCIES,
       }}
       files={{
         "/App.js": {
@@ -123,6 +125,7 @@ const SandpackArrowList = () => {
         "/Components.js": {
           code: ComponentsCode,
         },
+        "/index.js": REACT_SANDBOX_ENTRY,
         "/scene.css": {
           code: dark ? SceneCSSDark : SceneCSSLight,
           hidden: true,

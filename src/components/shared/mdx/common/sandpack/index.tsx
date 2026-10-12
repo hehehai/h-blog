@@ -1,6 +1,7 @@
 import type { SandpackProps } from "@codesandbox/sandpack-react";
 import { ClientOnly } from "@tanstack/react-router";
 import { lazy, memo, Suspense } from "react";
+import { SANDBOX_TAILWIND_URL } from "@/lib/sandbox-dependencies";
 import { SandpackHolder } from "./holder";
 
 const SandpackWrapper = lazy(() => import("./wrapper"));
@@ -18,7 +19,7 @@ const SandpackBlock = memo(function Sandpack({
           options={{
             externalResources: [
               ...(externalResources || []),
-              "https://unpkg.com/@tailwindcss/ui/dist/tailwind-ui.min.css",
+              SANDBOX_TAILWIND_URL,
             ],
             rtl: true,
             ...rest,

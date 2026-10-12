@@ -1,4 +1,5 @@
 import SandpackBlock from "@/components/shared/mdx/common/sandpack";
+import { RADIX_SANDBOX_DEPENDENCIES } from "@/lib/sandbox-dependencies";
 import { UtilsCode } from "./demo-code";
 
 const BadgeCode = `import { cn } from "./utils";
@@ -70,13 +71,7 @@ export default function DemoBadge({ type = "1" }: { type?: "1" | "2" }) {
   return (
     <SandpackBlock
       customSetup={{
-        dependencies: {
-          "@radix-ui/react-slot": "^1.2.0",
-          "class-variance-authority": "^0.7.1",
-          clsx: "^2.1.1",
-          "lucide-react": "^0.487.0",
-          "tailwind-merge": "^3.2.0",
-        },
+        dependencies: RADIX_SANDBOX_DEPENDENCIES,
       }}
       files={{
         "/App.tsx": {

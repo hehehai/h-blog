@@ -1,4 +1,8 @@
 import { lazy } from "react";
+import {
+  MOTION_SANDBOX_DEPENDENCIES,
+  REACT_SANDBOX_ENTRY,
+} from "@/lib/sandbox-dependencies";
 import snippet1 from "./snippet1";
 import snippet2 from "./snippet2";
 import snippet3 from "./snippet3";
@@ -69,15 +73,13 @@ const SNIPPETS = {
 const GuideToFramerMotionSandpack = ({ snippet }: { snippet: string }) => (
   <SandpackBlock
     customSetup={{
-      dependencies: {
-        "@stitches/react": "^1.2.7",
-        "framer-motion": "6.2.4",
-      },
+      dependencies: MOTION_SANDBOX_DEPENDENCIES,
     }}
     files={{
       "/App.js": {
         code: SNIPPETS[snippet as keyof typeof SNIPPETS],
       },
+      "/index.js": REACT_SANDBOX_ENTRY,
       "/Pill.js": {
         code: PillCode,
         hidden: true,

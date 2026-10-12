@@ -172,7 +172,7 @@ export default function App() {
   return (
     <div className="p-2">
       <div>
-        <button class="bg-orange-500 text-white p-1 mr-3" onClick={handleToggleBoxSizing}>Toggle Box Sizing Mode</button>
+        <button className="bg-orange-500 text-white p-1 mr-3" onClick={handleToggleBoxSizing}>Toggle Box Sizing Mode</button>
         <span>{boxSizing}</span>
       </div>
       <div className="h-72 mt-3">
@@ -181,7 +181,7 @@ export default function App() {
         </div>
       </div>
 
-      <pre class="leading-7">
+      <pre className="leading-7">
         {JSON.stringify(rectData, undefined, 4)}
       </pre>
     </div>
@@ -198,7 +198,7 @@ export default function App() {
 	template="vue"
 	files={{
 		"/src/App.vue": {
-      acitve: true,
+      active: true,
 			code: `<template>
   <div class="p-4">
       <button
