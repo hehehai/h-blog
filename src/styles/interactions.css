@@ -8,7 +8,7 @@
   font-size: 0.88em;
   font-weight: 400;
   background: hsl(var(--muted));
-  border-radius: 5px;
+  border-radius: var(--ui-radius-inline);
 }
 .prose :where(thead) {
   background: hsl(var(--muted));
@@ -22,7 +22,7 @@
   margin: 28px 0;
   background: hsl(var(--muted) / 0.5);
   border: 1px solid hsl(var(--border));
-  border-radius: 14px;
+  border-radius: var(--ui-radius-surface);
 }
 .faq-summary {
   display: flex;
@@ -222,7 +222,7 @@
   width: min(248px, calc(100vw - 32px));
   padding: 12px;
   background: hsl(var(--popover) / 0.98);
-  border-radius: 20px;
+  border-radius: var(--ui-radius-surface);
   box-shadow: 0 16px 64px #00000014;
   backdrop-filter: blur(20px);
   transform-origin: bottom right;
@@ -255,7 +255,7 @@
   justify-content: space-between;
   padding: 8px 10px;
   font-size: 13px;
-  border-radius: 10px;
+  border-radius: var(--ui-radius-control);
 }
 .explore-nav .nav-link > svg {
   color: hsl(var(--muted-foreground));
@@ -287,7 +287,7 @@
   place-items: center;
   width: 34px;
   height: 34px;
-  border-radius: 10px;
+  border-radius: var(--ui-radius-control);
   transition: background 180ms;
 }
 .social-icon-link:hover {
@@ -359,7 +359,7 @@
   font-size: 11px;
   color: inherit;
   cursor: pointer;
-  border-radius: 6px;
+  border-radius: var(--ui-radius-small);
   transition: background 180ms;
 }
 .copy-button:hover {
@@ -383,7 +383,7 @@
   color: #e8e8ec;
   background: #202024;
   border: 1px solid #ffffff14;
-  border-radius: 14px;
+  border-radius: var(--ui-radius-surface);
 }
 .code-toolbar {
   display: flex;
@@ -434,7 +434,7 @@
   margin: 28px 0;
   background: hsl(var(--muted) / 0.6);
   border: 1px solid hsl(var(--border));
-  border-radius: 14px;
+  border-radius: var(--ui-radius-surface);
 }
 .callout-icon {
   flex-shrink: 0;
@@ -469,7 +469,7 @@
   color: hsl(var(--muted-foreground));
   background: hsl(var(--muted) / 0.5);
   border: 1px solid hsl(var(--border));
-  border-radius: 12px;
+  border-radius: var(--ui-radius-surface);
 }
 .article-context :where(p + p) {
   margin-top: 8px;

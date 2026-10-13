@@ -424,7 +424,7 @@
   padding: 9px 14px;
   font-size: 14px;
   color: hsl(var(--muted-foreground));
-  border-radius: 9px;
+  border-radius: var(--ui-radius-control);
   transition:
     background 180ms,
     color 180ms;
@@ -446,7 +446,7 @@
   padding: 9px 14px;
   font-size: 13px;
   border: 1px solid hsl(var(--border));
-  border-radius: 10px;
+  border-radius: var(--ui-radius-control);
   transition:
     background 180ms,
     border-color 180ms,
@@ -554,7 +554,7 @@
   content: "";
   background: hsl(var(--muted));
   border: 1px solid hsl(var(--border));
-  border-radius: 24px;
+  border-radius: var(--ui-radius-hero);
   transform: translateY(14px) scale(0.96);
 }
 .showcase-stack::before {
@@ -568,7 +568,7 @@
   overflow: hidden;
   background: hsl(var(--muted));
   border: 1px solid hsl(var(--border));
-  border-radius: 24px;
+  border-radius: var(--ui-radius-hero);
   box-shadow: 0 12px 28px #0000000a;
 }
 .showcase-image {
@@ -724,7 +724,7 @@
   font-size: 13px;
   color: hsl(var(--muted-foreground));
   cursor: pointer;
-  border-radius: 8px;
+  border-radius: var(--ui-radius-control);
   transition:
     color 180ms,
     background 180ms;
@@ -745,7 +745,7 @@
   padding: 0 12px;
   color: hsl(var(--muted-foreground));
   border: 1px solid hsl(var(--border));
-  border-radius: 9px;
+  border-radius: var(--ui-radius-control);
 }
 .post-search:focus-within {
   outline: 2px solid hsl(var(--ring));
@@ -796,7 +796,7 @@
   overflow: hidden;
   background: hsl(var(--muted));
   border: 1px solid hsl(var(--border));
-  border-radius: 18px;
+  border-radius: var(--ui-radius-media);
 }
 .project-image {
   width: 100%;
@@ -842,7 +842,7 @@
   margin-top: 64px;
   background: hsl(var(--muted) / 0.5);
   border: 1px dashed hsl(var(--border));
-  border-radius: 16px;
+  border-radius: var(--ui-radius-surface);
 }
 .content-placeholder > p:last-child {
   margin-top: 10px;
@@ -863,7 +863,7 @@
   aspect-ratio: 4 / 3;
   overflow: hidden;
   background: hsl(var(--muted));
-  border-radius: 18px;
+  border-radius: var(--ui-radius-media);
 }
 .photo-frame:first-child {
   grid-column: 1 / -1;
@@ -895,7 +895,7 @@
   max-width: 1000px;
   max-height: calc(100svh - 32px);
   overflow-y: auto;
-  border-radius: 18px;
+  border-radius: var(--ui-radius-media);
 }
 .lightbox-image {
   width: 100%;
@@ -941,7 +941,7 @@
   padding: 28px;
   background: hsl(var(--muted) / 0.45);
   border: 1px solid hsl(var(--border));
-  border-radius: 18px;
+  border-radius: var(--ui-radius-surface);
 }
 .about-avatar {
   margin-bottom: 24px;
@@ -966,7 +966,7 @@
   font-size: 11px;
   color: hsl(var(--muted-foreground));
   border: 1px solid hsl(var(--border));
-  border-radius: 6px;
+  border-radius: var(--ui-radius-small);
 }
 .about-story {
   min-width: 0;
@@ -1074,7 +1074,7 @@
   max-width: 100%;
   height: auto;
   border: 1px solid hsl(var(--border));
-  border-radius: 14px;
+  border-radius: var(--ui-radius-surface);
 }
 .article-body :where(pre):not(:where(.not-prose, .not-prose *)) {
   max-width: 100%;
@@ -1217,7 +1217,7 @@
   padding: 12px 20px;
   color: hsl(var(--primary-foreground));
   background: hsl(var(--primary));
-  border-radius: 8px;
+  border-radius: var(--ui-radius-control);
   transform: translateY(-160%);
 }
 .skip-link:focus {
@@ -1311,7 +1311,7 @@
     padding: 16px 20px;
     margin: 0 auto 32px;
     border: 1px solid hsl(var(--border));
-    border-radius: 12px;
+    border-radius: var(--ui-radius-surface);
   }
   .article-outline details {
     position: static;
@@ -1373,7 +1373,7 @@
   .showcase-card,
   .showcase-stack::before,
   .showcase-stack::after {
-    border-radius: 16px;
+    border-radius: var(--ui-radius-hero);
   }
   .showcase-open {
     right: 12px;
@@ -1447,7 +1447,7 @@
     gap: 40px;
   }
   .project-media {
-    border-radius: 14px;
+    border-radius: var(--ui-radius-media);
   }
   .project-info {
     padding-top: 18px;
@@ -1469,7 +1469,7 @@
   .photo-frame:first-child {
     grid-column: auto;
     aspect-ratio: 3 / 4;
-    border-radius: 12px;
+    border-radius: var(--ui-radius-media);
   }
   .photo-frame:first-child {
     grid-column: 1 / -1;

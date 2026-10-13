@@ -1,3 +1,25 @@
+/* One radius scale for site surfaces; keep learning-demo geometry unchanged. */
+:root {
+  --ui-radius-inline: 9px;
+  --ui-radius-small: 14px;
+  --ui-radius-control: 18px;
+  --ui-radius-surface: 32px;
+  --ui-radius-media: 40px;
+  --ui-radius-hero: 52px;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --ui-radius-surface: 28px;
+    --ui-radius-media: 32px;
+    --ui-radius-hero: 40px;
+  }
+}
+
+.article-heading [class*="rounded"] {
+  border-radius: var(--ui-radius-small);
+}
+
 /* Native continuous corners are progressive enhancement, not a JS dependency.
    Keep border-radius as the cross-browser fallback and leave demo geometry alone. */
 @supports (corner-shape: squircle) {
