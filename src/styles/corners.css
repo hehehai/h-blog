@@ -34,8 +34,6 @@
     .post-search,
     .filter-button,
     .showcase-card,
-    .showcase-stack::before,
-    .showcase-stack::after,
     .project-media,
     .photo-frame,
     .photo-lightbox,
@@ -61,7 +59,6 @@
   :where(
     .explore-trigger,
     .author-avatar,
-    .showcase-open,
     .photo-expand,
     .showcase-controls .icon-button,
     .theme-toggle

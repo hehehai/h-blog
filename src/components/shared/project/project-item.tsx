@@ -1,6 +1,7 @@
 import { Image } from "@unpic/react";
 import { ArrowUpRight } from "lucide-react";
 import type { HTMLAttributes } from "react";
+import { getProjectAnchor } from "@/lib/project-anchor";
 import { cn } from "@/lib/utils";
 
 const LIST_PREFIX = /^-\s*/;
@@ -23,7 +24,11 @@ export default function Project({
   ...props
 }: ProjectProps) {
   return (
-    <article className={cn("project-card", className)} {...props}>
+    <article
+      className={cn("project-card", className)}
+      id={getProjectAnchor(name)}
+      {...props}
+    >
       <a
         aria-label={`查看 ${name} 项目`}
         className="project-media"

@@ -26,13 +26,6 @@ function Home() {
 
   return (
     <div className="home-page">
-      <header className="home-heading">
-        <p className="eyebrow">Hehehai · 一块木头</p>
-        <h1>
-          把想法做出来，
-          <span className="text-muted-foreground">把过程记下来。</span>
-        </h1>
-      </header>
       <ProjectShowcase />
       <ShortAboutMe />
       <section className="home-posts">

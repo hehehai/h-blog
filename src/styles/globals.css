@@ -512,8 +512,7 @@
   margin: 46px auto 72px;
   text-align: center;
 }
-.page-heading h1,
-.home-heading h1 {
+.page-heading h1 {
   margin: 20px 0;
   font-size: clamp(32px, 4vw, 48px);
   font-weight: 500;
@@ -533,94 +532,170 @@
   max-width: 800px;
   margin: auto;
 }
-.home-heading {
-  margin: 24px 0 42px;
-  text-align: center;
+.project-showcase {
+  margin-top: 8px;
 }
-.home-heading h1 {
-  font-size: clamp(30px, 3.6vw, 46px);
+.showcase-scene {
+  position: relative;
+  padding-bottom: 6%;
+  margin-inline: 14px 30px;
 }
-
 .showcase-stack {
   position: relative;
-  margin: 0 14px 30px;
+  aspect-ratio: 3 / 2;
+  touch-action: pan-y;
   isolation: isolate;
+  perspective: 1400px;
 }
-.showcase-stack::before,
-.showcase-stack::after {
+.showcase-layer {
   position: absolute;
   inset: 0;
-  z-index: -1;
-  content: "";
-  background: hsl(var(--muted));
-  border: 1px solid hsl(var(--border));
-  border-radius: var(--ui-radius-hero);
-  transform: translateY(14px) scale(0.96);
-}
-.showcase-stack::before {
-  background: hsl(var(--foreground));
-  transform: translateY(27px) scale(0.9);
+  transform-origin: center;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
 }
 .showcase-card {
   position: relative;
   display: block;
-  aspect-ratio: 8 / 5;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
-  background: hsl(var(--muted));
   border: 1px solid hsl(var(--border));
   border-radius: var(--ui-radius-hero);
-  box-shadow: 0 12px 28px #0000000a;
+  background: hsl(var(--muted));
+  box-shadow:
+    0 14px 38px #0000000d,
+    0 2px 5px #00000008;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 .showcase-image {
   width: 100%;
   height: 100%;
+  pointer-events: none;
   object-fit: cover;
-  transition: transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
-  animation: image-arrive 450ms ease-out;
 }
-.showcase-card:hover .showcase-image {
-  transform: scale(1.025);
-}
-.showcase-open {
+.showcase-card-hint {
   position: absolute;
-  right: 20px;
-  bottom: 20px;
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
+  right: 24px;
+  bottom: 22px;
+  padding: 6px 10px;
+  font-size: 12px;
   color: #27272a;
   background: #ffffffed;
+  border-radius: var(--ui-radius-small);
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 200ms,
+    transform 200ms;
+}
+.showcase-card:hover .showcase-card-hint,
+.showcase-card:focus-visible .showcase-card-hint {
+  opacity: 1;
+  transform: translateY(0);
+}
+.showcase-position {
+  position: absolute;
+  top: 0;
+  right: -30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: calc(100% - 9%);
+}
+.showcase-slider {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 28px;
+  height: 80px;
+  padding-block: 8px;
+  touch-action: none;
+  cursor: pointer;
+}
+.showcase-track {
+  position: relative;
+  width: 6px;
+  height: 100%;
+  background: hsl(var(--foreground) / 0.1);
+  border-radius: 999px;
+}
+.showcase-thumb {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  cursor: grab;
   border-radius: 50%;
+}
+.showcase-thumb::after {
+  display: block;
+  width: 6px;
+  height: 16px;
+  content: "";
+  background: hsl(var(--foreground) / 0.6);
+  border-radius: 999px;
+}
+.showcase-thumb:active {
+  cursor: grabbing;
 }
 .showcase-caption {
   display: flex;
-  gap: 16px;
+  gap: 20px;
   align-items: center;
   justify-content: space-between;
-  padding: 22px 38px 0;
+  max-width: 640px;
+  min-height: 64px;
+  margin: 24px auto 0;
+}
+.showcase-description {
+  min-width: 0;
 }
 .showcase-caption h2 {
-  margin-top: 6px;
-  font-size: 17px;
-  font-weight: 500;
-  line-height: 1.7;
-}
-.showcase-caption :where(h2 span) {
-  margin-left: 12px;
-  font-size: 14px;
+  margin-top: 5px;
+  font-size: 18px;
   font-weight: 400;
-  color: hsl(var(--muted-foreground));
+  line-height: 1.7;
+  text-wrap: pretty;
+}
+.showcase-controls {
+  flex-shrink: 0;
 }
 .showcase-controls .icon-button {
-  border-radius: 50%;
+  width: 36px;
+  min-height: 36px;
+  background: hsl(var(--foreground) / 0.07);
+  border: 0;
+  border-radius: 999px;
+}
+.showcase-controls .showcase-shuffle {
+  width: 44px;
+}
+.showcase-shuffle[data-shuffled="true"] {
+  background: hsl(var(--foreground) / 0.14);
+}
+.showcase-shuffle-icon {
+  transition: transform 250ms;
+}
+.showcase-shuffle:hover .showcase-shuffle-icon {
+  transform: rotate(15deg);
 }
 .home-intro {
   max-width: 640px;
-  margin: 88px auto 96px;
+  margin: 72px auto 96px;
   font-size: clamp(19px, 2vw, 23px);
   line-height: 1.8;
   letter-spacing: -0.025em;
+}
+.home-intro h1 {
+  margin-bottom: 24px;
+  font-size: clamp(24px, 2.4vw, 30px);
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: -0.035em;
+  text-wrap: pretty;
 }
 .home-intro :where(p + p) {
   margin-top: 16px;
@@ -1360,49 +1435,35 @@
   .page-description {
     font-size: 14px;
   }
-  .home-heading {
-    margin: 24px 0 32px;
+  .project-showcase {
+    margin-top: 8px;
   }
-  .home-heading h1 span {
-    display: block;
-    margin-top: 6px;
+  .showcase-scene {
+    margin-inline: 0 28px;
   }
-  .showcase-stack {
-    margin-inline: 4px;
+  .showcase-position {
+    right: -28px;
   }
-  .showcase-card,
-  .showcase-stack::before,
-  .showcase-stack::after {
-    border-radius: var(--ui-radius-hero);
+  .showcase-slider {
+    height: 64px;
   }
-  .showcase-open {
-    right: 12px;
+  .showcase-card-hint {
+    right: 14px;
     bottom: 12px;
-    width: 32px;
-    height: 32px;
   }
   .showcase-caption {
-    gap: 10px;
-    padding: 16px 4px 0;
+    gap: 14px;
+    min-height: 72px;
+    margin-top: 18px;
   }
   .showcase-caption h2 {
-    font-size: 16px;
-  }
-  .showcase-caption h2 span {
-    display: block;
-    margin: 2px 0 0;
-    font-size: 12px;
+    font-size: 15px;
   }
   .showcase-controls {
-    flex-shrink: 0;
-    gap: 5px;
-  }
-  .showcase-controls .icon-button {
-    width: 36px;
-    min-height: 36px;
+    gap: 6px;
   }
   .home-intro {
-    margin: 56px 4px 64px;
+    margin: 48px 4px 64px;
     font-size: 19px;
   }
   .section-heading {
