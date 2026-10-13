@@ -149,16 +149,16 @@
 }
 .explore-dock {
   position: fixed;
+  right: max(24px, env(safe-area-inset-right));
   bottom: max(20px, env(safe-area-inset-bottom));
-  left: max(24px, env(safe-area-inset-left));
   z-index: 40;
 }
 .explore-trigger {
-  display: flex;
-  gap: 0;
-  align-items: center;
-  min-height: 52px;
-  padding: 13px 17px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
   color: hsl(var(--foreground));
   cursor: pointer;
   background: hsl(var(--background) / 0.95);
@@ -169,33 +169,15 @@
   transition:
     background 200ms,
     border-color 200ms,
-    gap 200ms;
+    transform 200ms;
 }
 .explore-trigger:hover,
 .explore-trigger[data-state="open"] {
   background: hsl(var(--muted));
   border-color: hsl(var(--muted-foreground) / 0.3);
 }
-.explore-trigger-label {
-  max-width: 0;
-  overflow: hidden;
-  font-size: 12px;
-  white-space: nowrap;
-  opacity: 0;
-  transition:
-    max-width 260ms,
-    opacity 200ms;
-}
-.explore-trigger:hover,
-.explore-trigger:focus-visible,
-.explore-trigger[data-state="open"] {
-  gap: 13px;
-}
-.explore-trigger:hover .explore-trigger-label,
-.explore-trigger:focus-visible .explore-trigger-label,
-.explore-trigger[data-state="open"] .explore-trigger-label {
-  max-width: 80px;
-  opacity: 1;
+.explore-trigger:active {
+  transform: scale(0.94);
 }
 .explore-orbit {
   position: relative;
@@ -237,41 +219,42 @@
   transform: rotate(var(--dot-angle)) translateX(10px);
 }
 .explore-panel {
-  width: min(340px, calc(100vw - 32px));
-  padding: 22px;
+  width: min(248px, calc(100vw - 32px));
+  padding: 12px;
   background: hsl(var(--popover) / 0.98);
   border-radius: 20px;
   box-shadow: 0 16px 64px #00000014;
   backdrop-filter: blur(20px);
-  transform-origin: bottom left;
+  transform-origin: bottom right;
 }
 .explore-panel-heading {
   display: flex;
-  gap: 20px;
+  gap: 12px;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
+  padding-left: 8px;
+  margin-bottom: 10px;
 }
 .explore-panel-heading h2 {
-  margin-top: 6px;
-  font-size: 23px;
+  font-size: 15px;
   font-weight: 500;
-  letter-spacing: -0.03em;
 }
 .explore-panel-heading .icon-button {
+  width: 28px;
+  min-height: 28px;
   border: 0;
 }
 .explore-nav {
   display: grid;
-  gap: 4px;
+  gap: 2px;
 }
 .explore-nav .nav-link {
   display: flex;
   gap: 20px;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 14px;
-  font-size: 15px;
+  padding: 8px 10px;
+  font-size: 13px;
   border-radius: 10px;
 }
 .explore-nav .nav-link > svg {
@@ -283,14 +266,45 @@
 }
 .explore-panel-bottom {
   display: flex;
-  gap: 20px;
+  gap: 10px;
   align-items: center;
-  padding-top: 18px;
-  margin-top: 24px;
+  padding-top: 10px;
+  margin-top: 10px;
   border-top: 1px solid hsl(var(--border));
 }
 .explore-panel-bottom .theme-toggle {
+  width: 34px;
+  min-height: 34px;
   margin-left: auto;
+}
+.social-links-icons {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.social-icon-link {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  transition: background 180ms;
+}
+.social-icon-link:hover {
+  background: hsl(var(--muted));
+}
+.social-icon {
+  width: 21px;
+  height: 21px;
+}
+.social-icon-threads {
+  width: 17px;
+  height: 17px;
+}
+.social-links-text {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 .explore-nojs {
   display: block;
@@ -555,17 +569,11 @@
     flex-shrink: 0;
   }
   .explore-dock {
+    right: max(16px, env(safe-area-inset-right));
     bottom: max(14px, env(safe-area-inset-bottom));
-    left: 16px;
-  }
-  .explore-trigger {
-    gap: 0;
-    min-height: 48px;
-    padding: 11px 13px;
   }
   .explore-panel {
-    max-height: calc(100svh - 100px);
-    padding: 20px;
+    max-height: calc(100svh - 92px);
     overflow-y: auto;
   }
   .footer-navigation {
@@ -576,7 +584,7 @@
   .footer-email {
     gap: 12px;
   }
-  .site-footer {
+  .footer-inner {
     padding-bottom: 84px;
   }
   .code-block .code-pre {

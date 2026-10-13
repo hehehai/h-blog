@@ -2,6 +2,7 @@ import { Link, useLocation, useRouterState } from "@tanstack/react-router";
 import { ArrowUp, ArrowUpRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { AnimatedLabel } from "@/components/shared/animated-label";
+import { SiteLogo } from "@/components/shared/site-logo";
 import { navMap } from "@/lib/config/nav";
 import { siteConfig } from "@/lib/config/site";
 
@@ -43,11 +44,7 @@ export default function Header() {
     <header className="site-header" data-scrolled={scrolled}>
       <div className="header-identity">
         <Link aria-label="Hehehai，返回首页" className="site-brand" to="/">
-          <span aria-hidden="true" className="brand-mark">
-            <span />
-            <span />
-            <span />
-          </span>
+          <SiteLogo />
           <span className="brand-name">
             Hehehai<span className="text-muted-foreground">.cn</span>
           </span>

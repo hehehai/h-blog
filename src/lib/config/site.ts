@@ -18,6 +18,7 @@ export const siteConfig = {
     "Node.js",
   ],
   shortTitle: "代码、设计与日常",
+  threads: "https://www.threads.com/@hskread",
   title: "Hehehai @一块木头",
   twitter: "https://x.com/York_981",
   twitterName: "@York_981",

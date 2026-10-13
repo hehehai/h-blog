@@ -1,13 +1,13 @@
 import { useLocation } from "@tanstack/react-router";
-import { ArrowUpRight, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import ButtonThemeToggle from "@/components/shared/button-theme-toggle";
+import { SocialLinks } from "@/components/shared/social-links";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { siteConfig } from "@/lib/config/site";
 import NavBar from "./nav-bar";
 
 export function ExploreMenu() {
@@ -59,21 +59,18 @@ export function ExploreMenu() {
                 <span key={dot} />
               ))}
             </span>
-            <span className="explore-trigger-label">探索本站</span>
+            <span className="sr-only">探索本站</span>
           </button>
         </PopoverTrigger>
         <PopoverContent
-          align="start"
+          align="end"
           aria-label="站点导航"
           className="explore-panel"
           side="top"
-          sideOffset={12}
+          sideOffset={10}
         >
           <div className="explore-panel-heading">
-            <div>
-              <p className="eyebrow">代码、设计与日常</p>
-              <h2>随处逛逛。</h2>
-            </div>
+            <h2>浏览本站</h2>
             <button
               aria-label="关闭导航面板"
               className="icon-button"
@@ -85,22 +82,7 @@ export function ExploreMenu() {
           </div>
           <NavBar onNavigate={() => setOpen(false)} />
           <div className="explore-panel-bottom">
-            <a
-              className="text-link"
-              href={siteConfig.github}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              GitHub <ArrowUpRight aria-hidden="true" size={14} />
-            </a>
-            <a
-              className="text-link"
-              href={siteConfig.twitter}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              X <ArrowUpRight aria-hidden="true" size={14} />
-            </a>
+            <SocialLinks iconsOnly />
             <ButtonThemeToggle />
           </div>
         </PopoverContent>

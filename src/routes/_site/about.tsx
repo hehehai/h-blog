@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
+import { AuthorAvatar } from "@/components/shared/author-avatar";
 import { PageHeading } from "@/components/shared/page-heading";
 import { authorProfile } from "@/lib/config/author";
 import { siteConfig } from "@/lib/config/site";
@@ -25,9 +26,7 @@ function About() {
       />
       <div className="about-layout">
         <aside className="about-card">
-          <span aria-hidden="true" className="about-monogram">
-            木
-          </span>
+          <AuthorAvatar className="about-avatar" size={72} />
           <h2>{authorProfile.name}</h2>
           <p>Hehehai · {authorProfile.role}</p>
           <div className="about-tags">

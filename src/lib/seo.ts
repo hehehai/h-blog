@@ -1,3 +1,4 @@
+import { authorProfile } from "@/lib/config/author";
 import { siteConfig } from "@/lib/config/site";
 
 const defaultImage = `${siteConfig.host}/favicon.svg`;
@@ -67,8 +68,9 @@ export function createWebsiteStructuredData() {
       },
       {
         "@type": "Person",
-        name: "一块木头",
-        sameAs: [siteConfig.github, siteConfig.twitter],
+        image: absoluteUrl(authorProfile.avatar),
+        name: authorProfile.name,
+        sameAs: [siteConfig.github, siteConfig.twitter, siteConfig.threads],
         url: siteConfig.host,
       },
     ],

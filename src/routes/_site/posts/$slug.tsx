@@ -1,12 +1,14 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import exampleComponents from "@/components/content";
+import { AuthorAvatar } from "@/components/shared/author-avatar";
 import MDXContent from "@/components/shared/mdx";
 import { ArticleOutline } from "@/components/shared/post/article-outline";
 import PostTags from "@/components/shared/post/post-tags";
 import { getPostBySlug, type PostDetail } from "@/functions/post";
 import { siteConfig } from "@/lib/config/site";
 import { formatPostDate } from "@/lib/date";
+import { hasPostContent, preloadPostContent } from "@/lib/mdx-posts";
 import { isPostSlug } from "@/lib/post-path";
 import { absoluteUrl, createSeoHead } from "@/lib/seo";
 
@@ -83,11 +85,14 @@ export const Route = createFileRoute("/_site/posts/$slug")({
     };
   },
   loader: async ({ params }): Promise<PostDetail> => {
-    if (!isPostSlug(params.slug)) {
+    if (!(isPostSlug(params.slug) && hasPostContent(params.slug))) {
       throw notFound();
     }
 
-    const post = await getPostBySlug({ data: { slug: params.slug } });
+    const [post] = await Promise.all([
+      getPostBySlug({ data: { slug: params.slug } }),
+      preloadPostContent(params.slug),
+    ]);
     if (!post) {
       throw notFound();
     }
@@ -118,9 +123,7 @@ function PostPage() {
         </div>
         <p className="article-description">{post.description}</p>
         <div className="article-author">
-          <span aria-hidden="true" className="author-avatar">
-            木
-          </span>
+          <AuthorAvatar />
           <Link to="/about">
             一块木头<span> · {post.source ? "翻译与整理" : "Hehehai"}</span>
           </Link>

@@ -1,0 +1,49 @@
+/* Native continuous corners are progressive enhancement, not a JS dependency.
+   Keep border-radius as the cross-browser fallback and leave demo geometry alone. */
+@supports (corner-shape: squircle) {
+  :where(
+    .button-link,
+    .icon-button,
+    .nav-link,
+    .social-icon-link,
+    .explore-panel,
+    .explore-nojs,
+    .skip-link,
+    .post-search,
+    .filter-button,
+    .showcase-card,
+    .showcase-stack::before,
+    .showcase-stack::after,
+    .project-media,
+    .photo-frame,
+    .photo-lightbox,
+    .about-card,
+    .about-tags span,
+    .content-placeholder,
+    .article-context,
+    .article-outline,
+    .article-heading [class*="rounded"],
+    .callout,
+    .faq-details,
+    .code-block,
+    .copy-button
+  ) {
+    corner-shape: squircle;
+  }
+
+  :where(.article-body, .about-story)
+    :where(img, video, code):not(:where(.not-prose, .not-prose *)) {
+    corner-shape: squircle;
+  }
+
+  :where(
+    .explore-trigger,
+    .author-avatar,
+    .showcase-open,
+    .photo-expand,
+    .showcase-controls .icon-button,
+    .theme-toggle
+  ) {
+    corner-shape: round;
+  }
+}
