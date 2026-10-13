@@ -1,7 +1,8 @@
 ---
-title: 在 Vercel 部署无头浏览器实现网页截图
-description: 如何使用将 Nextjs 中的无头浏览器(headless)部署在 Vercel 或其他 AWS-Lambda。
-tags: Vercel,Headless,Nextjs,AWS
+title: 在 Vercel 上用无头浏览器生成网页截图
+description: 使用 Puppeteer 与远程 Chromium 二进制包生成网页截图，记录 Next.js 部署中的体积限制、外部依赖与替代方案。
+tags: Vercel,无头浏览器,Next.js,AWS
+notice: 本文记录 2024 年的部署方案与平台限制。文中的执行时长、包体积限制和 Cloudflare 服务状态不是当前规则，请查阅最新官方文档。
 badges: 实践
 publicAt: "2024-01-16"
 ---
@@ -45,7 +46,7 @@ Traced Next.js server files in: 423.26ms
 
 [@sparticuz/chromium](https://github.com/Sparticuz/chromium)：AWS Lambda 的后继维护版
 
-在文档种找到了这个
+在文档中找到了这段说明：
 
 > If your vendor does not allow large deploys (`chromium.br` is 50+ MB), you'll need to host the `chromium-v#-pack.tar` separately and use the [`@sparticuz/chromium-min` package](https://github.com/Sparticuz/chromium#-min-package).
 >
@@ -76,7 +77,7 @@ const browser = await puppeteer.launch({
 开发直接使用本地包（你电脑上的 Chrome 浏览器），不同系统的本地包路径不同。
 
 **生产模式**
-使用远程 Chromium 二进制包，它是一互联网文件地址，建议使用 github 的公开包地址，否则私有地址要注意流量问题。
+使用远程 Chromium 二进制包，它是一个互联网文件地址，建议使用 github 的公开包地址，否则私有地址要注意流量问题。
 
 ## 搭建
 
@@ -271,7 +272,7 @@ page title Hehehai @一块木头 - 全栈开发，专注于前端应用程序和
 
 Fork [headless-try repo](https://github.com/hehehai/headless-try)
 
-登录 [verlcel](https://vercel.com) 登录后，进入 Dashboard，创建项目
+登录 [Vercel](https://vercel.com) 登录后，进入 Dashboard，创建项目
 
 ![vercel project create](/static/images/vercel-deploy-headless/20240116121328.png)
 
@@ -283,7 +284,7 @@ Fork [headless-try repo](https://github.com/hehehai/headless-try)
 
 ![vercel project dashboard](/static/images/vercel-deploy-headless/20240116121503.png)
 
-部署成功后，访问 **Domains** 点击 **Blog screenshot** 链接， 部署在 vercel 的免费网页，截图的运行时间是 10s， 所以如果在 10 内，没有返回结果，那么是超时了！可以重试几次，有缓存后就快一点了，测试一般在 5s。
+部署成功后，在 **Domains** 中打开 **Blog screenshot** 链接。原始示例曾受当时 10 秒的执行时长限制；后续规则已有变化，实际时长应按当前套餐与项目配置核对，不能将截图中的限制当作现行规则。
 
 ![hehehai vercel blog](/static/images/vercel-deploy-headless/20240116121721.png)
 
@@ -321,7 +322,7 @@ export default {
 
 🥳 好消息：[Workers Browser Rendering API enters open beta](https://blog.cloudflare.com/browser-rendering-open-beta)
 
-🫠 坏消息：还在内测中, 快来申请 [Add yourself to the waitlist](https://www.cloudflare.com/lp/workers-browser-rendering-api/)
+这里保留当时的服务发布记录。现在是否需要申请、支持哪些接口及如何计费，请查阅 [Browser Rendering 当前文档](https://developers.cloudflare.com/browser-rendering/)，不要沿用旧的等待名单说明。
 
 ## Browserless
 

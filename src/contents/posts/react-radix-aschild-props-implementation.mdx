@@ -1,16 +1,16 @@
 ---
-title: React 如何实现 Radix asChild 一样的属性组件
-description: Web 端中文字体的加载速度一直是网页优化的重点, 中文庞大的字符集导致字体文件通常超过1M, 本篇文章将从提取子集、字体分包两个方面进行优化。
-tags: React,Radix,ShadcnUI
+title: 在 React 中实现 Radix 的 asChild 模式
+description: 从 Radix Primitives 的 asChild 用法出发，理解 Slot 与 Slottable 的实现，并在 React 中实现属性、事件与 ref 的组合。
+tags: React,Radix,shadcn/ui
 badges: 实践
 publicAt: "2024-10-05"
 ---
 
 ## Radix 组件 `asChild` 使用
 
-当下极其热门的 [Shadcn UI](https://ui.shadcn.com/) 我想很多 [React](https://react.dev/) 开发者都已经听说过或者使用过了，它是基于 [Radix Primitives](https://www.radix-ui.com/primitives) 并继承了它的组合式组件风格，并且主题化，本地化（无沙盒）的 UI 库。如果你还没有尝试过 [Shadcn UI](https://ui.shadcn.com/)，我强烈建议你要尽快开始了！
+[shadcn/ui](https://ui.shadcn.com/) 的许多组件采用 [Radix Primitives](https://www.radix-ui.com/primitives) 的组合模式，并将代码放进项目中，方便自行调整。本文从其中的 `asChild` 用法出发，理解属性、事件和子节点是如何组合的。
 
-[Shadcn UI](https://ui.shadcn.com/) 中很多元组件都有一个 `asChild` 属性，可以接受一个布尔值，默认是 `false` ，当将该值设为 `true` 时，该组件的 `props`（属性&事件）会被解构及合并（`style`、`className`、`on` 事件）到它的子节点上（注意：当使用 `asChild` 时，该组件有且只能有一个子节点）
+[shadcn/ui](https://ui.shadcn.com/) 中的许多组件都有一个 `asChild` 属性，可以接受一个布尔值，默认是 `false` ，当将该值设为 `true` 时，该组件的 `props`（属性&事件）会被解构及合并（`style`、`className`、`on` 事件）到它的子节点上（注意：当使用 `asChild` 时，该组件有且只能有一个子节点）
 
 ```tsx
 import { Button } from "@/components/ui/button";

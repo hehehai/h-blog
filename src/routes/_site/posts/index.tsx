@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import PostList from "@/components/shared/post/post-list";
+import { PageHeading } from "@/components/shared/page-heading";
+import { PostBrowser } from "@/components/shared/post/post-browser";
 import { queryPosts } from "@/functions/post";
 import { createSeoHead } from "@/lib/seo";
 
@@ -15,12 +16,16 @@ export const Route = createFileRoute("/_site/posts/")({
 });
 
 function Posts() {
-  const { posts, total } = Route.useLoaderData();
+  const { posts } = Route.useLoaderData();
 
   return (
-    <div>
-      <div className="mb-3">共 {total} 篇</div>
-      <PostList posts={posts} />
+    <div className="collection-page">
+      <PageHeading
+        description="开发实践、交互设计与阅读整理。完整的教程和阶段性笔记，都在这里。"
+        eyebrow="实践记录与译文"
+        title="文章与笔记。"
+      />
+      <PostBrowser posts={posts} />
     </div>
   );
 }

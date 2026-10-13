@@ -1,22 +1,23 @@
 ---
-title: 使用 Docker 创建 MySQL 容器服务
-description: 使用 Docker 创建 MySQL 容器服务
+title: 用 Docker 运行 MySQL：连接、数据卷与网络
+description: 从官方 MySQL 镜像创建容器，验证连接、管理命名数据卷，并用 Docker 网络隔离应用与数据库。
+notice: 本文沿用 Docker 20.10 与 MySQL 8 的示例环境。配置镜像源前请核对服务可用性，示例密码需要替换，数据卷删除不可恢复。
 badges: 实践
 tags: MySQL,Docker
 publicAt: "2022-11-05"
 ---
 
-### Docker 下载
+## Docker 下载
 
 前往官网下载 Docker https://www.docker.com/
 
-### 安装
+## 安装
 
 ![docker-install](/static/images/use-docker-mysql-server/docker-install.png)
 
 打开 Docker 后，我们需要登录账号，没有的话，注册一下就好
 
-### 修改安装源
+## 修改安装源
 
 点击 设置 / Docker Engine
 
@@ -36,11 +37,11 @@ publicAt: "2022-11-05"
 }
 ```
 
-这里我室友的阿里云的个人源地址，这还是免费的，网上还有很多国内源，自己选择就好。
+这里使用的是阿里云提供的个人镜像加速地址，示例中的 `xxxxxx` 需要替换。镜像服务的访问范围和可用性可能变化，请使用自己确认可信且可用的地址。
 
 修改完需要点击右下角的重启就好。
 
-### 安装 MySQL
+## 安装 MySQL
 
 使用的 Docker Hub Image: https://hub.docker.com/_/mysql
 
@@ -71,7 +72,7 @@ docker images -a
 
 ```shell
 docker ps
-dcpker ps -a
+docker ps -a
 ```
 
 当前正在运行中的容器
@@ -83,7 +84,7 @@ dcpker ps -a
 docker run --name mysql -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=your-pwd -v mysql:/var/lib/mysql --restart unless-stopped mysql:8
 ```
 
-Unable to find image 'mysql:8' locally 表示当前镜像再本地不存在，需要在 远程 hub 中查找，及下载
+Unable to find image 'mysql:8' locally 表示本地没有该镜像，Docker 会从配置的镜像仓库拉取它
 
 ![docker-pull-mysql-images](/static/images/use-docker-mysql-server/docker-pull-mysql-images.png)
 
@@ -94,7 +95,7 @@ Unable to find image 'mysql:8' locally 表示当前镜像再本地不存在，�
 - `-d`: 此命令将在后台运行容器
 - `-p 3306:3306`: 容器服务的 `3306` 端口开放到宿主网络（你的系统）映射的端口是 `3306`（这个端口可以自己填写）
 - `-e MYSQL_ROOT_PASSWORD=your-pwd`: 为容器设置环境变量，名称为 `MYSQL_ROOT_PASSWORD` 这里会被内部使用，作为 `root` 用户的密码 `your-pwd` 可以自定义
-- `--restart unless-stopped`: 指示 Docker 始终可以重新启动容器，若 Docker 守护进程发生重新启动或更新后，该容器自动重启。`unless-stop` 表示 `docker stop` 停止容器时， Docker 守护进程的重启将不会影响容器
+- `--restart unless-stopped`: 指示 Docker 始终可以重新启动容器，若 Docker 守护进程发生重新启动或更新后，该容器自动重启。`unless-stopped` 表示 `docker stop` 停止容器时， Docker 守护进程的重启将不会影响容器
 
 2. 查看容器信息
 
@@ -130,7 +131,7 @@ docker exec -it mysql mysql -p
 
 3. 使用持久化数据
 
-此时我们已经可以连接使用数据库了，但还没有配置 Docker Volumes (容器持久化卷宗)。也就是当前 MySQL 的书就是被临时挂在容器默认使用的路径上（容器 `<->` 宿主路径），随着容器的删除，临时的路径也会被删除，所以我们需要持久化我们的数据。
+上面的启动命令已经通过 `-v mysql:/var/lib/mysql` 配置了名为 `mysql` 的数据卷。下面单独演示它的作用：删除容器不会自动删除这个命名卷，重建容器时可以继续挂载原有数据；删除数据卷则会删除其中的数据。
 
 ```shell
 docker stop mysql
@@ -145,7 +146,7 @@ docker rm mysql
 docker run --name mysql -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=your-pwd -v mysql:/var/lib/mysql --restart unless-stopped mysql:8
 ```
 
-- `-v mysql:/var/lib/mysql`: 容器的关联到宿主的 `/var/lib/mysql` 下, `mysql` 为 Volumes 名称
+- `-v mysql:/var/lib/mysql`：将 Docker 管理的命名卷 `mysql` 挂载到容器内的 `/var/lib/mysql`，这不是将同名宿主机路径直接挂载进去。
 
 ![docker-ui-volumes](/static/images/use-docker-mysql-server/docker-ui-volumes.png)
 
@@ -164,9 +165,9 @@ docker rm mysql
 docker volume rm mysql
 ```
 
-### 其他
+## 其他
 
-#### 使用容器网络
+### 使用容器网络
 
 在上面的示例中，端口转发用于在你的主机网络上公开 MySQL 服务器。如果你只从另一个 Docker 容器（例如您的 API 服务器）连接到 MySQL，更好的方法是创建一个专用的[Docker 网络](https://docs.docker.com/network)。这通过限制数据库的暴露来提高安全性。
 
@@ -190,7 +191,7 @@ docker run --name api-server -d -p 80:80 --network example-app example-api-serve
 
 API 和 MySQL 容器现在共享一个网络。可以通过引用 MySQL 容器的主机名从 API 容器连接到 MySQL。默认情况下，这与容器的名称匹配。在这里，应用程序应连接到`mysql`主机上的端口 `3306`。
 
-#### MySQL 配置
+### MySQL 配置
 
 官方 MySQL 镜像支持多个环境变量，您可以使用它们来配置容器的初始状态。例如，`MYSQL_ROOT_PASSWORD`.  使用 `-e` 标志 `docker run` 设置这些变量。它们仅在容器第一次启动时配置，此时 MySQL 数据目录为空。
 

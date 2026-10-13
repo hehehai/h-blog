@@ -1,12 +1,16 @@
 ---
-title: Framer Motion 高级动画模式
-description: 通过精选的示例和交互式示例，深入探讨 Framer Motion 的传播、退出过渡和布局动画模式。
-tags: Animation,Framer-Motion,Effect,Layout
-badges: 转发
+title: Framer Motion 进阶：动画传播、退出与共享布局
+description: 从 variants 的父子传播，到 AnimatePresence 的退出动画，再到 layoutId 与 LayoutGroup 的共享布局实践。
+tags: 动画,Framer Motion,交互动效,布局
+badges: 译文
+source:
+  name: Maxime Heckel
+  url: https://blog.maximeheckel.com/posts/advanced-animation-patterns-with-framer-motion/
+notice: 本文译自历史文章，保留原作者的第一人称与示例思路。依赖 API 请结合当前 Motion 官方文档核对。
 publicAt: "2024-04-29"
 ---
 
-> 本文转发并翻译至: [Advanced animation patterns with Framer Motion](https://blog.maximeheckel.com/posts/advanced-animation-patterns-with-framer-motion/)
+> 本文译自： [Advanced animation patterns with Framer Motion](https://blog.maximeheckel.com/posts/advanced-animation-patterns-with-framer-motion/)
 
 我从[我的指南](https://blog.maximeheckel.com/posts/guide-animations-spark-joy-framer-motion/)【[中文](https://www.hehehai.cn/posts/framer-motion-guide)】中得到 ✨ 了很多 ✨ 积极的反馈，这些动画用 Framer Motion 来激发人们的创造热情，不可否认的是，这个库激起了许多开发人员对基于 Web 的动画世界的兴趣。
 
@@ -27,7 +31,7 @@ publicAt: "2024-04-29"
 
 还记得在我[之前的博客文章](https://blog.maximeheckel.com/posts/guide-animations-spark-joy-framer-motion/)中，我们了解到每个 Framer Motion Animation 都需要 3 个属性（props） `initial`、 `animate`、`transition` 来定义过渡/动画吗？ 好吧，对于这种模式，这并不完全正确。
 
-Framer Motion 允许变体“向动”通过每个运动子组件，只要这些运动组件没有定义 `animate` props。在这种情况下，只有父运动组件定义 `animate` props。子项本身只定义他们打算为这些变体提供的行为。
+Framer Motion 允许父组件的变体状态向子级 motion 组件传播，只要这些运动组件没有定义 `animate` props。在这种情况下，只有父运动组件定义 `animate` props。子项本身只定义他们打算为这些变体提供的行为。
 
 我在这个博客上使用传播的一个很好的例子是这个博客主页上的“精选”部分。当您将鼠标悬停在它时，每张卡片都会“发光”，这种效果可以通过这种模式实现。为了解释引擎盖下到底发生了什么，我在下面构建了这个小部件，在那里我再现了这种效果：
 
@@ -40,7 +44,7 @@ Framer Motion 允许变体“向动”通过每个运动子组件，只要这些
 
 因此，当悬停这个不可见的层时，我们切换“悬停”变体，任何在其 `variants` prop 中定义了此变体的子运动组件都将检测到此更改并切换相应的行为。
 
-使用成帧器运动的传播模式示例
+使用 Framer Motion 传播模式的示例
 
 ```tsx
 const CardWithGlow = () => {

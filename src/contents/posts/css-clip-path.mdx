@@ -1,14 +1,14 @@
 ---
-title: 全面了解 CSS 中的剪切路径
-description: 如何使用 CSS 让网页元素形状多样化？独特的图形动效如何实现？
-tags: CSS,Effect
+title: CSS clip-path：图形裁剪与交互动效
+description: 理解 clip-path 的坐标系和常见图形，通过文本环绕、斜切背景与卡片示例探索 CSS 裁剪动效。
+tags: CSS,交互动效
 badges: 笔记
 publicAt: "2024-01-08"
 ---
 
-由于 CSS 对样式的形状调整只能实现矩形、圆形等简单图形效果，如若实现多边形等复杂形状就难的多了。
+矩形和圆形可以通过常规盒模型与圆角实现，但多边形或自定义路径往往需要额外的裁剪规则。
 
-这篇文章就来介绍 CSS `clip-path` 属性，来借助 SVG 路径剪切的方式，实现图形路径自由。
+这篇文章介绍 CSS `clip-path`：用基本图形或 SVG 路径定义可见区域，再将它应用到布局和交互动效中。
 
 <ExampleMenu />
 
@@ -206,14 +206,14 @@ margin: 0;
 }
 ```
 
-这三行代码是核心，可以看到使用了 `flaot` 属性，表示图片是要浮动的， `shape-outside` 的园半径是比 `clip-path` 大些，是为了留开间距，实际 `shape-outside` 是支持盒模型设置的。
+这三行代码是核心，可以看到使用了 `float` 属性，表示图片是要浮动的， `shape-outside` 的圆形半径是比 `clip-path` 大些，是为了留开间距，实际 `shape-outside` 是支持盒模型设置的。
 
 - [MDN shape-margin](https://developer.mozilla.org/en-US/docs/Web/CSS/shape-margin)
 - [MDN shape-box](https://developer.mozilla.org/en-US/docs/Web/CSS/shape-outside#shape-box)
 
 背景斜切
 
-使用 `cli-path` 实现斜切背景效果是很容易的，我们使用 `polygon` 来处理，为什么不使用 `path` 搭配 SVG 呢？使用 `polygon` 点的位置可以使用百分比，这可以实现响应式，如果 SVG 的话，位置很难把控。
+使用 `clip-path` 实现斜切背景效果是很容易的，我们使用 `polygon` 来处理，为什么不使用 `path` 搭配 SVG 呢？使用 `polygon` 点的位置可以使用百分比，这可以实现响应式，如果 SVG 的话，位置很难把控。
 
 <SandpackBlock 
 	template="static"

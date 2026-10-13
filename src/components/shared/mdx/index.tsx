@@ -1,5 +1,6 @@
 import type { MDXComponents } from "mdx/types";
 import { lazy, type ReactElement, Suspense } from "react";
+import { ArticleLoading } from "@/components/shared/layout/page-loading";
 import { getPostSlug } from "@/lib/post-path";
 import { components as defaultComponents } from "./components";
 
@@ -33,7 +34,7 @@ export default function MDXContent({
   }
 
   return (
-    <Suspense fallback={<p role="status">正在加载文章…</p>}>
+    <Suspense fallback={<ArticleLoading />}>
       <Component
         components={{
           ...defaultComponents,

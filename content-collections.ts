@@ -11,16 +11,30 @@ const posts = defineCollection({
   schema: z.object({
     badges: z
       .string()
-      .transform((badges) => badges.split(","))
+      .transform((badges) =>
+        badges
+          .split(",")
+          .map((badge) => badge.trim())
+          .filter(Boolean)
+      )
       .optional(),
     content: z.string().optional(),
     description: z.string().min(1),
+    notice: z.string().min(1).optional(),
     publicAt: z.iso
       .date()
       .transform((date) => new Date(`${date}T00:00:00.000Z`)),
+    source: z
+      .object({ name: z.string().min(1), url: z.url().startsWith("https://") })
+      .optional(),
     tags: z
       .string()
-      .transform((tags) => tags.split(","))
+      .transform((tags) =>
+        tags
+          .split(",")
+          .map((tag) => tag.trim())
+          .filter(Boolean)
+      )
       .optional(),
     title: z.string().min(1),
   }),

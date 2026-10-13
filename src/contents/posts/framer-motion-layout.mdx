@@ -1,12 +1,16 @@
 ---
-title: Framer Motion 关于布局动画的一切
-description: 一份完整的 Framer Motion 布局动画指南，展示了从布局属性、共享布局动画和 LayoutGroup，到复杂的拖拽重排序交互等每个概念。
-tags: Animation,Framer-Motion,Effect,Layout
-badges: 转发
+title: Framer Motion 布局动画：layout、layoutId 与 LayoutGroup
+description: 理解布局动画、共享布局与分组的区别，处理尺寸失真，并使用 Reorder 实现拖动排序。
+tags: 动画,Framer Motion,交互动效,布局
+badges: 译文
+source:
+  name: Maxime Heckel
+  url: https://blog.maximeheckel.com/posts/framer-motion-layout-animations/
+notice: 本文译自历史文章，保留原作者的第一人称与示例思路。依赖 API 请结合当前 Motion 官方文档核对。
 publicAt: "2024-04-30"
 ---
 
-> 本文转发并翻译至: [Everything about Framer Motion layout animations](https://blog.maximeheckel.com/posts/framer-motion-layout-animations/)
+> 本文译自： [Everything about Framer Motion layout animations](https://blog.maximeheckel.com/posts/framer-motion-layout-animations/)
 
 自从我上次写这篇文章以来，Framer Motion 发生了很大变化。如此之多，以至于我最近在尝试构建特定的布局动画时有点迷茫，而我自己的[博客文章](https://blog.maximeheckel.com/posts/advanced-animation-patterns-with-framer-motion/)【[中文](https://www.hehehai.cn/posts/framer-motion-advanced)】实际上研究了这种特定类型的动画，但远没有帮助 😅。尽管我在 11 月添加了更新的部分，但仍然感觉我没有触及关于这个主题的几点，其中一些是不完整的。
 
@@ -84,7 +88,7 @@ publicAt: "2024-04-30"
 <FramerMotionDistortions />
 
 <Callout type="exploding">
-如果像我一样，您在代码库中使用 CSS 变量，请注意，为 或 `borderRadius` `boxShadow` 的值设置 CSS 变量不会解决上面展示的任何副作用。您需要使用适当的值以避免任何失真。
+如果像我一样，您在代码库中使用 CSS 变量，请注意，为 `borderRadius` 或 `boxShadow` 的值设置 CSS 变量不会解决上面展示的任何副作用。您需要使用适当的值以避免任何失真。
 
 </Callout>
 
@@ -106,7 +110,7 @@ publicAt: "2024-04-30"
 
 <FramerMotionLayoutAnimationsLayoutProp />
 
-你可能会问，为什么我们需要使用这些 `layout` 属性？实际用途是什么？。有时，由于布局动画调整大小的组件的内容最终可能会被“压扁”或“拉伸”。如果您在制作布局动画时看到这种情况发生，则只需将 `layout` prop 设置为 `position` 即可修复。
+你可能会问，为什么我们需要使用这些 `layout` 属性？实际用途是什么？有时，由于布局动画调整大小的组件的内容最终可能会被“压扁”或“拉伸”。如果您在制作布局动画时看到这种情况发生，则只需将 `layout` prop 设置为 `position` 即可修复。
 
 下面您将找到此类用例的示例：
 
@@ -169,7 +173,7 @@ publicAt: "2024-04-30"
 
 <FramerMotionLayoutAnimationsTabsLayoutGroup />
 
-这就是图片 👀 的 `LayoutGroup` 用武之地。
+这正是 `LayoutGroup` 的用武之地。
 
 ## LayoutGroup 命名空间用例
 
@@ -208,7 +212,7 @@ const App = () => (
 
 ## LayoutGroup： 分组用例
 
-命名共享布局动画并不是的唯一 `LayoutGroup` 用例。其初衷其实是：
+命名共享布局动画并不是 `LayoutGroup` 的唯一用例。其初衷其实是：
 
 > 将应执行布局动画的运动组件组合在一起。
 

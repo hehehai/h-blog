@@ -88,9 +88,13 @@ const ContentDemo = (props: Props) => {
       </CardWrapper>
       <Flex className="mt-10 mb-4 space-x-5" gap={4}>
         <Button
-          aria-label="Previous"
-          id="prev"
+          aria-label={
+            withAnimatePresence
+              ? "上一张（有退出动画）"
+              : "上一张（无退出动画）"
+          }
           onClick={prev}
+          onFocus={() => setAboutToBeClicked("prev")}
           onMouseEnter={() => setAboutToBeClicked("prev")}
           size="icon"
           variant={"outline"}
@@ -99,9 +103,13 @@ const ContentDemo = (props: Props) => {
         </Button>
 
         <Button
-          aria-label="Next"
-          id="next"
+          aria-label={
+            withAnimatePresence
+              ? "下一张（有退出动画）"
+              : "下一张（无退出动画）"
+          }
           onClick={next}
+          onFocus={() => setAboutToBeClicked("next")}
           onMouseEnter={() => setAboutToBeClicked("next")}
           size="icon"
           variant={"outline"}

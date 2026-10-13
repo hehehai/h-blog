@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowUpRight } from "lucide-react";
 import PostList from "@/components/shared/post/post-list";
+import { ProjectShowcase } from "@/components/shared/project/project-showcase";
 import ShortAboutMe from "@/components/shared/short-about-me";
 import { queryPosts } from "@/functions/post";
 import { siteConfig } from "@/lib/config/site";
@@ -23,22 +25,30 @@ function Home() {
   const hasMore = total > 6;
 
   return (
-    <div>
+    <div className="home-page">
+      <header className="home-heading">
+        <p className="eyebrow">Hehehai · 一块木头</p>
+        <h1>
+          把想法做出来，
+          <span className="text-muted-foreground">把过程记下来。</span>
+        </h1>
+      </header>
+      <ProjectShowcase />
       <ShortAboutMe />
-      <div className="mt-14">
-        <div className="mb-5 text-lg">新的文章</div>
-        <PostList posts={posts} />
-        {hasMore ? (
-          <div className="mt-8">
-            <Link
-              className="text-slate-700 underline decoration-2 decoration-slate-500 underline-offset-8 hover:decoration-dotted dark:text-gray-400"
-              to="/posts"
-            >
-              全部文章 _
-            </Link>
+      <section className="home-posts">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">笔记与思考</p>
+            <h2>最近的记录</h2>
           </div>
-        ) : null}
-      </div>
+          {hasMore && (
+            <Link className="text-link" to="/posts">
+              全部 {total} 篇 <ArrowUpRight aria-hidden="true" size={16} />
+            </Link>
+          )}
+        </div>
+        <PostList posts={posts} />
+      </section>
     </div>
   );
 }

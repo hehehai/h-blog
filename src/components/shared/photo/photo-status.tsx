@@ -40,9 +40,9 @@ export function PhotoStatus({ result }: { result: PhotoLoadResult }) {
   return (
     <section aria-label="照片加载状态" className="rounded-lg border p-4">
       <div role="status">
-        <h1 className="font-semibold text-lg">
+        <h2 className="font-medium text-lg">
           {result.status === "stale" ? "暂时无法更新照片" : "照片暂时无法加载"}
-        </h1>
+        </h2>
         <p className="mt-2 text-sm">
           {failureMessages[result.reason ?? "upstream"]}
           {result.status === "stale" && " 正在显示最近一次成功加载的照片。"}

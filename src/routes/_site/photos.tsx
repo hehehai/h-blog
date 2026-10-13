@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { PageHeading } from "@/components/shared/page-heading";
 import PhotoItem from "@/components/shared/photo/photo-item";
 import { PhotoStatus } from "@/components/shared/photo/photo-status";
 import { getAtlas } from "@/functions/photo";
@@ -19,10 +20,18 @@ function Photos() {
   const result = Route.useLoaderData();
 
   return (
-    <div className="space-y-10">
+    <div className="photos-page">
+      <PageHeading
+        description="离开屏幕之后，记录生活与旅途里值得停留的瞬间。"
+        eyebrow="生活的切片"
+        title="看见，留住。"
+      />
       <PhotoStatus result={result} />
       {result.status === "ready" && result.albums.length === 0 && (
-        <p>还没有照片。</p>
+        <div className="content-placeholder">
+          <p className="eyebrow">照片集 · 待补充</p>
+          <p>还没有照片，新的生活片段将在这里更新。</p>
+        </div>
       )}
       {result.albums.map((item) => (
         <PhotoItem key={item.issuesId} {...item} />

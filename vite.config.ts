@@ -17,6 +17,11 @@ import { contentMetadataReload } from "./scripts/content-reload";
 const reactFilePattern = /\.(jsx|js|mdx|md|tsx|ts)$/;
 
 export default defineConfig({
+  optimizeDeps: {
+    // The navigation lives in Start's lazy site layout. Prewarm its primitive
+    // to avoid a late dependency re-optimization during client hydration.
+    include: ["@radix-ui/react-popover"],
+  },
   plugins: lazyPlugins(() => [
     cloudflare({ viteEnvironment: { name: "ssr" } }),
     {

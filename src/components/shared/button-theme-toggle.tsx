@@ -1,79 +1,26 @@
-"use client";
-
-import { AnimatePresence, motion, type Variants } from "motion/react";
-import { type MouseEvent, useEffect, useState } from "react";
-import ButtonFadeStyle from "./button-fade-style";
-import { IconMoon, IconSun } from "./icons";
+import { Moon, Sun } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useTheme } from "./theme-provider";
-
-const themeVariants: Variants = {
-  animate: {
-    opacity: 1,
-    x: 0,
-  },
-  exit: {
-    opacity: 0,
-    x: -10,
-  },
-  initial: (isMount: boolean) => ({
-    opacity: isMount ? 0 : 1,
-    x: isMount ? 10 : 0,
-  }),
-};
 
 export default function ButtonThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
-  const [isMount, setIsMount] = useState(false);
-
-  const handleToggleTheme = (e: MouseEvent<HTMLElement>) => {
-    e.preventDefault();
-    setTheme(resolvedTheme === "dark" ? "light" : "dark");
-  };
-
-  useEffect(() => {
-    setIsMount(true);
-  }, []);
-
-  if (!isMount) {
-    return null;
-  }
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const isDark = mounted && resolvedTheme === "dark";
 
   return (
-    <ButtonFadeStyle
-      aria-label={
-        resolvedTheme === "dark" ? "切换到浅色模式" : "切换到深色模式"
-      }
-      onClick={handleToggleTheme}
+    <button
+      aria-label={isDark ? "切换到浅色模式" : "切换到深色模式"}
+      className="icon-button theme-toggle"
+      disabled={!mounted}
+      onClick={() => setTheme(isDark ? "light" : "dark")}
+      type="button"
     >
-      <AnimatePresence mode="wait">
-        {resolvedTheme === "dark" ? (
-          <motion.div
-            animate="animate"
-            className="text-2xl"
-            custom={isMount}
-            exit="exit"
-            initial="initial"
-            key="sun"
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            variants={themeVariants}
-          >
-            <IconSun />
-          </motion.div>
-        ) : (
-          <motion.div
-            animate="animate"
-            className="text-2xl"
-            custom={isMount}
-            exit="exit"
-            initial="initial"
-            key="moon"
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            variants={themeVariants}
-          >
-            <IconMoon />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </ButtonFadeStyle>
+      {isDark ? (
+        <Sun aria-hidden="true" size={18} />
+      ) : (
+        <Moon aria-hidden="true" size={18} />
+      )}
+    </button>
   );
 }

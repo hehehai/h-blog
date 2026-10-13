@@ -1,16 +1,17 @@
 ---
-title: Next Auth 如何实现丝滑的邮件 OTP 认证
-description: 如何基于 Next Auth 实现邮件 OTP 认证？
-tags: Next,NextAuth,OTP
+title: NextAuth 邮件验证码登录：从 Magic Link 到 OTP
+description: 改造 NextAuth 的邮件登录流程，将 Magic Link 的 token 用作验证码，完成邮件发送、OTP 输入与登录验证。
+tags: Next.js,NextAuth,OTP
+notice: 本文记录 2024 年的 NextAuth 实践。上线前还需要核对当前 API，并补齐验证码有效期、一次性消费、尝试次数与发送频率限制。
 badges: 实践
 publicAt: "2024-03-06"
 ---
 
 ## OTP 是什么
 
-OTP 认证是一种基于一次性密码（One-Time Password）的身份验证方法。通常，在传统的用户名和密码登录方式中，用户只需提供用户名和密码即可进行身份验证。然而，由于密码可能会被泄露或猜测，这种方式存在一定的安全风险。
+OTP（One-Time Password）是一次性验证码。它可以用于无密码登录，也可以作为多因素认证的一环，并不一定需要同时输入账号密码。
 
-为了增强身份验证的安全性，OTP 认证引入了一次性密码的概念。在 OTP 认证中，用户除了提供用户名和密码外，还需要提供由特定算法生成的一次性密码。这个一次性密码通常是基于时间的，每隔一段时间就会生成一个新的密码。
+本文使用邮件发送随机生成的验证码，用户回到登录页输入后完成验证。它与基于时间算法生成验证码的 TOTP 不同；安全性取决于随机性、有效期、一次性消费及尝试次数限制。
 
 ![20240306183855](/static/images/next-auth-email-otp/20240306183855.jpg)
 
@@ -95,7 +96,15 @@ npx prisma db push
 pnpm install resend
 ```
 
-打开 `src/server/auth.ts` 文件
+先在本地 `.env` 中设置服务端环境变量，下面的值只是占位，需要替换为自己的密钥：
+
+```text
+RESEND_API_KEY=YOUR_RESEND_API_KEY
+```
+
+不要提交 `.env`，不要使用 `NEXT_PUBLIC_` 前缀，也不要将密钥写入源码或日志。部署时通过托管平台的服务端环境变量配置。
+
+打开 `src/server/auth.ts` 文件，读取该环境变量：
 
 ```ts
 ...
@@ -106,8 +115,8 @@ import { Resend } from "resend";
 
 ...
 
-// Resend 服务的 Api Key
-const resend = new Resend("re_jkp1CHXF_9VwdjEjziwkf9fkLNRcPpXC6");
+// 仅在服务端读取 Resend API Key
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const authOptions: NextAuthOptions = {
   ...
@@ -146,10 +155,10 @@ export const authOptions: NextAuthOptions = {
 ...
 ```
 
-- 将我们刚刚申请的 `Api Key` 填入 `new Resend(Api Key)`
+- 将申请的密钥配置为 `RESEND_API_KEY`，代码使用 `process.env.RESEND_API_KEY` 读取，不硬编码。
 - 设置 `EmailProvider`，这里 `from` 我们使用 Resend 的测试邮箱作为发送方，实际生产这里是自定义域名（Resend 免费版本支持一个自定义域名，每月 3000 发送额度）
 - [`generateVerificationToken`](https://next-auth.js.org/providers/email#customizing-the-verification-token)：自定义验证码生成
-- [`sendVerificationRequest`](sendVerificationRequest): 自定义邮件发送
+- [`sendVerificationRequest`](https://next-auth.js.org/providers/email#customizing-emails): 自定义邮件发送
 - `resend.emails.send`: 邮件发送，这里即发送了 `token`，也发送了 `url`
 
 接下来我们启动服务，到登录页面，测试邮件的发送。
@@ -170,7 +179,7 @@ npm run dev
 
 ![20240306210549](/static/images/next-auth-email-otp/20240306210549.jpg)
 
-可以看到，我们收到了邮件，点击 Magic Link 链接，这个时候，页面会跳转到 `/loign` 我们不用管，在页面打开 [http://localhost:3000/api/auth/session](http://localhost:3000/api/auth/session)
+可以看到，我们收到了邮件，点击 Magic Link 链接，这个时候，页面会跳转到 `/login` 我们不用管，在页面打开 [http://localhost:3000/api/auth/session](http://localhost:3000/api/auth/session)
 
 ```json
 {

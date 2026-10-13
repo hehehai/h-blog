@@ -1,14 +1,15 @@
 ---
-title: Vue3 reactivity 原理
-description: vue3 响应式的实现原理的解读
-tags: Vue, 响应式
+title: Vue 3 响应式笔记：Proxy、reactive 与缓存
+description: 从早期 reactivity API 出发，用 Proxy 和 WeakMap 理解响应式代理与缓存；effect 的依赖收集实现待补充。
+tags: Vue,响应式
+notice: 阶段性笔记：当前内容只覆盖代理与缓存思路，effect 的依赖收集和触发实现尚未整理。示例参考早期 alpha 版本，不是完整的 Vue 响应式实现。
 badges: 笔记
 publicAt: "2022-03-06"
 ---
 
 ## @vue/reactivity@3.0.0-alpha.0
 
-这里先看的是最早期的代码，结构会更容易读些，下面的文章不是直接看源码，而是由 vue reativeity 的出口 api 来进入，试着实现该接口（并非玩去实现）
+本文从最早期的 API 结构入手，尝试实现部分 `reactivity` 接口来理解思路，而不是逐行解读源码或完整复刻当前 Vue 的实现。
 
 ## demo.html
 
@@ -50,7 +51,7 @@ publicAt: "2022-03-06"
 <button id="btn_age">年龄 + 1</button>
 ```
 
-我们这里要实现的是 reactive 和 effect，虽然我们直接在 vue core 中没有 effect 接口，但是 watch，computed 内都是使用了 effect，所以我们直接关注 effect（类似 react effect 的效果）
+示例使用 `reactive` 和 `effect` 表达响应式数据与依赖执行的关系。当前正文先实现代理与缓存，`effect` 的依赖收集与触发部分会在后续补充；它与 React 的 `useEffect` 并不是同一个机制。
 
 ## reactive
 
@@ -156,7 +157,7 @@ function createReactiveObject(target, toProxy, toRaw, handlers) {
 
 ![reactive](/static/images/Xnip2022-03-06_09-01-08.jpg)
 
-其实这里并没有完成是响应，我们只是将 target 创建了一个 proxy，返回。而具体的拦截执行是 reactiveTarget 的使用
+到这里，我们只为 `target` 创建并缓存了代理，还没有实现依赖收集与更新触发。访问或修改代理属性时会进入对应的 handler，但这并不等于完整的响应式系统。
 
 ```jsx
 const user = reactive({
@@ -172,5 +173,5 @@ ok，这里我们先不用处理了，从数据来说，这以及是我们要的
 ## effect
 
 ```jsx
-function effect()
+// 待补充：effect 的依赖收集、执行与触发逻辑。
 ```

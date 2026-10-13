@@ -1,7 +1,8 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Outlet, useLocation } from "@tanstack/react-router";
+import { ExploreMenu } from "@/components/shared/layout/explore-menu";
 import Footer from "@/components/shared/layout/footer";
 import Header from "@/components/shared/layout/header";
-import NavBar from "@/components/shared/layout/nav-bar";
+import { NavigationProgress } from "@/components/shared/layout/page-loading";
 import { getCopyrightYear } from "@/functions/site";
 
 export const Route = createFileRoute("/_site")({
@@ -11,15 +12,25 @@ export const Route = createFileRoute("/_site")({
 
 function SiteLayout() {
   const currentYear = Route.useLoaderData();
+  const { pathname } = useLocation();
 
   return (
-    <div className="mx-auto max-w-5xl px-5 md:px-8">
+    <div className="site-shell">
+      <a className="skip-link" href="#main-content">
+        跳到主要内容
+      </a>
       <Header />
-      <NavBar />
-      <div className="my-4">
+      <NavigationProgress />
+      <main
+        className="page-content page-enter"
+        id="main-content"
+        key={pathname}
+        tabIndex={-1}
+      >
         <Outlet />
-      </div>
+      </main>
       <Footer currentYear={currentYear} />
+      <ExploreMenu />
     </div>
   );
 }

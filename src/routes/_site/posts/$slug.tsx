@@ -1,6 +1,8 @@
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import exampleComponents from "@/components/content";
 import MDXContent from "@/components/shared/mdx";
+import { ArticleOutline } from "@/components/shared/post/article-outline";
 import PostTags from "@/components/shared/post/post-tags";
 import { getPostBySlug, type PostDetail } from "@/functions/post";
 import { siteConfig } from "@/lib/config/site";
@@ -25,7 +27,23 @@ export const Route = createFileRoute("/_site/posts/$slug")({
       structuredData: {
         "@context": "https://schema.org",
         "@type": "BlogPosting",
-        author: { "@type": "Person", name: "一块木头", url: siteConfig.host },
+        author: post.source
+          ? {
+              "@type": post.source.name === "Dub" ? "Organization" : "Person",
+              name: post.source.name,
+              url: post.source.url,
+            }
+          : { "@type": "Person", name: "一块木头", url: siteConfig.host },
+        ...(post.source
+          ? {
+              isBasedOn: post.source.url,
+              translator: {
+                "@type": "Person",
+                name: "一块木头",
+                url: siteConfig.host,
+              },
+            }
+          : {}),
         dateModified: new Date(post.lastModified).toISOString(),
         datePublished: new Date(post.publicAt).toISOString(),
         description: post.description,
@@ -81,25 +99,74 @@ function PostPage() {
   const post = Route.useLoaderData() as PostDetail;
 
   return (
-    <div>
-      <div className="mb-10">
-        <div className="mb-4 font-medium text-2xl leading-relaxed underline decoration-2 decoration-slate-700 underline-offset-8 md:text-3xl">
-          {post.title}
+    <div className="article-page">
+      <header className="article-heading">
+        <Link className="article-back text-link" to="/posts">
+          <ArrowLeft aria-hidden="true" size={15} />
+          全部文章
+        </Link>
+        <PostTags className="justify-center" tags={post.tags} />
+        <h1>{post.title}</h1>
+        <div className="post-meta justify-center">
+          <time dateTime={new Date(post.publicAt).toISOString()}>
+            {formatPostDate(post.publicAt)}
+          </time>
+          <span>{post.readingTime} 分钟阅读</span>
+          {post.badges?.map((badge) => (
+            <span key={badge}>{badge}</span>
+          ))}
         </div>
-        <div className="justify-content mt-1.5 flex space-x-2 text-slate-700 text-sm dark:text-gray-200">
-          <PostTags isSimple tags={post.tags} title="标签:" />
+        <p className="article-description">{post.description}</p>
+        <div className="article-author">
+          <span aria-hidden="true" className="author-avatar">
+            木
+          </span>
+          <Link to="/about">
+            一块木头<span> · {post.source ? "翻译与整理" : "Hehehai"}</span>
+          </Link>
         </div>
-        <div className="justify-content mt-1.5 flex space-x-2 text-slate-700 text-sm dark:text-gray-200">
-          <PostTags tags={post.badges} />
-          {post.publicAt && <div>{formatPostDate(post.publicAt)}</div>}
-          {!!post.readingTime && <div>约 {post.readingTime} 分钟</div>}
-        </div>
-      </div>
-      <main>
-        <article className="prose prose-slate dark:prose-invert mt-4 w-full max-w-none">
+      </header>
+      {(post.source || post.notice) && (
+        <aside aria-label="阅读说明" className="article-context">
+          {post.source && (
+            <p>
+              原文来自{" "}
+              <a
+                href={post.source.url}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                {post.source.name}
+                <ArrowUpRight aria-hidden="true" size={13} />
+              </a>
+              ，译文中的“我”“我们”指原作者。
+            </p>
+          )}
+          {post.notice && <p>{post.notice}</p>}
+        </aside>
+      )}
+      <div className="article-layout">
+        <ArticleOutline slug={post.slug} />
+        <article
+          className="article-body prose dark:prose-invert"
+          id="article-body"
+        >
           <MDXContent components={exampleComponents} slug={post.slug} />
         </article>
-      </main>
+      </div>
+      <footer className="article-end">
+        <p className="eyebrow">感谢阅读</p>
+        <p>每一次探索，都值得记录。</p>
+        <div>
+          <Link className="text-link" to="/posts">
+            <ArrowLeft aria-hidden="true" size={15} />
+            继续阅读
+          </Link>
+          <a className="text-link" href={`mailto:${siteConfig.email}`}>
+            交流想法 <ArrowUpRight aria-hidden="true" size={15} />
+          </a>
+        </div>
+      </footer>
     </div>
   );
 }

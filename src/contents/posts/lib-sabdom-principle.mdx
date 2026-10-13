@@ -1,7 +1,9 @@
 ---
-title: 虚拟 Dom + Diff 算法的最小实现库 - Sabbdom
-description: Sabbdom 作为一个虚拟 Dom + Diff 算法的最小实现库，源码值得一看
+title: Snabbdom 入门：虚拟 DOM、模块与生命周期
+description: 整理 Snabbdom 的 vnode、h、patch、模块与生命周期接口，通过示例理解轻量虚拟 DOM 库的使用方式。
 badges: 笔记
+tags: JavaScript,虚拟 DOM
+notice: 本文整理早期 Snabbdom 文档与示例。核心代码行数和实验性接口等描述对应当时版本，当前行为请核对官方仓库。
 publicAt: "2022-04-18"
 ---
 
@@ -23,11 +25,11 @@ Snabbdom 则极其简单、高效并且可拓展，同时核心代码 ≈ 200 �
     - Patch 函数有一个相当于 reduce/scan 函数的函数声明，这将更容易集成其他函数式库
 - 模块特点
     - 函数`h`： 轻松创建虚拟 DOM 节点
-    - [SVG 需要与 `h` 函数结合使用](notion://www.notion.so/hehehai/Sabbdom-3092e74578dd47188c5257cb38d53541#svg)
+    - [SVG 需要与 `h` 函数结合使用](#svg)
     - 支持复杂的 CSS 动画实现
     - 提供强大的事件监听功能
-    - 通过 [Thunks](notion://www.notion.so/hehehai/Sabbdom-3092e74578dd47188c5257cb38d53541#thunks) 进一步优化 diff 和 patch 过程
-    - [支持 JSX 及 Typrscript](notion://www.notion.so/hehehai/Sabbdom-3092e74578dd47188c5257cb38d53541#jsx)
+    - 通过 [Thunks](#thunks) 进一步优化 diff 和 patch 过程
+    - [支持 JSX 及 TypeScript](#jsx)
 - 第三方功能
     - [snabbdom-to-html](https://github.com/acstll/snabbdom-to-html) 提供服务端渲染功能
     - [snabbdom-helpers](https://github.com/krainboltgreene/snabbdom-helpers) 精简版虚拟 DOM 创建
@@ -207,7 +209,7 @@ Snabbdom 提供了一系列丰富的生命周期函数，这些生命周期函�
 
 ### 概览
 
-[hooks](https://www.notion.so/a7dece4c24ad407bb54587090da72497)
+[Snabbdom 官方生命周期说明](https://github.com/snabbdom/snabbdom#hooks)
 
 适用于模块：`pre`, `create`,`update`, `destroy`, `remove`, `post`
 
@@ -291,7 +293,7 @@ const myModule = {
 
 ## 模块文档
 
-本章节将描述核心模块，所有模块都是可选的，关于 JSX 示例我们将假定你使用的 `[jsx` pragma](notion://www.notion.so/hehehai/Sabbdom-3092e74578dd47188c5257cb38d53541#jsx) 与本库一致。
+本章节将描述核心模块，所有模块都是可选的，关于 JSX 示例我们将假定你使用的 [JSX pragma](#jsx) 与本库一致。
 
 ### class 模块
 
@@ -324,7 +326,7 @@ h("a", { props: { href: "/foo" } }, "Go to Foo");
 // Renders as: <input name="foo" /> with input.name === "foo"
 ```
 
-属性只能被设置不能被移除，即使浏览器允许自定义添加或删除属性，该模块也不会尝试删除。这是因为原生 DOM 的属性也同样不支持被移除，如果你是通过自定义属性来存储信息或者引用对象，那么请考虑使用 [data-\* attributes](https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes) 代替，为此我们提供了 [dataset](notion://www.notion.so/hehehai/Sabbdom-3092e74578dd47188c5257cb38d53541#dataset-%E6%A8%A1%E5%9D%97) 模块。
+属性只能被设置不能被移除，即使浏览器允许自定义添加或删除属性，该模块也不会尝试删除。这是因为原生 DOM 的属性也同样不支持被移除，如果你是通过自定义属性来存储信息或者引用对象，那么请考虑使用 [data-\* attributes](https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes) 代替，为此我们提供了 [dataset](#dataset-模块) 模块。
 
 ### attributes 模块
 
@@ -511,7 +513,7 @@ const vnode = h("div", [
 ]);
 ```
 
-更多示例： [SVG example](notion://www.notion.so/hehehai/examples/svg) 、 [SVG Carousel example](notion://www.notion.so/hehehai/examples/carousel-svg/)。
+更多示例：[SVG example](https://github.com/snabbdom/snabbdom/tree/master/examples/svg)、[SVG Carousel example](https://github.com/snabbdom/snabbdom/tree/master/examples/carousel-svg)。
 
 ### Classes in SVG Elements
 
@@ -609,22 +611,22 @@ const node = (
 
 **属性**
 
-- [sel](notion://www.notion.so/hehehai/Sabbdom-3092e74578dd47188c5257cb38d53541#sel--string)
-- [data](notion://www.notion.so/hehehai/Sabbdom-3092e74578dd47188c5257cb38d53541#data--object)
-- [children](notion://www.notion.so/hehehai/Sabbdom-3092e74578dd47188c5257cb38d53541#children--array)
-- [text](notion://www.notion.so/hehehai/Sabbdom-3092e74578dd47188c5257cb38d53541#text--string)
-- [elm](notion://www.notion.so/hehehai/Sabbdom-3092e74578dd47188c5257cb38d53541#elm--element)
-- [key](notion://www.notion.so/hehehai/Sabbdom-3092e74578dd47188c5257cb38d53541#key--string--number)
+- [sel](#sel--string)
+- [data](#data--object)
+- [children](#children--arrayvnode)
+- [text](#text--string)
+- [elm](#elm--element)
+- [key](#key--string--number)
 
 ### sel : String
 
-虚拟节点的 `.sel` 属性通过对 `[h()](notion://www.notion.so/hehehai/Sabbdom-3092e74578dd47188c5257cb38d53541#h)` 传入一个 CSS 选择器生成，比如： `h('div#container', {}, [...])` 将会创建一个虚拟节点并以 `div#container` 作为其 `.sel` 属性的值。
+虚拟节点的 `.sel` 属性通过对 [`h()`](#h) 传入一个 CSS 选择器生成，比如： `h('div#container', {}, [...])` 将会创建一个虚拟节点并以 `div#container` 作为其 `.sel` 属性的值。
 
 ### data : Object
 
-`.data` 属性是虚拟节点用于添加 [模块](notion://www.notion.so/hehehai/Sabbdom-3092e74578dd47188c5257cb38d53541#%E6%A8%A1%E5%9D%97%E6%96%87%E6%A1%A3) 信息以便在创建时访问或操作 DOM 元素、添加样式、操作 CSS classes、attributes 等
+`.data` 属性是虚拟节点用于添加 [模块](#模块文档) 信息以便在创建时访问或操作 DOM 元素、添加样式、操作 CSS classes、attributes 等
 
-data 对象是 `[h()](notion://www.notion.so/hehehai/Sabbdom-3092e74578dd47188c5257cb38d53541#h)` 的第二个参数（可选）
+data 对象是 [`h()`](#h) 的第二个参数（可选）
 
 比如： `h('div', {props: {className: 'container'}}, [...])` 将会生成一个虚拟节点，其属性 `.data` 的值为
 
@@ -638,7 +640,7 @@ data 对象是 `[h()](notion://www.notion.so/hehehai/Sabbdom-3092e74578dd47188c5
 
 ### children : `Array<vnode>`
 
-虚拟节点的 `.children` 属性通过 `[h()](notion://www.notion.so/hehehai/Sabbdom-3092e74578dd47188c5257cb38d53541#h)` 传入的第三个参数（可选）生成。`.children` 仅仅是一个虚拟节点数组，在创建时将其作为子节点添加到父级 DOM 节点中。
+虚拟节点的 `.children` 属性通过 [`h()`](#h) 传入的第三个参数（可选）生成。`.children` 仅仅是一个虚拟节点数组，在创建时将其作为子节点添加到父级 DOM 节点中。
 
 比如： `h('div', {}, [ h('h1', {}, 'Hello, World') ])` 将会创建一个虚拟节点，其 `.children` 的值为
 
@@ -663,11 +665,11 @@ data 对象是 `[h()](notion://www.notion.so/hehehai/Sabbdom-3092e74578dd47188c5
 
 ### elm : Element
 
-`.elm` 属性指向由 snabbdom 创建的真实 DOM 节点，这个属性在 [hooks](notion://www.notion.so/hehehai/Sabbdom-3092e74578dd47188c5257cb38d53541#hooks) 和 [modules](notion://www.notion.so/hehehai/Sabbdom-3092e74578dd47188c5257cb38d53541#%E6%A8%A1%E5%9D%97%E6%96%87%E6%A1%A3) 中做计算都非常有用。
+`.elm` 属性指向由 snabbdom 创建的真实 DOM 节点，这个属性在 [hooks](#hooks) 和 [modules](#模块文档) 中做计算都非常有用。
 
 ### key : string | number
 
-当你在 `[.data](notion://www.notion.so/hehehai/Sabbdom-3092e74578dd47188c5257cb38d53541#data--object)` 对象中提供了 key 时将会创建 `.key` 属性，`.key` 属性用于给旧的、已存在的 DOM 节点提供一个标识，有效避免了不必要的重建操作。这对于像列表重排这类操作非常有用，此外 key 必须是 `string`  或者 `number`  以便用于查找，这是因为参数是以键值对的形式存储在内存中，这里 键为 `.key` 而 值则为 `.elm`。
+当你在 [`.data`](#data--object) 对象中提供了 key 时将会创建 `.key` 属性，`.key` 属性用于给旧的、已存在的 DOM 节点提供一个标识，有效避免了不必要的重建操作。这对于像列表重排这类操作非常有用，此外 key 必须是 `string`  或者 `number`  以便用于查找，这是因为参数是以键值对的形式存储在内存中，这里 键为 `.key` 而 值则为 `.elm`。
 
 这里 `.key` 在同级元素之间必须是唯一的。
 

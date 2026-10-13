@@ -1,14 +1,14 @@
 ---
-title: JavaScript 是如何处理 Unicode 字符的
-description: 计算机如何计算文字的长度，不同的编码默认计算长度的方式是什么，如何统一?
+title: JavaScript 字符长度：从 Unicode 到 Emoji
+description: 区分 UTF-16 码元、Unicode 码点与字素簇，理解字符串 length、字符迭代器和 Emoji 长度计算的差异。
 tags: JavaScript
 badges: 笔记
 publicAt: "2022-04-12"
 ---
 
-### 字符长度问题
+## 字符长度问题
 
-在日常的开发中，经常会遇到字符长度的统计以及在将数据发送到后端后字符长度计算方式的的统一。
+开发中经常需要统计字符长度，并让前端与后端采用一致的计算方式。这里首先要明确：我们统计的是 UTF-16 码元、Unicode 码点，还是用户看到的字符（字素簇）。
 
 ![Twitter Textarea](/static/images/character-length-calculation/twitter-textarea.png)
 
@@ -21,7 +21,7 @@ publicAt: "2022-04-12"
 
 这一切追根溯源，都和 Unicode 有关。而 Unicode 对我们来说是一个熟悉而又陌生的词。
 
-### Unicode 基础
+## Unicode 基础
 
 > Unicode 是计算机科学领域里的一项业界标准。它对世界上大部分的文字系统进行了整理、编码，使得电脑可以用更为简单的方式来呈现和处理文字。 —— wiki
 
@@ -32,7 +32,7 @@ publicAt: "2022-04-12"
 - [Unicode 与前端字符编码全揭秘](https://juejin.cn/post/7070079762429034526)
 - [Unicode 字符集与字符编码](https://zhuanlan.zhihu.com/p/165524551)
 
-### Emoji 在 Unicode 中的长度
+## Emoji 在 Unicode 中的长度
 
 ```javascript
 "🤦🏻‍♂️".length; // 7
@@ -47,15 +47,15 @@ publicAt: "2022-04-12"
 | [Runner 🏃] [Emoji Modifier Fitzpatrick Type-1-2] [ZWJ] [Female Sign ♀️] | 🏃🏻‍♀️       | 奔跑的女人：浅肤色     |
 | [Runner 🏃] [Emoji Modifier Fitzpatrick Type-6] [ZWJ] [Female Sign ♀️]   | 🏃🏿‍♀️       | 奔跑的女人：深肤色     |
 
-可以在 Console 从尝试输入以下编码
+可以在浏览器控制台尝试展开下面的字符串：
 
 ```javascript
-[...👨‍👩‍👦]
+[..."👨‍👩‍👦"]
 ```
 
 ![Emoji Length](/static/images/character-length-calculation/emoji-length.png)
 
-### JavaScript 的长度处理
+## JavaScript 的长度处理
 
 我们就以 `a 嗨 𠮷 💩 🤦🏻‍♂️` 这些字符作为测试，先来看下他们的 Unicode
 
@@ -67,9 +67,19 @@ a   1  =>  \u0061
 🤦🏻‍♂️  7  =>  \ud83e\udd26\ud83c\udffb\u200d\u2642\ufe0f
 ```
 
-这里字符的长度就是来自 Unicde 码点的数量
+这里的 `.length` 统计的是 UTF-16 码元数量，不是 Unicode 码点或字素簇数量。一个码点可能占用两个码元，一个 Emoji 也可能由多个码点组成。
 
-#### 使用正则匹配范围
+<Callout type="find">
+如果需要按用户感知的字符计数，可使用 `Intl.Segmenter` 的 `grapheme` 分段方式；使用前请确认目标运行环境支持。
+</Callout>
+
+```js
+const segmenter = new Intl.Segmenter("zh-CN", { granularity: "grapheme" });
+const countGraphemes = (text) => [...segmenter.segment(text)].length;
+countGraphemes("🤦🏻‍♂️"); // 1
+```
+
+### 使用正则匹配范围
 
 可以使用正则表达式匹配码点的范围，替换为占位字符 `_` 长度为 1
 
@@ -92,7 +102,7 @@ function countSymbols(string) {
 }
 ```
 
-#### 使用字符迭代器
+### 使用字符迭代器
 
 在 ES6 中，您可以执行类似的操作 `Array.from`，使用字符串的迭代器将其拆分为一个字符串数组，每个字符串包含一个符号。
 
@@ -115,7 +125,7 @@ function countSymbols(string) {
 
 > 这也是多数前端库的选择，如：[AntDesignVue](https://github.com/vueComponent/ant-design-vue/blob/23a83688947020342f3f579d0c334e13e3046b9c/components/input/TextArea.tsx#L259-L266)
 
-#### 更加完善的正则
+### 更加完善的正则
 
 - [Grapheme Splitter](https://github.com/orling/grapheme-splitter) 这是 [SemiDesign](https://semi.design/zh-CN/input/input#%E8%87%AA%E5%AE%9A%E4%B9%89%E8%AE%A1%E7%AE%97%E5%AD%97%E7%AC%A6%E4%B8%B2%E9%95%BF%E5%BA%A6) 的推荐
 - [Lodash.size()](https://github.com/lodash/lodash/blob/2da024c3b4/size.js)
@@ -277,7 +287,7 @@ function stringSize(value: string) {
 - [Unicode 字符边界算法](http://www.unicode.org/reports/tr29/#Table_Sample_Grapheme_Clusters)
 - [ES2015 中的 Unicode 感知正则表达式](https://mathiasbynens.be/notes/es6-unicode-regex)
 
-### 正则匹配
+## 正则匹配
 
 在上面的长度计算中，其实已经有正则匹配的内容了，这里要单独介绍的是 ES6 对正则表达式添加了 `u` 修饰符，含义为“Unicode 模式”，用来正确处理大于`\uFFFF` 的 Unicode 字符。也就是说，会正确处理四个字节的 UTF-16 编码。
 
@@ -376,7 +386,7 @@ codePointLength(s); // 2
 - [ECMAScript 6 入门 - 正则 u 修饰符](https://es6.ruanyifeng.com/#docs/regex#u-%E4%BF%AE%E9%A5%B0%E7%AC%A6)
 - [正则表达式中的 Unicode 问题](https://mathiasbynens.be/notes/javascript-unicode#regex)
 
-### 遍历
+## 遍历
 
 在 ECMAScript 5 中，您必须编写大量边界匹配代码来处理多码点字符：
 
@@ -420,7 +430,7 @@ for (const symbol of "💩") {
 }
 ```
 
-### 参考
+## 参考
 
 - [JavaScript has a Unicode problem](https://mathiasbynens.be/notes/javascript-unicode)
 - [Intl - JavaScript | MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Intl)

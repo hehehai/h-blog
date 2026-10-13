@@ -1,7 +1,7 @@
 [
   {
     "name": "Voxt",
-    "subtitle": "🎙️ 本地优先的语音转文本 App",
+    "subtitle": "本地优先的语音转文本应用",
     "description": "- Swift 桌面 App 的建构和模型链路。\n- MLX 模型的接入和使用封装。\n- 远程模型的适配接入。",
     "cover": "/static/images/projects/voxt.webp",
     "links": {
@@ -11,8 +11,8 @@
   },
   {
     "name": "Tiny SVG",
-    "subtitle": "🖼️ 压缩 SVG 到最佳可用状态!",
-    "description": "- Tanstack Start + ORPC + Drizzle ORM。\n- PWA + 多语言 + 缓存。\n- Figma 插件的编写和实现。",
+    "subtitle": "让 SVG 更轻量的在线压缩工具",
+    "description": "- TanStack Start + ORPC + Drizzle ORM。\n- PWA + 多语言 + 缓存。\n- Figma 插件的编写和实现。",
     "cover": "/static/images/projects/tiny-svg.webp",
     "links": {
       "github": "https://github.com/hehehai/tiny-svg",
@@ -21,7 +21,7 @@
   },
   {
     "name": "refto",
-    "subtitle": "🤯 最新设计感网站收集，释放无限灵感!",
+    "subtitle": "收集有设计感的网站，发现新的灵感",
     "description": "- Next + tRPC + Prisma。\n- 瀑布流数据懒加载。\n- 图片数据持久化存储。",
     "cover": "/static/images/projects/refto.webp",
     "links": {
@@ -30,7 +30,7 @@
   },
   {
     "name": "x-hiring",
-    "subtitle": "🥳 每日最新招聘信息，使用 Google AI 提取摘要!",
+    "subtitle": "使用 Google AI 提取摘要的招聘信息聚合工具",
     "description": "- Google Gemini 分析职位摘要。\n- 动态数据搜索，路由跳转。\n- 瀑布流数据加载。",
     "cover": "/static/projects/x-hiring.jpg",
     "links": {
@@ -39,7 +39,7 @@
   },
   {
     "name": "微博价值分析",
-    "subtitle": "🤑 工具微博账户数据分析账户价值!",
+    "subtitle": "通过微博账户数据分析账户价值",
     "description": "- 微博账户数据抓取。\n- 抓取数据缓存，路由缓存。\n- 图片生成及下载",
     "cover": "/static/projects/weibo-worth.jpg",
     "links": {
@@ -48,7 +48,7 @@
   },
   {
     "name": "Coolos",
-    "subtitle": "🌈 快速轻松地发现颜色：您的快速和简单的颜色伴侣!",
+    "subtitle": "发现颜色，创建和分享你的色板",
     "description": "- Next.js / Clerk / Prisma / Shadcn UI。\n- 颜色选择、色板生成、热门颜色查询。\n- 数据管理、身份认证、信息统计。",
     "cover": "/static/projects/coolos.jpg",
     "links": {
@@ -57,7 +57,7 @@
   },
   {
     "name": "CrateHub",
-    "subtitle": "🦀 自动展示 Github Rust 项目依赖列表的浏览器插件",
+    "subtitle": "展示 GitHub Rust 项目依赖列表的浏览器扩展",
     "description": "- Rust 项目依赖列表。\n- crates.io 包信息。\n- Workspaces 目录列表",
     "cover": "/static/images/projects/cratehub-cover.png",
     "links": {
@@ -76,7 +76,7 @@
   },
   {
     "name": "终端 2048",
-    "subtitle": "NodeJS 实现终端 2048 玩游戏",
+    "subtitle": "使用 Node.js 在终端中玩 2048",
     "description": "- 使用终端表格渲染布局。\n- 监听键盘事件操作。\n- 游戏分数展示。\n- 操作流畅。",
     "cover": "/static/images/projects/2048.gif",
     "links": {

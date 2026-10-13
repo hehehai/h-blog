@@ -1,17 +1,14 @@
 import { Image } from "@unpic/react";
+import { ArrowUpRight } from "lucide-react";
 import type { HTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
-import { IconGithub, IconWebsite } from "../icons";
 
-interface ProjectLink {
-  github?: string;
-  site?: string;
-}
+const LIST_PREFIX = /^-\s*/;
 
 interface ProjectProps extends HTMLAttributes<HTMLDivElement> {
   cover: string;
   description: string;
-  links: ProjectLink;
+  links: { github?: string; site?: string };
   name: string;
   subtitle: string;
 }
@@ -26,59 +23,56 @@ export default function Project({
   ...props
 }: ProjectProps) {
   return (
-    <div className={cn("max-w-3xl", className)} {...props}>
-      <div className="mb-4 items-center md:flex md:space-x-2">
-        <div className="text-xl">{name}</div>
-        {subtitle && (
-          <>
-            <div className="hidden md:block"> —— </div>
-            <div className="mt-2 md:mt-0">{subtitle}</div>
-          </>
-        )}
-      </div>
-      <div className="gap-5 md:flex">
-        <div className="relative aspect-[5/3] w-full drop-shadow-lg md:w-[420px] md:shrink-0">
-          <Image
-            alt={name}
-            className="absolute inset-0 h-full w-full rounded-xl object-cover"
-            height={252}
-            layout="constrained"
-            src={cover}
-            width={420}
-          />
+    <article className={cn("project-card", className)} {...props}>
+      <a
+        aria-label={`查看 ${name} 项目`}
+        className="project-media"
+        href={links.site ?? links.github}
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <Image
+          alt={`${name} 项目界面`}
+          className="project-image"
+          height={480}
+          layout="constrained"
+          src={cover}
+          width={800}
+        />
+      </a>
+      <div className="project-info">
+        <div className="project-title">
+          <h3>{name}</h3>
+          <p>{subtitle}</p>
         </div>
-        <div className="mt-4 flex grow flex-col md:mt-0">
-          <div className="mb-2 space-y-2.5 text-md md:text-sm">
-            {description.split("\n").map((line: string, idx: number) => (
-              <p key={idx + line}>{line}</p>
-            ))}
-          </div>
-          <div className="mt-2 flex items-center space-x-4 md:mt-auto">
-            {links.github && (
-              <a
-                className="flex cursor-pointer items-center rounded-lg bg-slate-900/[0.03] px-2 py-1 font-semibold text-slate-900 text-sm leading-6 transition hover:bg-slate-900/[0.06] dark:bg-white/[0.03] dark:text-white dark:hover:bg-white/[0.06]"
-                href={links.github}
-                rel="noreferrer"
-                target="_blank"
-              >
-                <IconGithub className="text-xl" />
-                <span className="ml-2">Github</span>
-              </a>
-            )}
-            {links.site && (
-              <a
-                className="flex cursor-pointer items-center rounded-lg bg-slate-900/[0.03] px-2 py-1 font-semibold text-slate-900 text-sm leading-6 transition hover:bg-slate-900/[0.06] dark:bg-white/[0.03] dark:text-white dark:hover:bg-white/[0.06]"
-                href={links.site}
-                rel="noreferrer"
-                target="_blank"
-              >
-                <IconWebsite className="text-xl" />
-                <span className="ml-2">Website</span>
-              </a>
-            )}
-          </div>
+        <div className="project-description">
+          {description.split("\n").map((line) => (
+            <p key={line}>{line.replace(LIST_PREFIX, "")}</p>
+          ))}
+        </div>
+        <div className="project-links">
+          {links.site && (
+            <a
+              className="text-link"
+              href={links.site}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              访问网站 <ArrowUpRight aria-hidden="true" size={15} />
+            </a>
+          )}
+          {links.github && (
+            <a
+              className="text-link"
+              href={links.github}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              GitHub <ArrowUpRight aria-hidden="true" size={15} />
+            </a>
+          )}
         </div>
       </div>
-    </div>
+    </article>
   );
 }

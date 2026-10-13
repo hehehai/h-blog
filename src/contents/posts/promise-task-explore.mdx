@@ -1,12 +1,12 @@
 ---
-title: 探究 Promise 的静态方法
-description: Promise的静态方法和多任务管理、并发管理实践，让您优化异步操作和提升代码执行效率。
+title: Promise 并发指南：all、allSettled、any 与 race
+description: 比较四种 Promise 组合方法的完成与失败行为，再将它们应用到超时、重试和并发数量限制。
 badges: 笔记
-tags: JS,Promise,Async/await
+tags: JavaScript,Promise,async/await
 publicAt: "2024-01-07"
 ---
 
-自从 ES 中的 Promise 普及后，多个异步任务的编排处理是一项棘手的时期，这里不仅仅是 “地狱回调” 的问题，这在后期的 async/await 已经解决了，但是遇到负责异步依赖的问题，依然要处理并发，错误，重试等业务问题。
+Promise 和 async/await 简化了异步代码，但多个任务之间的依赖、并发数量、错误传播与重试仍需要单独设计。本文从这些业务场景出发，比较四种常用的 Promise 组合方法。
 
 这篇文章是介绍如何从业务的角度去解决多任务异步编排的处理方式，只着眼于“异步”。
 
@@ -78,8 +78,8 @@ Error: task2 error
 
 特点
 
-1. 返回所有 Promise 的结果：Promise.all 返回一个新的 Promise，该 Promise 在所有传入的 Promise 都解决后被解决。它会等待所有 Promise 完成，而不管它们是解决还是拒绝。
-2. 取消其他 Promise：一旦一个 Promise 被拒绝，Promise.all 将立即取消其他未完成的 Promise。这意味着只要有一个 Promise 被拒绝，返回的 Promise 将立即被拒绝，并提供拒绝的原因。
+1. 等待全部成功：只有所有输入项都 fulfilled 时，`Promise.all` 才会返回结果数组；任一输入项 rejected 时，组合 Promise 会立即 rejected。
+2. 不会取消其他任务：组合 Promise 的失败不会停止仍在执行的请求或其他异步操作。需要取消请求时，应额外使用 `AbortController` 等取消机制。
 3. 处理所有 Promise 的结果：返回的 Promise 将解决为一个数组，其中包含每个 Promise 的结果。数组中的元素按照传入 Promise 的顺序排列，与 Promise 的解决顺序无关。
 4. 参数可以是可迭代对象：Promise.all 接受一个可迭代对象作为参数，这意味着你可以传递一个包含多个 Promise 的数组或类似数组的对象（如 Set）。这样可以方便地处理多个并发操作。
 5. 返回一个新的 Promise：Promise.all 返回一个新的 Promise 对象，因此你可以使用 then 方法来处理它的解决情况，并获取包含每个 Promise 结果的数组。
@@ -155,7 +155,7 @@ times: 4
 
 ### [`Promise.any()`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise/any)
 
-在**任意一个** Promise 被完成时完成，仅在**所有**的 Promise 都被拒绝时才会拒绝。
+在**任意一个** Promise fulfilled 时返回它的值；只有**所有**输入项都 rejected 时才以 `AggregateError` 拒绝。
 
 ![any-resolve](/static/images/promise-task-explore/any-resolve.webp)
 
@@ -242,7 +242,7 @@ times: 2
 
 ### 超时处理
 
-当需要执行一个操作，但希望在一定时间内完成，否则视为超时时，可以使用 Promise.race 来创建一个超时机制。将操作的 Promise 和一个定时器 Promise（在指定时间后拒绝）传递给 Promise.race，这样，如果操作的 Promise 在超时之前解决，就可以获取其结果；否则，如果超时定时器先拒绝，就可以执行相应的超时处理逻辑。
+当需要为操作设置等待时限时，可以使用 `Promise.race` 创建超时机制。注意：超时 Promise 先完成并不会取消原操作；网络请求通常还需要配合 `AbortController`。将操作的 Promise 和一个定时器 Promise（在指定时间后拒绝）传递给 Promise.race，这样，如果操作的 Promise 在超时之前解决，就可以获取其结果；否则，如果超时定时器先拒绝，就可以执行相应的超时处理逻辑。
 
 ```js
 function timeout(ms) {

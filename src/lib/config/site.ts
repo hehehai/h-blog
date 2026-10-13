@@ -1,6 +1,6 @@
 export const siteConfig = {
   description:
-    "我是一位全栈开发，专注于前端应用程序和用户界面设计。我的首选技术栈是 TypeScript、React、Vue 和 NodeJS。",
+    "一块木头的个人网站，记录前端开发、全栈工程、交互设计与独立项目。常用 TypeScript、React、Vue 和 Node.js。",
   domain: "hehehai.cn",
   email: "hey@hehehai.cn",
   github: "https://github.com/hehehai",
@@ -15,9 +15,9 @@ export const siteConfig = {
     "React",
     "Vue",
     "TypeScript",
-    "NodeJS",
+    "Node.js",
   ],
-  shortTitle: "全栈开发，专注于前端应用程序和用户界面设计.",
+  shortTitle: "代码、设计与日常",
   title: "Hehehai @一块木头",
   twitter: "https://x.com/York_981",
   twitterName: "@York_981",

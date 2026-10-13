@@ -1,7 +1,7 @@
 ---
-title: 如何获取隐藏元素的高度
-description: 我们如果想做一个元素高度的动画，这个动画的起始为`0` 结束这里不设置具体的高度，我们需要拿到元素的高度作为最终高度！问题是在元素高度为`0`的时候，我们无法拿到最终高度。
-tags: 样式
+title: 隐藏元素的高度测量与折叠动画
+description: 比较 offsetHeight、clientHeight、scrollHeight 与 getBoundingClientRect，结合盒模型理解高度测量，再实现折叠动画。
+tags: CSS
 badges: 笔记
 publicAt: "2022-10-27"
 ---
@@ -14,7 +14,7 @@ publicAt: "2022-10-27"
 - 元素隐藏时，宽高对元素已没有意义（`display: none` 不会占用空间）
   我们如果想做一个元素高度的动画，这个动画的起始为`0` 结束这里不设置具体的高度，我们需要拿到元素的高度作为最终高度！问题是在元素高度为`0`的时候，我们无法拿到最终高度。
 
-#### 处理方法
+### 处理方法
 
 先将元素显示，高度设置为 `1px` , `visibility: hidden` 但让元素不可见，当高度大于 `1px` 后，元素可见。
 
@@ -29,7 +29,7 @@ publicAt: "2022-10-27"
 
 要先知道盒模型的概念：[参考](https://developer.mozilla.org/zh-CN/docs/Web/CSS/box-sizing)
 
-#### height/width
+### height/width
 
 `height` CSS 属性指定了一个元素的高度。默认情况下，这个属性决定的是内容区（ [content area](https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Box_Model/Introduction_to_the_CSS_box_model#content-area)）的高度，但是，如果将  [`box-sizing`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/box-sizing)  设置为  `border-box` , 这个属性决定的将是边框区域（[border area](https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Box_Model/Introduction_to_the_CSS_box_model#border-area)）的高度。
 
@@ -55,7 +55,7 @@ element.style.height; // ''
 
 ![offsetHeight box](/static/images/how-to-get-the-height-of-a-hidden-element/offsetHeight-box.png)
 
-#### `clientHeight/clientWidth`
+### `clientHeight/clientWidth`
 
 只读属性  **`Element.clientHeight`**  对于没有定义 CSS 或者内联布局盒子的元素为 0；否则，它是元素内部的高度（以像素为单位），包含内边距，但不包括边框、外边距和水平滚动条（如果存在）。
 
@@ -65,14 +65,14 @@ element.style.height; // ''
 
 ![clientHeight box](/static/images/how-to-get-the-height-of-a-hidden-element/clientHeight-box.png)
 
-#### `scrollHeight/scrollWidth`
+### `scrollHeight/scrollWidth`
 
 **`Element.scrollHeight`**  这个只读属性是一个元素内容高度的度量，包括由于溢出导致的视图中不可见内容。
 `scrollHeight`  的值等于该元素在不使用滚动条的情况下为了适应视口中所用内容所需的最小高度。没有垂直滚动条的情况下，`scrollHeight` 值与元素视图填充所有内容所需要的最小值[`clientHeight`](https://developer.mozilla.org/zh-CN/docs/Web/API/Element/clientHeight "clientHeight")相同。包括元素的 `padding`，但不包括元素的 `border` 和 `margin`。`scrollHeight`  也包括  [`::before`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/::before)  和  [`::after`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/::after)这样的伪元素。 如果元素的内容不需要垂直滚动条就可以容纳，则其  `scrollHeight`  等于 `clientHeight`
 
 ![scrollHeight box](/static/images/how-to-get-the-height-of-a-hidden-element/scrollHeight-box.png)
 
-#### `getComputedStyle`
+### `getComputedStyle`
 
 `Window.getComputedStyle()`方法返回一个对象，该对象在应用活动样式表并解析这些值可能包含的任何基本计算后报告元素的所有 CSS 属性的值。 `getComputedStyle`返回的对象是只读的。
 
@@ -86,7 +86,7 @@ getComputedStyle 可以从**伪元素**拉取样式信息 (比如，`::after`, 
 window.getComputedStyle(element, "::after");
 ```
 
-#### `getBoundingClientRect()`
+### `getBoundingClientRect()`
 
 **`Element.getBoundingClientRect()`**  方法返回一个  [`DOMRect`](https://developer.mozilla.org/zh-CN/docs/Web/API/DOMRect)  对象，其提供了元素的大小及其相对于[视口](https://developer.mozilla.org/zh-CN/docs/Glossary/Viewport)的位置。
 

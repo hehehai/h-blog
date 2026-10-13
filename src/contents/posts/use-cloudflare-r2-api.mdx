@@ -1,14 +1,18 @@
 ---
-title: 使用 Cloudflare R2 构建可扩展且经济实惠的图像存储服务
-description: 我们最近将图像托管从 Cloudinary 迁移到 Cloudflare R2。这篇文章详细介绍了切换背后的原因、Cloudflare R2 的优缺点以及我们如何在代码库中实现它。
-tags: Storage,Cloudflare R2
-badges: 转发
+title: Cloudflare R2 图像存储：从 Cloudinary 迁移到 R2
+description: Dub 团队分享图像存储迁移过程，包括 R2 存储桶、上传客户端、图片尺寸处理、批量迁移与 CORS 配置。
+tags: 对象存储,Cloudflare R2
+badges: 译文
+source:
+  name: Dub
+  url: https://dub.co/blog/image-hosting-r2
+notice: 本文是 Dub 团队在 2024 年的迁移记录。价格、区域、域名与运行时兼容性请以 Cloudflare 当前文档及实际依赖版本为准。
 publicAt: "2024-04-03"
 ---
 
 ![i1](/static/images/use-cloudflare-r2-api/image-hosting-r2.png)
 
-> 本文转发并翻译至: [Building a Scalable & Affordable Image Hosting Pipeline with Cloudflare R2](https://dub.co/blog/image-hosting-r2)
+> 本文译自： [Building a Scalable & Affordable Image Hosting Pipeline with Cloudflare R2](https://dub.co/blog/image-hosting-r2)
 
 [Dub.co](https://dub.co/)作为[链接管理](https://dub.co/help/article/what-is-dub)平台，存储了各种用户生成的图像资产：
 
@@ -82,7 +86,7 @@ publicAt: "2024-04-03"
 
 确保将您的 API 令牌命名为与将使用该令牌的服务相关的名称。
 
-授予其“对象读写”权限，我们建议仅将 ito 应用于单个存储桶。
+授予其“对象读写”权限，我们建议仅将其应用于单个存储桶。
 
 您可以保留其余设置（TTL、客户端 IP 地址过滤）不变，然后单击**创建 API 令牌**。
 
@@ -178,14 +182,14 @@ class StorageClient {
 export const storage = new StorageClient();
 ```
 
-<Callout typ="find">
+<Callout type="find">
   注意：我们所有的图像上传都是在服务器端处理的，因此我们不必担心[预先签名的 URL
   上传](https://docs.aws.amazon.com/AmazonS3/latest/userguide/PresignedUrlUploadObject.html)。
 </Callout>
 
 您会注意到我们使用的是 `aws4fetch` 而不是 `aws-sdk/client-s3` SDK。原因有两个：
 
-- **边缘兼容**：AWS S3 SDK 与[边缘运行时](https://vercel.fyi/edge)不边缘兼容，而 `aws4fetch` 则兼容。这是因为 AWS 开发工具包使用边缘运行时中不可用的 Node.js API。
+- **边缘兼容**：本文当时使用的 AWS S3 SDK 与[边缘运行时](https://vercel.fyi/edge)不兼容，而 `aws4fetch` 则兼容。这是因为 AWS 开发工具包使用边缘运行时中不可用的 Node.js API。
 - **简单的接口**： `aws4fetch` 提供了一个用于发出请求的简单接口，这就是我们的用例所需要的。
 
 您可以在我们的[代码库](https://github.com/dubinc/dub/blob/main/apps/web/lib/storage.ts)中查看此代码。
@@ -288,7 +292,7 @@ cloudinary.v2.uploader.upload(image, {
 });
 ```
 
-我们现在有一句话：
+替换后的调用方式如下：
 
 ```ts
 storage.upload(linkId, image);

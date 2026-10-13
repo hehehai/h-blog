@@ -29,7 +29,7 @@ export default function ElementLink({
   return (
     <a
       className={cn(
-        "group inline cursor-pointer items-center space-x-1 break-all underline-offset-4",
+        "group wrap-break-word inline cursor-pointer items-center space-x-1 underline-offset-4",
         className
       )}
       href={href}
@@ -38,7 +38,7 @@ export default function ElementLink({
       {...props}
     >
       <span>{props.children}</span>
-      <IconJumpLink className="inline group-hover:animate-shaking" />
+      <IconJumpLink className="inline transition-transform group-hover:-translate-y-0.5 motion-reduce:transform-none" />
     </a>
   );
 }

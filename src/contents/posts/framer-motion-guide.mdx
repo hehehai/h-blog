@@ -1,12 +1,16 @@
 ---
-title: Framer Motion 动画创建入门指南
-description: 网页的动效交互一直是个复杂且的问题，这篇文章解释如何使用 FramerMotion 来让动效编码变得简单有效。
-tags: Animation,Framer-Motion,Effect
-badges: 转发
+title: Framer Motion 入门：状态、变体与动画编排
+description: 通过交互示例学习 initial、animate、transition、变体与 MotionValue，并理解延迟、重复和父子动画编排。
+tags: 动画,Framer Motion,交互动效
+badges: 译文
+source:
+  name: Maxime Heckel
+  url: https://blog.maximeheckel.com/posts/guide-animations-spark-joy-framer-motion/
+notice: 本文译自历史文章，保留原作者的第一人称与示例思路。依赖 API 请结合当前 Motion 官方文档核对。
 publicAt: "2024-04-28"
 ---
 
-> 本文转发并翻译至: [Guide to creating animations that spark joy with Framer Motion](https://blog.maximeheckel.com/posts/guide-animations-spark-joy-framer-motion/)
+> 本文译自： [Guide to creating animations that spark joy with Framer Motion](https://blog.maximeheckel.com/posts/guide-animations-spark-joy-framer-motion/)
 
 在过去的几个月里， [Framer Motion](https://www.framer.com/motion/introduction/) 从我玩的一个有趣的工具变成了我前端项目的核心元素，为我的 UI 添加一层交互。我从对动画和转场一无所知，到能够[编排涉及大量元素的更复杂的动画](https://twitter.com/MaximeHeckel/status/1327647479521701889?s=20)。
 
@@ -31,7 +35,7 @@ publicAt: "2024-04-28"
 2. “它需要去哪里，或者它最终是哪种形状？” **即目标状态**
 3. “它将如何从初始状态过渡到最终状态？” **即过渡状态**
 
-在 Framer Motion 的中，该库为我们提供了一个 `motion` 组件，该组件具有 3 个属性（`props`），让我们定义上述 3 个问题的答案：
+在 Framer Motion 中，该库为我们提供了一个 `motion` 组件，该组件具有 3 个属性（`props`），让我们定义上述 3 个问题的答案：
 
 `initial` ：元素在挂载时的状态。
 
@@ -91,7 +95,7 @@ Framer Motion 中有许多类型的过渡可用，因此我在下面添加了这
 
 现在我们了解了基础知识，让我们来看看我们的第一个例子！您将在下面找到一系列动画组件，您可以随意编辑和调整这些组件。至于要调整的内容，以下列表包含一些有趣的点，您可以查看：
 
-- **从第一个组件中删除 ** `transition` prop （示例 1）。请注意，此过渡动画从一种 `ease` 类型转到另一种 `spring` 类型。这来自我们刚才提到的“智能默认值”。
+- **从第一个组件中删除 `transition` prop** （示例 1）。请注意，此过渡动画从一种 `ease` 类型转到另一种 `spring` 类型。这来自我们刚才提到的“智能默认值”。
 
 - 组合示例 2 中的动画：将第二个动画从简单旋转更改为旋转和平移。
 
@@ -464,7 +468,7 @@ return (
 
 这两个选项的确切作用乍一看似乎令人困惑。我希望我有一些视觉示例，以便在我开始时真正掌握它们是如何工作的。我希望下面的可视化能做到这一点！
 
-在下面的小部件中，您可以调整 和 `staggeredChildren` 的 `beforeChildren` 值，并查看生成的转换方式。
+在下面的小部件中，你可以调整 `staggerChildren` 和 `delayChildren` 的值，并查看生成的转换方式。
 
 <Orchestration />
 

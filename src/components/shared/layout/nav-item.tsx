@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
-import { motion } from "motion/react";
+import { ArrowUpRight } from "lucide-react";
 import type { HTMLAttributes } from "react";
+import { AnimatedLabel } from "@/components/shared/animated-label";
 import { cn } from "@/lib/utils";
 
 interface NavItemProps extends HTMLAttributes<HTMLAnchorElement> {
@@ -18,24 +19,13 @@ export default function NavItem({
 }: NavItemProps) {
   return (
     <Link
-      className={cn("group relative px-5 pb-2 first:pl-0", className)}
+      aria-current={active ? "page" : undefined}
+      className={cn("nav-link animated-link", active && "is-active", className)}
       to={href}
       {...props}
     >
-      <span>{text}</span>
-      {active && (
-        <motion.div
-          animate={{ opacity: 1 }}
-          className={cn(
-            "absolute bottom-0 h-1 rounded-full bg-zinc-700/10 dark:bg-white/20"
-          )}
-          exit={{ opacity: 0 }}
-          initial={{ opacity: 0 }}
-          layoutId="underline"
-          style={{ width: `${text.length}em` }}
-          transition={{ duration: 0.3 }}
-        />
-      )}
+      <AnimatedLabel text={text} />
+      <ArrowUpRight aria-hidden="true" size={17} />
     </Link>
   );
 }

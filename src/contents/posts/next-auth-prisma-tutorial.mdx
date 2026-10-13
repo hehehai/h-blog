@@ -1,12 +1,13 @@
 ---
-title: Next + NextAuth + Prisma 简单博客
-description: Next + NextAuth + Prisma 简单博客
+title: Next.js + NextAuth + Prisma：搭建一个博客
+description: 从项目初始化开始，实现 GitHub 与邮件登录、Prisma 数据模型，以及文章草稿、发布、详情和删除流程。
 badges: 实践
-tags: Next,NextAuth,Prisma
+tags: Next.js,NextAuth,Prisma
+notice: 本文使用 2022 年的 Next.js 12、Pages Router 与 NextAuth 配置。新版 App Router 和 Auth.js 的接入方式需另行核对。
 publicAt: "2022-11-13"
 ---
 
-### 基础 Next
+## 基础 Next
 
 ```shell
 mkdir my-blog
@@ -61,7 +62,7 @@ pnpm add next@12.3.3 react react-dom
 
 ![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221112161049.png)
 
-### 基础 Typescript
+## 基础 TypeScript
 
 ```shell
 pnpm add -D ts-node typescript @types/node @types/react
@@ -142,7 +143,7 @@ pnpm add -D ts-node typescript @types/node @types/react
 }
 ```
 
-### 创建首页
+## 创建首页
 
 `pages/index.tsx`
 
@@ -167,7 +168,7 @@ ready - started server on 0.0.0.0:3000, url: http://localhost:3000
 
 ![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221112162300.png)
 
-### 基础 Tailwindcss
+## 基础 TailwindCSS
 
 为了写些基础样式更方便，我们使用 [tailwind next.js](https://tailwindcss.com/docs/guides/nextjs)
 
@@ -262,7 +263,7 @@ npm run dev
 
 ok, 这里我们的基础就搭建好了，下面，我们先来直接安装 NextAuth
 
-### 使用 NextAuth
+## 使用 NextAuth
 
 ```shell
 pnpm add next-auth
@@ -308,7 +309,7 @@ export default authHandler;
 
 此时，我们需要去申请一个 Github OAuth 的 token，用于请求
 
-### 申请 Github OAuth App Token
+## 申请 GitHub OAuth App Token
 
 1. [Github OAuth Apps](https://github.com/settings/developers)
 
@@ -338,7 +339,7 @@ export default authHandler;
 
 nice!, 我们已经有自己的 Github OAuth token，下面开始配置吧！
 
-### 配置 ENV
+## 配置 ENV
 
 创建 `.env`
 
@@ -380,9 +381,9 @@ node_modules/
 └── tsconfig.json
 ```
 
-### 使用 NextAuth Github 登录
+## 使用 NextAuth GitHub 登录
 
-NextAuth 是支持不适应数据库做身份认证登录的，实际使用 OAuth 可以每次登录的时候获取用户信息，无需数据库存储了。我们先来验证下。
+NextAuth 支持不使用数据库进行 OAuth 身份认证，实际使用 OAuth 可以每次登录的时候获取用户信息，无需数据库存储了。我们先来验证下。
 
 1. 运行
 
@@ -424,13 +425,13 @@ npm run dev
 
 想要确认已经退出的话，可以访问: `http://localhost:3000/api/auth/session`
 
-### 基础 UI
+## 基础 UI
 
 下面我们将编写一个简单的 UI，方便我们之后的操作。这里我们也会根据当前的登录状态显示隐藏一些界面元素。
 
 先来介绍一下 NextAuth 封装的客户端登录信息获取
 
-#### [useSession()](https://next-auth.js.org/getting-started/client#usesession)
+### [useSession()](https://next-auth.js.org/getting-started/client#usesession)
 
 ```ts
 import { useSession } from "next-auth/react";
@@ -446,7 +447,7 @@ export default function Component() {
 }
 ```
 
-#### [getSession()](https://next-auth.js.org/getting-started/client#getsession)
+### [getSession()](https://next-auth.js.org/getting-started/client#getsession)
 
 ```ts
 async function myFunction() {
@@ -455,7 +456,7 @@ async function myFunction() {
 }
 ```
 
-#### Header
+### Header
 
 `components/Header.tsx`
 
@@ -603,7 +604,7 @@ export default function () {
 └── tsconfig.json
 ```
 
-### 基础 Prisma
+## 基础 Prisma
 
 ```shell
 pnpm add prisma @prisma/client @next-auth/prisma-adapter
@@ -657,7 +658,7 @@ datasource db {
 }
 ```
 
-- `generator client`: 是 Prisma 用于客户端类型生成的配置，这里 `provider` 使用目前官方的 `prisma-client-js` （目前官方近这一个生成器）
+- `generator client`: 是 Prisma 用于客户端类型生成的配置，这里 `provider` 使用目前官方的 `prisma-client-js` （本文使用这个生成器）
 - `datasource db`: 数据库连接器的配置，这里连接的是 `postgresql` 地址这里使用环境变量
 
 我们再看 `.env` 文件，可以发现 Prisma 初始化自动为我们添加了 `DATABASE_URL`。
@@ -816,10 +817,10 @@ model VerificationToken {
 
 此数据来自 [NextAuthPrismaAdapter](https://next-auth.js.org/adapters/prisma#setup) 这里有些简单的表和字段的名称调整，不过你要是直接使用 NextAuth 的也可以，原谅我强迫症 🫣。
 
-有关 Prisma Schema 的语法，可以参考[官方文档](https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference)，下面我近介绍些基本的语法，方便理解
+有关 Prisma Schema 的语法，可以参考[官方文档](https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference)，下面介绍一些基本语法，方便理解
 
-- `model`: 理解为数据库表，而 `model` 后的名称，默认是数据库表名，但但我们在 Schema 底部设置了 `@@map('...')` 时，Prisma 将以该名称映射到数据库表
-- `String Int DateTime` 代码的数据类型，因为我们使用的是 Postgresql 所以这里直接使用 Prisma 处理的默认类型就行，若是 MySQL 的话，对于 `access_token` Prisma 的 `String` 会默认使用 `CARHCAR(191)` 的长度，这里可能不够，需要使用 `String @db.Text` 这种，标明数据库字段类型
+- `model`: 理解为数据库表，而 `model` 后的名称，默认是数据库表名，但当我们在 Schema 底部设置了 `@@map('...')` 时，Prisma 将以该名称映射到数据库表
+- `String Int DateTime` 代码的数据类型，因为我们使用的是 Postgresql 所以这里直接使用 Prisma 处理的默认类型就行，若是 MySQL 的话，对于 `access_token` Prisma 的 `String` 会默认使用 `VARCHAR(191)` 的长度，这里可能不够，需要使用 `String @db.Text` 这种，标明数据库字段类型
 - `?` 表示该字段值可以为空，这其实就是 `DEFAULT NULL`，相反的是 `NOT NULL`
 - `@id`：表主键
 - `@unique`：唯一键，这里不在字段后使用的，而在 Schema 中直接设置的 `@@unique([...])` 表示符合唯一键
@@ -891,7 +892,7 @@ prisma/
 
 可以注意下表结构，关联表是使用了外键的方式处理。
 
-### 使用 Prisma
+## 使用 Prisma
 
 首先我们要做的就是连接 Prisma，这里要创建一个全局的连接单例
 `lib/db/prisma.ts` 在顶层新建一个 `lib` 目录
@@ -920,7 +921,7 @@ export const db = prisma;
 
 - `declare gloabl __db__`: 全局变量类型
 - 生产环境下，我们的服务在部署的时候会运行，也就代表仅在部署启动的时候会连接一次
-- 非生产环境，热开发的情况为了避免多次创建连接实例，这里将第一次创建的实例挂在到全局，下一次直接使用乙存在的实例即可
+- 非生产环境，热开发的情况为了避免多次创建连接实例，这里将第一次创建的实例挂在到全局，下一次直接使用已存在的实例即可
 - `prisma.$connect()`: 初始化的时间先做一次连接，这是为了解决在开发模式下，重启服务后缓存是热开发的增量，此时数据库请求会出现未连接的错误（刷新页面-会好）。
 
 这里为了方便引用，我们在 `tsconfig.json` 中设置路径别名
@@ -1088,7 +1089,7 @@ Prisma Studio is up on http://localhost:5555
 
 可以看到，"Session" 没有了
 
-### 邮件登录
+## 邮件登录
 
 如果使用邮件，那么 NextAuth 必须有连接数据库，这也就是我们在设置了 Prisma 后，才使用 Email。
 
@@ -1110,7 +1111,7 @@ pnpm add nodemailer
 },
 ```
 
-#### 环境变量
+### 环境变量
 
 `.env`
 
@@ -1134,7 +1135,7 @@ EMAIL_FROM=Your_qq_number@qq.com
 - `EMAIL_SERVER_PASSWORD`: 密码，这里要填授权码，不是我们登录的密码注意，下面我们申请一下。
 - `EMAIL_FROM`: 是我们（发送方）的邮件地址，这里和 `EMAIL_SERVER_USER` 相同就好
 
-#### 申请邮箱授权码
+### 申请邮箱授权码
 
 1. 登录 [QQ 邮箱](https://wx.mail.qq.com/)
 2. 点击 "设置"
@@ -1161,7 +1162,7 @@ EMAIL_FROM=Your_qq_number@qq.com
 
 ![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221113163217.png)
 
-#### 配置 NextAuth
+### 配置 NextAuth
 
 ```ts
 import { NextApiHandler } from "next";
@@ -1202,7 +1203,7 @@ export default authHandler;
 
 官方更详细说明: https://next-auth.js.org/providers/email
 
-#### 登录
+### 登录
 
 1. 启动服务
 
@@ -1259,7 +1260,7 @@ ok, 我们来梳理下 NextAuth 邮件登录的逻辑
 
 🤪 这要下一个教程了: [看这里](https://hehehai.cn/posts/next-auth-password-tutorial)
 
-### 基础 Blog
+## 基础 Blog
 
 我们要完成
 
@@ -1269,7 +1270,7 @@ ok, 我们来梳理下 NextAuth 邮件登录的逻辑
 - 查询文章
 - 文章删除
 
-#### 文章表
+### 文章表
 
 1. 创建文章表 `prisma/schema.prisma`
 
@@ -1362,7 +1363,7 @@ s/@prisma/client in 98ms
 
 ![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221113183527.png)
 
-#### 创建
+### 创建
 
 **场景**
 
@@ -1510,7 +1511,7 @@ export default CreatePost;
 
 ![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221114154146.png)
 
-点击创建，此时成功的话会跳转到 `/drafts` 但该页面目前我们创建，是 `404`。我们先来看下文章
+创建成功后会跳转到 `/drafts`，但这个页面还未创建，因此暂时返回 `404`。我们先来看下文章
 
 ```shell
 npx prisma studio
@@ -1520,7 +1521,7 @@ npx prisma studio
 
 可以看到 `published` 默认是 `false`（未发布），也就是草稿
 
-#### 草稿
+### 草稿
 
 **场景**
 
@@ -1721,7 +1722,7 @@ npm run dev
 
 点击文章卡片，跳转详情页面 `/p/[id]` (页面还不存在)
 
-#### 文章详情
+### 文章详情
 
 新建文件 `pages/p/[id].tsx`
 
@@ -1774,7 +1775,7 @@ export default Post;
 
 ![Next NextAuth Prisma Blog](/static/images/next-auth-prisma-tutorial/20221114164224.png)
 
-#### 发布和删除
+### 发布和删除
 
 场景
 
@@ -1928,7 +1929,7 @@ export default Post;
 
 先不要测试删除，我们先来实现首页
 
-#### 首页（所有已发布文章）
+### 首页（所有已发布文章）
 
 `pages/index.tsx`
 

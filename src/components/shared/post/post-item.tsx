@@ -1,25 +1,43 @@
 import { Link } from "@tanstack/react-router";
+import { ArrowUpRight } from "lucide-react";
 import type { QueryPostItem } from "@/functions/post";
 import { formatPostDate } from "@/lib/date";
-import PostTags from "./post-tags";
 
-export default function ContentItem({ post }: { post: QueryPostItem }) {
-  const readingTime = Number.parseInt(String(post.readingTime));
-
+export default function PostItem({
+  post,
+  headingLevel = "h3",
+}: {
+  post: QueryPostItem;
+  headingLevel?: "h2" | "h3";
+}) {
+  const Heading = headingLevel;
   return (
-    <div>
+    <article className="post-item">
       <Link
-        className="font-medium text-xl leading-relaxed underline decoration-2 decoration-slate-700 underline-offset-8 transition hover:decoration-dotted"
+        className="post-item-link"
         params={{ slug: post.slug }}
         to="/posts/$slug"
       >
-        {post.title}
+        <div className="post-item-content">
+          <div className="post-meta">
+            <time dateTime={new Date(post.publicAt).toISOString()}>
+              {formatPostDate(post.publicAt)}
+            </time>
+            <span>{post.tags?.[0] || "技术笔记"}</span>
+            <span>{post.readingTime} 分钟阅读</span>
+          </div>
+          <Heading>{post.title}</Heading>
+          <p>{post.description}</p>
+          {post.badges?.includes("译文") && (
+            <span className="post-kind">译文整理</span>
+          )}
+        </div>
+        <ArrowUpRight
+          aria-hidden="true"
+          className="post-item-arrow"
+          size={21}
+        />
       </Link>
-      <div className="justify-content mt-3 flex space-x-3 text-slate-700 text-sm dark:text-gray-200">
-        <PostTags tags={post.badges} />
-        {post.publicAt && <div>{formatPostDate(post.publicAt)}</div>}
-        {!!readingTime && <div>约 {readingTime} 分钟</div>}
-      </div>
-    </div>
+    </article>
   );
 }

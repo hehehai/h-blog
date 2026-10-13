@@ -1,15 +1,16 @@
 ---
-title: 我工作中的 Git 使用手册
-description: 目前在开发中 Git 作为版本管理是必不可少的，这篇文章我们就记录我再工作的 Git 使用。
+title: Git 工作手册：常用命令与协作场景
+notice: reset --hard、clean 和历史重写操作可能丢失本地改动。执行前请检查状态并备份，公共分支优先使用 revert。
+description: Git 是开发中不可或缺的版本管理工具。这篇文章记录我在工作中常用的 Git 命令与协作流程。
 tags: 工具,Git
 badges: 笔记
 publicAt: '2022-09-29'
 ---
 
-### 配置
-#### 用户信息
+## 配置
+### 用户信息
 
-该信息会作为 commit 的提议 author（作者）
+这些信息会作为提交的作者（author）信息。
 
 ```bash
 git config --global user.name "xxx"
@@ -18,7 +19,7 @@ git config --global user.email "xxx@xx.com"
 
 - `--global` 用于设置全局 git 配置
 
-#### 显示当前系统的 config
+### 显示当前系统的 config
 
 ```bash
 git config --list
@@ -30,7 +31,7 @@ git config --list
 
 ![My Git Config List](/static/images/git-in-my-work/my-git-config-list.png)
 
-#### git 默认处理的编辑器
+### git 默认处理的编辑器
 
 ```bash
 git config --global core.editor vim
@@ -39,7 +40,7 @@ git config --global core.editor vim
 - 默认是 vim
 - 可以使用 code, emacs
 
-#### 配置项删除
+### 配置项删除
 
 ```bash
 git config --global --unset user.name
@@ -47,7 +48,7 @@ git config --global --unset user.name
 
 或者直接编辑 `vim ~/.gitconfig`
 
-#### git 代理配置
+### git 代理配置
 
 ```bash
 git config --global https.proxy http://127.0.0.1:1080
@@ -74,7 +75,7 @@ git config --global https.proxy socks5://127.0.0.1:7890
 git config --global http.https://github.com.proxy socks5://127.0.0.1:7890
 ```
 
-#### 别名
+### 别名
 
 它的基本用法是  `git config --global alias.<简化的字符> 原始命令`
 
@@ -88,8 +89,8 @@ $ git config --global alias.br branch
 
 如果你在使用 [Oh My Zsh](https://github.com/ohmyzsh/ohmyzsh)，那么就可以配置内容的 [Git](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/git) 插件，支持很多简写的 Git 命令别名。
 
-### 远程仓库配置
-#### ssh key 生成
+## 远程仓库配置
+### ssh key 生成
 
 ```bash
 ssh-keygen -t rsa -C "email address"
@@ -97,7 +98,7 @@ ssh-keygen -t rsa -C "email address"
 
 ![Generate git ssh key](/static/images/git-in-my-work/generate-git-ssh-key.png)
 
-#### ssh key 查看
+### ssh key 查看
 
 ssh 通常在 `.ssh` 文件夹中
 
@@ -105,7 +106,7 @@ ssh 通常在 `.ssh` 文件夹中
 
 ![Git ssh file list](/static/images/git-in-my-work/git-ssh-file-list.png)
 
-#### 多个 key 管理
+### 多个 key 管理
 
 情况：`gitlib`, `github`, `coding`, `gitee` 等
 
@@ -133,15 +134,15 @@ Host 67.101.99.102
 ...
 ```
 
-#### 测试 key 是否有效（某个 domain）
+### 测试 key 是否有效（某个 domain）
 
-`ssh -T [git@github.com](mailto:git@github.com)`
+`ssh -T git@github.com`
 
-#### 报错处理
+### 报错处理
 
-删除 `~/.ssh` 文件下的 `known_host` 后，重试
+遇到主机密钥变化时，先核对远端官方指纹并排除中间人风险，再更新 `~/.ssh/known_hosts` 中对应主机的记录，不要直接删除整个文件。
 
-### .gitignore
+## .gitignore
 
 文件 `.gitignore` 的格式规范如下：
 
@@ -177,9 +178,9 @@ doc/**/*.pdf
 
 [gitignore.io](https://www.toptal.com/developers/gitignore)
 
-### 基础
+## 基础
 
-#### git status
+### git status
 
 ```bash
 git status
@@ -202,7 +203,7 @@ M  lib/simplegit.rb
 
 新添加的未跟踪文件前面有 `??` 标记，新添加到暂存区中的文件前面有 `A` 标记，修改过的文件前面有 `M` 标记。 输出中有两栏，左栏指明了暂存区的状态，右栏指明了工作区的状态。
 
-#### git add
+### git add
 
 ```bash
 git add filePath
@@ -212,21 +213,22 @@ git add .
 - filePath: `a.js`
 - `.` ： 暂存工作区所有可暂存的文件
 
-#### git reset
+### git reset
 
 ```bash
 git reset HEAD^
-git reset --mixid HEAD^
+git reset --mixed HEAD^
 git reset --soft HEAD^
 git reset --hard HEAD^
 ```
 
-- 空：取消上次提交，取消暂存（默认）
-- `—mixed`: 取消上次提交，也取消暂存（默认）
-- `—soft`: 取消上次提交，但保留暂存
-- `—hard`: 取消上次提交，取消暂存，删除工作区的变动
+以上示例都以 `HEAD^` 为目标，回退到上一次提交；不指定目标的 `git reset` 默认使用 `HEAD`，并不会自动撤销提交。
 
-#### git commit
+- `--mixed`：重置暂存区，保留工作区改动（默认模式）。
+- `--soft`：保留暂存区和工作区改动。
+- `--hard`：重置暂存区和工作区，会丢弃相应的本地改动。
+
+### git commit
 
 ```bash
 git commit
@@ -237,10 +239,10 @@ git commit --amend
 
 - 空：会打开 git 默认的编辑器，来编辑 message
 - `-m`: 简单 message，无法换行
-- `-am`: `git add .` + `git commit -m`
-- `-amend`: 修改上一次提交的 commit（❗️会重新生成 Commit HASH）
+- `-am`：暂存已跟踪文件的修改并提交，不会包含新的未跟踪文件。
+- `--amend`：修改上一次提交，会生成新的提交哈希；不要随意改写已共享的提交。
 
-#### git pull
+### git pull
 
 ```bash
 git pull <remote-origin> <remote-branch>:<lcoal-branch>
@@ -250,7 +252,7 @@ git pull --rebase <remote-origin> <remote-branch>:<local-branch>
 - 拉取远程分支到本地分支 （`git fetch` + `git merge`）
 - 拉取远程分支到本地分支，且使用 rebase 合并 commit
 
-#### git fetch
+### git fetch
 
 ```bash
 git fetch <remote-origin> <remote-branch>
@@ -260,7 +262,7 @@ git fetch --all
 - 拉取远程分支到本地（同步到本地），拉取后不会合并（`git merge`）
 - 拉取全部远程分支到本地
 
-#### git branch
+### git branch
 
 ```bash
 git branch <branch-name>
@@ -278,7 +280,7 @@ git branch -m <branch-name> <new-branch-name>
 - `-D`: 删除分支
 - `-m`: 重命名分支
 
-#### git remote
+### git remote
 
 ```bash
 git remote
@@ -299,7 +301,7 @@ git remote remove <remote-name>
 - `rename <remote-name> <new-remote-name>`： 远程仓库重命名
 - `remove <remote-name>`: 删除远程仓库
 
-#### git stash
+### git stash
 
 代码贮藏，通常用于保存暂时不需要提交到暂存库的代码更改
 
@@ -325,7 +327,7 @@ git stash branch testchanges
 - `—keep-index`: 仅贮藏没有在暂存库的文件
 - `branch <branch-name>`: 从贮藏创建分支
 
-#### git tag
+### git tag
 
 **打标签**
 
@@ -569,7 +571,7 @@ Switched to a new branch 'version2'
 
 `git push` 推送两种标签 使用 `git push <remote> --tags` 推送标签并不会区分轻量标签和附注标签， 没有简单的选项能够让你只选择推送一种标签。
 
-#### 移除文件以及取消对文件的跟踪
+### 移除文件以及取消对文件的跟踪
 
 **移除文件**
 
@@ -630,7 +632,7 @@ $ git rm \*~
 取消对文件的跟踪还有一个命令：`git update-index --assume-unchanged <取消跟踪的文件>`
 注：该命令只能取消提交到暂存区之前的文件，可以先用`git reset <文件名>`将暂存区的文件回退到暂存区之前，然后再取消跟踪。
 
-#### 放弃修改，放弃增加文件操作
+### 放弃修改，放弃增加文件操作
 
 **放弃修改**
 
@@ -678,7 +680,7 @@ git clean -xdff
 💣 本命令删除新增的文件和文件夹，如果文件已经已经 `git add` 到暂存区，并不会删除！
 </aside>
 
-**放弃暂寸**
+**放弃暂存**
 
 本地修改/新增了一些文件，已经 `git add` 到暂存区，想放弃修改
 
@@ -722,19 +724,19 @@ git reset --hard commit_id
 💣 撤销之后，你所做的已经 `commit` 的修改将会清除，仍在工作区/暂存区的代码也将会清除！
 </aside>
 
-### HEAD ~ ^
+## HEAD ~ ^
 
 HEAD 就是当前活跃分支的游标。
 
 不过 HEAD 并非只能指向分支的最顶端（时间节点距今最近的那个），实际上它可以指向任何一个节点，它就是 Git内部用来追踪当前位置的东东。
 
-#### 区别
+### 区别
 
 在 HEAD 后面加 `^` 或者 `~` 其实就是以 HEAD 为基准，来表示之前的版本，因为 HEAD 被认为是当前分支的最新版本，那么 `HEAD~` 和 `HEAD^` 都是指次新版本，也就是倒数第二个版本，`HEAD~~` 和 `HEAD^^` 都是指次次新版本，也就是倒数第三个版本，以此类推。
 
-### 场景
+## 场景
 
-#### 使用 rebase 的流程
+### 使用 rebase 的流程
 
 `rebase` 是很好的工具，不过我其实反对合进 `master` 分支的时候做 `rebase` 或者 `fast-forward` ，我喜欢的方式是
 
@@ -747,7 +749,7 @@ HEAD 就是当前活跃分支的游标。
 
 反对滥用 `amend` 和 `squash`（以及 `soft reset`），这才是爱慕虚荣的表现，除了引入莫名其妙的 `conflict` 以外没有任何积极意义。保留每次提交的细粒度历史版本对于合并、回滚是非常重要的。比如说开发完成了一个新功能，突然发现其中对某个文件的某步修改是错误的，需要撤销，如果已经 `squash` 了那就难找了，可能这个文件被前后修改过很多遍，很难分离出来某一批次的修改了。再比如说 `cherry-pick`，可能`master` 分支上发现了一个重大的 `bug`，这个 `commit` 需要 `cherry-pick` 到各个版本分支和开发分支上，如果这个 `cherry-pick` 以后被 `squash` 掉了，再合并的时候就会出现 `conflict`。仅仅当很少的情况，比如这个 `commit` 仅仅是修复上个 `commit` 中的提交错误或低级失误的时候，用 `amend` 和 `squash` 有一定意义（去掉一堆无意义的 `bugfix` 提交）
 
-#### Git 时光机
+### Git 时光机
 
 有的时候我们特别需要一个时光机器，来记录你的操作步骤，而不是仅仅有你的提交信息，尤其当你 `clone` 下来一个代码库，然后一阵操作，`merge` 一些 `branch`，添加删除一些代码，当你发现你误删了东西，弄坏了整个 build 等等，那么你就需要 `reflog + reset` 这两个命令的组合。
 
@@ -783,7 +785,7 @@ git reflog
 git reset HEAD@{13}
 ```
 
-#### Git 后悔药
+### Git 后悔药
 
 **程序员很长时间都是在和 bug 奋战，而 bug 的来源经常是某次 commit 的提交，有可能是很久以前的，那么想要修改很久之前的一次提交，那么该怎么办呢？**
 
@@ -831,7 +833,7 @@ git revert 2feb45f[第二条对应的 hash]
 # 这个时候它会创建一个新的 commit，并且弹出提交的对话框，修改保存就可以了。
 ```
 
-#### 我刚才好像犯了个大错，能不能给我台时光机啊!?!
+### 我刚才好像犯了个大错，能不能给我台时光机啊!?!
 
 ```bash
 git reflog
@@ -848,7 +850,7 @@ git reset HEAD@{index}
 
 你可以用这个方法来找回那些你不小心删除的东西、恢复一些你对 repo 改动、恢复一次错误的 merge 操作、或者仅仅想退回到你的项目还能正常工作的那一时刻。
 
-#### 我刚提交 commit 就发现还有一个小改动需要添加！
+### 我刚提交 commit 就发现还有一个小改动需要添加！
 
 ```bash
 # 继续改动你的文件
@@ -862,7 +864,7 @@ git commit --amend --no-edit
 
 ❗️*警告: 你千万不要在已推送的公共分支上做这个 `amend` 的操作! 只能在你本地 `commit` 上做这种修改，否则你会把事情搞砸的！*
 
-#### 我要修改我刚刚 commit 提交的信息！
+### 我要修改我刚刚 commit 提交的信息！
 
 ```bash
 git commit --amend
@@ -871,7 +873,7 @@ git commit --amend
 
 使用繁琐的提交信息格式
 
-#### 我不小心把本应在新分支上提交的东西提交到了 master!
+### 我不小心把本应在新分支上提交的东西提交到了 master!
 
 ```bash
 # 基于当前 master 新建一个分支
@@ -884,7 +886,7 @@ git checkout some-new-branch-name
 
 注意：如果你已将这个 commit 推送到了公共分支，那这波操作就不起作用了。如果你在此之前做了些其他的操作，那你可能需要使用 `HEAD@{number-of-commits-back}` 来替代 `HEAD~`。
 
-#### 我把这个 commit 提交错分支了！
+### 我把这个 commit 提交错分支了！
 
 ```bash
 # 撤回这次提交，但保留改动的内容
@@ -909,7 +911,7 @@ git checkout master
 git reset HEAD~ --hard
 ```
 
-#### 我想用 diff 命令看下改动内容，但啥都没看到?!
+### 我想用 diff 命令看下改动内容，但啥都没看到?!
 
 如果对文件做了改动，但是通过 `diff` 命令却看不到，那很可能是你执行过 `add` 命令将文件改动添加到了 `暂存区` 了。你需要添加下面这个参数。
 
@@ -917,7 +919,7 @@ git reset HEAD~ --hard
 git diff --staged
 ```
 
-#### 我想撤回一个很早以前的 commit！
+### 我想撤回一个很早以前的 commit！
 
 ```bash
 # 先找到你想撤销的那个 commit
@@ -937,7 +939,7 @@ git revert [刚才记下的那个 hash 值]
 
 你甚至可以恢复单个文件而不是一整个 commit！但那是另一套 git 命令咯...
 
-#### 我想撤回某一个文件的改动！
+### 我想撤回某一个文件的改动！
 
 ```bash
 # 找到文件改动前的那个 commit
@@ -950,7 +952,7 @@ git checkout [刚才记下的那个 hash 值] -- path/to/file
 git commit -m "这样就不需要通过复制粘贴来撤回改动啦"
 ```
 
-### 参考
+## 参考
 
 - [Git教程](https://www.liaoxuefeng.com/wiki/896043488029600)
 - [Reference](https://git-scm.com/docs)

@@ -32,6 +32,13 @@ export const Route = createRootRoute({
       { href: appCss, rel: "stylesheet" },
       { href: highlightCss, rel: "stylesheet" },
       { href: "/favicon.svg", rel: "icon" },
+      {
+        as: "font",
+        crossOrigin: "anonymous",
+        href: "/static/fonts/Geist-Regular.woff2",
+        rel: "preload",
+        type: "font/woff2",
+      },
       { href: "/manifest.webmanifest", rel: "manifest" },
       {
         crossOrigin: "anonymous",
@@ -70,7 +77,7 @@ function RootLayout() {
       <head>
         <HeadContent />
       </head>
-      <body className="h-full min-h-screen bg-stone-50 text-foreground dark:bg-gradient-to-br dark:from-slate-900 dark:to-background">
+      <body className="min-h-screen bg-background text-foreground">
         <Providers>
           <Outlet />
         </Providers>
@@ -82,22 +89,17 @@ function RootLayout() {
 
 function NotFound() {
   return (
-    <main className="grid min-h-screen place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8 dark:bg-slate-950">
+    <main className="grid min-h-screen place-items-center bg-background px-6 py-24 sm:py-32 lg:px-8">
       <div className="text-center">
-        <p className="font-semibold text-base text-gray-900 dark:text-gray-100">
-          404
-        </p>
-        <h1 className="mt-4 font-bold text-3xl text-gray-900 tracking-tight sm:text-5xl dark:text-gray-100">
+        <p className="eyebrow">404</p>
+        <h1 className="mt-4 font-medium text-3xl tracking-tight sm:text-5xl">
           未找到页面
         </h1>
-        <p className="mt-6 text-base text-gray-600 leading-7 dark:text-gray-300">
-          抱歉!我们找不到您要查找的页面
+        <p className="mt-6 text-base text-muted-foreground leading-7">
+          这个页面可能已移动，或还没有发布。
         </p>
         <div className="mt-10 flex items-center justify-center gap-x-6">
-          <a
-            className="rounded-md bg-primary px-3.5 py-2.5 font-semibold text-sm text-white shadow-sm hover:bg-primary/90"
-            href="/"
-          >
+          <a className="button-link" href="/">
             返回首页
           </a>
         </div>

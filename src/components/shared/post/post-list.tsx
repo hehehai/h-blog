@@ -1,15 +1,21 @@
 import type { QueryPostItem } from "@/functions/post";
 import PostItem from "./post-item";
 
-export default function PostList({ posts }: { posts: QueryPostItem[] }) {
+export default function PostList({
+  posts,
+  headingLevel = "h3",
+}: {
+  posts: QueryPostItem[];
+  headingLevel?: "h2" | "h3";
+}) {
   return (
-    <div className="space-y-8">
+    <div className="post-list">
       {posts.length > 0 ? (
-        posts.map((post) => <PostItem key={post.slug} post={post} />)
+        posts.map((post) => (
+          <PostItem headingLevel={headingLevel} key={post.slug} post={post} />
+        ))
       ) : (
-        <div className="text-center text-slate-700 text-sm dark:text-gray-200">
-          暂无文章
-        </div>
+        <p className="empty-state">没有找到匹配的文章，试试其他关键词。</p>
       )}
     </div>
   );

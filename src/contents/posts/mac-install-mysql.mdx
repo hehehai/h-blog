@@ -1,113 +1,116 @@
 ---
-title: MAC MySQL 安装与基础配置
-description: 如何在 MAC 系统安装 MySQL， 密码设置与修改
+title: macOS 安装 MySQL：配置、PATH 与登录
+description: 记录 Intel Mac 上通过 DMG 安装 MySQL 的步骤，包括服务管理、命令行 PATH 配置与登录验证。
 badges: 笔记
-tags: MySQL
+tags: MySQL,macOS
+notice: 本文环境为 macOS 12.6 与 Intel Mac，截图来自 2022 年。Apple Silicon 机型、安装路径与新版安装器请以当前官方说明为准。
 publicAt: "2022-11-02"
 ---
 
-### 查看系统信息
+## 查看系统信息
 
-![My os version](/static/images/mac-install-mysql/my-os-version.png)
+先确认 macOS 版本和处理器架构。本文使用 macOS 12.6、Intel Core i9。
 
-我这里是 OS 12.6, Intel Core i9
+![macOS 版本与 Intel 处理器信息](/static/images/mac-install-mysql/my-os-version.png)
 
-### 下载
+## 下载
 
-MySQL 下载： https://dev.mysql.com/downloads/mysql/
+打开 [MySQL 官方下载页面](https://dev.mysql.com/downloads/mysql/)，选择与系统版本和架构相符的安装包。
 
-![MySQL download list](/static/images/mac-install-mysql/mysql-download-list.png)
+![MySQL 的 macOS 安装包列表](/static/images/mac-install-mysql/mysql-download-list.png)
 
-这里我们下载 **macOS 12 (x86, 64-bit), DMG Archive**，点击 Download
+本文选择 **macOS 12 (x86, 64-bit), DMG Archive**，点击 **Download**。
 
-![mysql-download-confirm](/static/images/mac-install-mysql/mysql-download-confirm.png)
+![MySQL 下载确认页面](/static/images/mac-install-mysql/mysql-download-confirm.png)
 
-点击 No thanks, just start my download (直接点击下载)
+点击 **No thanks, just start my download**，即可直接下载。
 
-### 安装
+## 安装
 
-1. 双击 dmg 文件，打开安装
+1. 双击 DMG 文件，打开安装器。
 
-![mysql-dmg-install](/static/images/mac-install-mysql/mysql-dmg-install.png)
+   ![打开 MySQL DMG 安装器](/static/images/mac-install-mysql/mysql-dmg-install.png)
 
-2. 允许安装
+2. 允许安装。
 
-![mysql-install-warning](/static/images/mac-install-mysql/mysql-install-warning.png)
+   ![macOS 的安装确认提示](/static/images/mac-install-mysql/mysql-install-warning.png)
 
-3. 继续
+3. 继续安装。
 
-![mysql-install-01](/static/images/mac-install-mysql/mysql-install-01.png)
+   ![MySQL 安装器的欢迎页面](/static/images/mac-install-mysql/mysql-install-01.png)
 
-4. 可能要输入系统密码
+4. 按提示输入系统密码。
 
-![mysql-install-02](/static/images/mac-install-mysql/mysql-install-02.png)
+   ![MySQL 安装过程中的系统授权](/static/images/mac-install-mysql/mysql-install-02.png)
 
-5. 选择默认密码方式 **Use Strong Password Encryption**
+5. 选择 **Use Strong Password Encryption**。
 
-![mysql-install-03](/static/images/mac-install-mysql/mysql-install-03.png)
+   ![MySQL 的密码加密方式设置](/static/images/mac-install-mysql/mysql-install-03.png)
 
-6. 输入 root 用户的密码，这里最短 8 位
+6. 为 `root` 用户设置符合密码策略的强密码，并妥善保存。
 
-![mysql-install-04](/static/images/mac-install-mysql/mysql-install-04.png)
+   ![MySQL root 密码设置](/static/images/mac-install-mysql/mysql-install-04.png)
 
-7. 安装器需要再次输入系统密码
+7. 按安装器要求再次确认系统授权。
 
-![mysql-install-05](/static/images/mac-install-mysql/mysql-install-05.png)
+   ![确认 MySQL 安装授权](/static/images/mac-install-mysql/mysql-install-05.png)
 
-8. 安装成功！
+8. 安装完成。
 
-![mysql-install-06](/static/images/mac-install-mysql/mysql-install-06.png)
+   ![MySQL 安装完成页面](/static/images/mac-install-mysql/mysql-install-06.png)
 
-### 查看
+## 查看
 
-点击设置，会初选 MySQL 的图标
+安装完成后，系统设置中会出现 MySQL 管理入口，可查看和控制服务状态。
 
-![mac-setting-mysql](/static/images/mac-install-mysql/mac-setting-mysql.png)
+![系统设置中的 MySQL 入口](/static/images/mac-install-mysql/mac-setting-mysql.png)
 
-![mac-setting-mysql-status](/static/images/mac-install-mysql/mac-setting-mysql-status.png)
+![MySQL 服务状态面板](/static/images/mac-install-mysql/mac-setting-mysql-status.png)
 
-### 修改 PATH
+## 修改 PATH
 
-为了直接在终端使用 MySQL cli，我们要配置下 PATH
+为了直接在终端使用 `mysql` 命令，将 MySQL 的 `bin` 目录加入 `PATH`。以下路径对应本文的 DMG 安装方式。
 
-先查看下当前的 PATH，在终端输入 `env`
+先在终端执行 `env`，查看当前环境变量。
 
-![mysql-cli-os-env](/static/images/mac-install-mysql/mysql-cli-os-env.png)
+![终端中的环境变量](/static/images/mac-install-mysql/mysql-cli-os-env.png)
 
-1. 修改 `.zshrc` 文件，扩展 PATH
+1. 编辑 `.zshrc`：
 
-```shell
-vi ~/.zshrc
-```
+   ```shell
+   vi ~/.zshrc
+   ```
 
-我这里使用 VIM， 你也可以使用其他编辑器，例如 vscode `code ~/.zshrc`
+   也可以使用 VS Code 等编辑器。将下面这一行加入文件：
 
-```shell
-export PATH=$PATH:/usr/local/mysql/bin
-```
+   ```shell
+   export PATH=$PATH:/usr/local/mysql/bin
+   ```
 
-将 MySQL cli bin 路径添加到 env PATH 后
+2. 使配置生效：
 
-2. 使 PATH 配置生效
+   ```shell
+   source ~/.zshrc
+   ```
 
-```shell
-source ~/.zshrc
-```
+   再执行 `env`，确认 `PATH` 中包含 MySQL 的 `bin` 路径。
 
-这会重载 zsh 的配置，执行我们的 PATH 扩展命令
+   ![加入 MySQL bin 目录后的 PATH](/static/images/mac-install-mysql/mysql-cli-os-path.png)
 
-查看 PATH, 在终端输入 `env`
+3. 验证命令行工具：
 
-![mysql-cli-os-path](/static/images/mac-install-mysql/mysql-cli-os-path.png)
+   ```shell
+   mysql --version
+   ```
 
-3. 验证 MySQL cli
+   ![MySQL 命令行版本输出](/static/images/mac-install-mysql/mysql-cli-version.png)
 
-```shell
-mysql --version
-```
+4. 登录数据库：
 
-![mysql-cli-version](/static/images/mac-install-mysql/mysql-cli-version.png)
+   ```shell
+   mysql -u root -p
+   ```
 
-4. 登录
+   按提示输入安装时设置的密码，不要把密码直接写进命令历史。
 
-![mysql-cli-login](/static/images/mac-install-mysql/mysql-cli-login.png)
+   ![MySQL 命令行登录结果](/static/images/mac-install-mysql/mysql-cli-login.png)
